@@ -210,7 +210,3 @@ Jika ada pertanyaan, saran, atau masukan terkait RekrutPro, silakan hubungi pemi
 * [https://github.com/ghilmanfz](https://github.com/ghilmanfz)
 
 ```
-
-Kalau kamu mau, aku juga bisa bikinkan versi README dalam bahasa Inggris atau versi yang lebih pendek khusus untuk publik/portfolio.
-::contentReference[oaicite:0]{index=0}
-```
