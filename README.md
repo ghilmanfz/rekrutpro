@@ -1,59 +1,212 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+Berikut draft isi `README.md` yang bisa kamu pakai untuk repo **rekrutpro**. Silakan copy–paste lalu sesuaikan jika ada detail yang kurang pas.
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+````md
+# RekrutPro
 
-## About Laravel
+> Make Recruit Process Look Easy
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+RekrutPro adalah aplikasi web berbasis Laravel untuk membantu tim HR dan rekruter dalam mengelola proses rekrutmen secara lebih terstruktur, mulai dari pembukaan lowongan, pengelolaan kandidat, hingga proses interview.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Repo ini dibuat sebagai project pembelajaran/pengembangan sistem rekrutmen dengan fokus pada praktik _clean code_, _testing_, dan dokumentasi.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## ✨ Fitur Utama (High Level)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+Beberapa fitur yang menjadi tujuan/ruang lingkup RekrutPro:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Manajemen lowongan:
+  - Membuat dan mengelola posisi/jabatan yang dibuka
+  - Mengatur deskripsi pekerjaan dan kualifikasi
+- Manajemen kandidat:
+  - Menyimpan data kandidat
+  - Melacak status kandidat dalam proses rekrutmen
+- Proses interview:
+  - Mencatat jadwal interview
+  - Mencatat feedback dan hasil interview
+- Dashboard sederhana untuk memantau progres rekrutmen
 
-## Laravel Sponsors
+> Catatan: Detail fitur dan progres pengembangan dapat dilihat di:
+> - `README_SISTEM_REKRUTMEN.md`
+> - `INTERVIEWER_FEATURES_COMPLETED.md`
+> - `PROGRESS_SUMMARY.md`
+> - `SESSION_2_SUMMARY.md`
+> - `TESTING_GUIDE.md`
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## 🛠 Tech Stack
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Proyek ini dibangun menggunakan:
 
-## Contributing
+- **PHP** dengan **Laravel** (framework utama)
+- **Blade** sebagai templating engine
+- **Tailwind CSS** untuk styling (lihat `tailwind.config.js`)
+- **Vite** sebagai bundler frontend (lihat `vite.config.js`)
+- **MySQL / MariaDB** (atau database relasional lain yang didukung Laravel)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Detail versi dependency bisa dilihat pada:
 
-## Code of Conduct
+- `composer.json`
+- `package.json`
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## 📦 Prasyarat
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Sebelum menjalankan proyek ini, pastikan kamu sudah menginstall:
 
-## License
+- PHP (sesuai requirement pada `composer.json`, biasanya 8.x)
+- Composer
+- Node.js & npm
+- MySQL / MariaDB (atau DB lain yang kamu gunakan)
+- Git (opsional, untuk clone repo)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+## 🚀 Cara Menjalankan Proyek Secara Lokal
+
+1. **Clone repository**
+
+   ```bash
+   git clone https://github.com/ghilmanfz/rekrutpro.git
+   cd rekrutpro
+````
+
+2. **Copy file environment**
+
+   ```bash
+   cp .env.example .env
+   ```
+
+3. **Atur konfigurasi database di `.env`**
+
+   Sesuaikan dengan konfigurasi lokal kamu:
+
+   ```env
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=rekrutpro
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ```
+
+4. **Install dependency backend (Composer)**
+
+   ```bash
+   composer install
+   ```
+
+5. **Generate application key**
+
+   ```bash
+   php artisan key:generate
+   ```
+
+6. **Jalankan migrasi (dan seeder jika tersedia)**
+
+   ```bash
+   php artisan migrate
+   # php artisan db:seed   # jika ada seeder
+   ```
+
+7. **Install dependency frontend (npm)**
+
+   ```bash
+   npm install
+   ```
+
+8. **Jalankan build/dev frontend**
+
+   Untuk development:
+
+   ```bash
+   npm run dev
+   ```
+
+   Untuk production build:
+
+   ```bash
+   npm run build
+   ```
+
+9. **Jalankan server Laravel**
+
+   ```bash
+   php artisan serve
+   ```
+
+10. **Akses aplikasi**
+
+    Buka di browser:
+
+    ```text
+    http://localhost:8000
+    ```
+
+---
+
+## 🧪 Testing
+
+Panduan lebih detail terkait testing tersedia di:
+
+* `TESTING_GUIDE.md`
+
+Secara umum, untuk menjalankan test bawaan Laravel:
+
+```bash
+php artisan test
+```
+
+atau
+
+```bash
+./vendor/bin/phpunit
+```
+
+---
+
+## 📂 Struktur & Dokumentasi Tambahan
+
+Dokumen berikut disertakan untuk membantu memahami konteks dan progres pengembangan:
+
+* `README_SISTEM_REKRUTMEN.md` – Deskripsi sistem rekrutmen yang dibangun
+* `INTERVIEWER_FEATURES_COMPLETED.md` – Fitur-fitur terkait interviewer yang sudah selesai
+* `PROGRESS_SUMMARY.md` – Ringkasan progres pengembangan
+* `SESSION_2_SUMMARY.md` – Ringkasan sesi pengembangan tertentu
+* `CHANGELOG.md` – Catatan perubahan versi
+
+---
+
+## 🤝 Kontribusi
+
+Project ini masih dalam tahap pengembangan. Jika ingin berkontribusi:
+
+1. Fork repository ini
+2. Buat branch baru untuk fitur/bugfix kamu:
+
+   ```bash
+   git checkout -b feature/nama-fitur
+   ```
+3. Commit perubahan kamu:
+
+   ```bash
+   git commit -m "Menambahkan fitur X"
+   ```
+4. Push ke branch:
+
+   ```bash
+   git push origin feature/nama-fitur
+   ```
+5. Buat Pull Request ke branch `main`
+
+---
+
+## 📧 Kontak
+
+Jika ada pertanyaan, saran, atau masukan terkait RekrutPro, silakan hubungi pemilik repository melalui GitHub:
+
+* [https://github.com/ghilmanfz](https://github.com/ghilmanfz)
+
+```
