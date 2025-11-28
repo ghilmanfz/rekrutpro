@@ -16,6 +16,8 @@ use App\Http\Controllers\HR\InterviewController;
 use App\Http\Controllers\HR\OfferController;
 use App\Http\Controllers\Candidate\DashboardController as CandidateDashboardController;
 use App\Http\Controllers\Candidate\ApplicationController as CandidateApplicationController;
+use App\Http\Controllers\Candidate\ProfileController as CandidateProfileController;
+use App\Http\Controllers\Candidate\NotificationController as CandidateNotificationController;
 use App\Http\Controllers\Interviewer\DashboardController as InterviewerDashboardController;
 use App\Http\Controllers\Interviewer\AssessmentController;
 use Illuminate\Support\Facades\Route;
@@ -98,9 +100,17 @@ Route::middleware(['auth', 'candidate'])->prefix('candidate')->name('candidate.'
     Route::get('/dashboard', [CandidateDashboardController::class, 'index'])->name('dashboard');
     
     // Applications
+    Route::get('/applications', [CandidateApplicationController::class, 'index'])->name('applications.index');
     Route::get('/jobs/{job}/apply', [CandidateApplicationController::class, 'create'])->name('applications.create');
     Route::post('/applications', [CandidateApplicationController::class, 'store'])->name('applications.store');
     Route::get('/applications/{application}', [CandidateApplicationController::class, 'show'])->name('applications.show');
+    
+    // Profile
+    Route::get('/profile', [CandidateProfileController::class, 'edit'])->name('profile');
+    Route::put('/profile', [CandidateProfileController::class, 'update'])->name('profile.update');
+    
+    // Notifications
+    Route::get('/notifications', [CandidateNotificationController::class, 'index'])->name('notifications');
 });
 
 // Interviewer Routes

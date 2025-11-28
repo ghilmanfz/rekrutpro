@@ -20,6 +20,19 @@ class ApplicationController extends Controller
     }
 
     /**
+     * Show all applications from candidate
+     */
+    public function index()
+    {
+        $applications = Application::with(['jobPosting.division', 'jobPosting.position'])
+            ->where('candidate_id', auth()->id())
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        return view('candidate.applications.index', compact('applications'));
+    }
+
+    /**
      * Show the application form for a specific job
      */
     public function create($jobId)

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $title ?? 'Dashboard Interviewer' }} - RekrutPro</title>
+    <title>{{ $title ?? 'Dashboard Kandidat' }} - RekrutPro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -23,22 +23,28 @@
 
             <!-- Menu -->
             <nav class="p-4">
-                <a href="{{ route('interviewer.dashboard') }}" 
-                   class="flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('interviewer.dashboard') ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50' }} mb-1">
+                <a href="{{ route('candidate.dashboard') }}" 
+                   class="flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('candidate.dashboard') ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50' }} mb-1">
                     <i class="fas fa-home w-5"></i>
                     <span class="font-medium">Dashboard</span>
                 </a>
                 
-                <a href="{{ route('interviewer.interviews.index') }}" 
-                   class="flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('interviewer.interviews.*') ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50' }} mb-1">
-                    <i class="fas fa-calendar-alt w-5"></i>
-                    <span class="font-medium">Interview Saya</span>
+                <a href="{{ route('candidate.applications.index') }}" 
+                   class="flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('candidate.applications.*') ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50' }} mb-1">
+                    <i class="fas fa-file-alt w-5"></i>
+                    <span class="font-medium">Aplikasi Saya</span>
                 </a>
                 
-                <a href="{{ route('interviewer.assessments.index') }}" 
-                   class="flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('interviewer.assessments.*') ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50' }} mb-1">
-                    <i class="fas fa-clipboard-list w-5"></i>
-                    <span class="font-medium">Riwayat Penilaian</span>
+                <a href="{{ route('candidate.profile') }}" 
+                   class="flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('candidate.profile') ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50' }} mb-1">
+                    <i class="fas fa-user w-5"></i>
+                    <span class="font-medium">Profil</span>
+                </a>
+                
+                <a href="{{ route('candidate.notifications') }}" 
+                   class="flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('candidate.notifications') ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50' }} mb-1">
+                    <i class="fas fa-bell w-5"></i>
+                    <span class="font-medium">Notifikasi</span>
                 </a>
             </nav>
 
@@ -48,7 +54,7 @@
                     @csrf
                     <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50">
                         <i class="fas fa-sign-out-alt w-5"></i>
-                        <span class="font-medium">Keluar</span>
+                        <span class="font-medium">Logout</span>
                     </button>
                 </form>
             </div>
@@ -60,7 +66,7 @@
             <div class="bg-white border-b border-gray-200 sticky top-0 z-10">
                 <div class="px-8 py-4 flex items-center justify-between">
                     <div>
-                        {{ $header ?? '' }}
+                        <h1 class="text-2xl font-bold text-gray-900">{{ $header ?? 'Dashboard Kandidat' }}</h1>
                     </div>
                     
                     <!-- User Profile -->

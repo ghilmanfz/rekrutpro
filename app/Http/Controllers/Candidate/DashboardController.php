@@ -34,20 +34,65 @@ class DashboardController extends Controller
             'success' => Application::where('candidate_id', $candidateId)
                 ->whereIn('status', ['offered', 'hired'])
                 ->count(),
+            'rejected' => Application::where('candidate_id', $candidateId)
+                ->where('status', 'like', 'rejected%')
+                ->count(),
         ];
 
         // Get upcoming interviews
         $upcomingInterviews = Interview::whereHas('application', function ($query) use ($candidateId) {
             $query->where('candidate_id', $candidateId);
         })
-            ->with(['application.jobPosting.division'])
+            ->with(['application.jobPosting'])
             ->where('status', 'scheduled')
-            ->where('interview_date', '>=', now())
-            ->orderBy('interview_date')
-            ->orderBy('interview_time')
+            ->where('scheduled_at', '>=', now())
+            ->orderBy('scheduled_at')
             ->limit(5)
             ->get();
 
-        return view('candidate.dashboard', compact('applications', 'stats', 'upcomingInterviews'));
+        // Calculate profile completion
+        $user = auth()->user();
+        $profileFields = [
+            'name', 'email', 'phone', 'address', 
+            'education', 'experience', 'skills'
+        ];
+        
+        $completedFields = 0;
+        foreach ($profileFields as $field) {
+            if (!empty($user->$field)) {
+                $completedFields++;
+            }
+        }
+        $profileCompletion = round(($completedFields / count($profileFields)) * 100);
+
+        // Get recent notifications (sample data - replace with actual notification system later)
+        $notifications = [
+            [
+                'icon' => 'check-circle',
+                'color' => 'green',
+                'title' => 'Lamaran Anda untuk posisi Software Engineer telah diterima',
+                'time' => '2 jam yang lalu'
+            ],
+            [
+                'icon' => 'calendar',
+                'color' => 'blue',
+                'title' => 'Jadwal interview untuk posisi Project Manager',
+                'time' => '5 jam yang lalu'
+            ],
+            [
+                'icon' => 'file-alt',
+                'color' => 'yellow',
+                'title' => 'Dokumen Anda sedang direview',
+                'time' => '1 hari yang lalu'
+            ],
+            [
+                'icon' => 'info-circle',
+                'color' => 'gray',
+                'title' => 'Pembaruan sistem: Fitur baru telah ditambahkan',
+                'time' => '2 hari yang lalu'
+            ],
+        ];
+
+        return view('candidate.dashboard', compact('applications', 'stats', 'upcomingInterviews', 'profileCompletion', 'notifications'));
     }
 }

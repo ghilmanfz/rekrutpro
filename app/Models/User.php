@@ -31,6 +31,13 @@ class User extends Authenticatable
         'otp_code',
         'otp_expires_at',
         'is_verified',
+        'date_of_birth',
+        'education',
+        'experience',
+        'skills',
+        'linkedin_url',
+        'github_url',
+        'portfolio_url',
     ];
 
     /**
