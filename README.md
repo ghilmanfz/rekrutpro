@@ -1,4 +1,3 @@
-Berikut draft isi `README.md` yang bisa kamu pakai untuk repo **rekrutpro**. Silakan copy–paste lalu sesuaikan jika ada detail yang kurang pas.
 
 ````md
 # RekrutPro
