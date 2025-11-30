@@ -12,25 +12,57 @@ Repo ini dibuat sebagai project pembelajaran/pengembangan sistem rekrutmen denga
 
 ## ✨ Fitur Utama (High Level)
 
-Beberapa fitur yang menjadi tujuan/ruang lingkup RekrutPro:
+RekrutPro menyediakan fitur lengkap untuk mengelola seluruh proses rekrutmen:
 
-- Manajemen lowongan:
-  - Membuat dan mengelola posisi/jabatan yang dibuka
-  - Mengatur deskripsi pekerjaan dan kualifikasi
-- Manajemen kandidat:
-  - Menyimpan data kandidat
-  - Melacak status kandidat dalam proses rekrutmen
-- Proses interview:
-  - Mencatat jadwal interview
-  - Mencatat feedback dan hasil interview
-- Dashboard sederhana untuk memantau progres rekrutmen
+### 🎯 Manajemen Lowongan
+- Membuat dan mengelola posisi/jabatan yang dibuka
+- Mengatur deskripsi pekerjaan, kualifikasi, dan requirements
+- Publikasi lowongan dengan status aktif/tidak aktif
+- Filter lowongan berdasarkan divisi, lokasi, dan tipe kontrak
 
-> Catatan: Detail fitur dan progres pengembangan dapat dilihat di:
-> - `README_SISTEM_REKRUTMEN.md`
-> - `INTERVIEWER_FEATURES_COMPLETED.md`
-> - `PROGRESS_SUMMARY.md`
-> - `SESSION_2_SUMMARY.md`
-> - `TESTING_GUIDE.md`
+### 👥 Manajemen Kandidat
+- Registrasi dan profil kandidat lengkap
+- Upload CV dan dokumen pendukung
+- Apply lamaran ke lowongan yang tersedia
+- Tracking status aplikasi real-time
+
+### 📋 Proses Rekrutmen
+- **Screening**: Review aplikasi kandidat oleh HR
+- **Interview**: Penjadwalan dan feedback interview (multi-tahap)
+- **Assessment**: Evaluasi kandidat dengan scoring system
+- **Offering**: Penawaran kerja dengan sistem negosiasi gaji
+- **Hiring**: Finalisasi kandidat yang diterima
+
+### 💼 Sistem Offer Management (NEW! ✨)
+- **Kandidat dapat**:
+  - ✅ Menerima penawaran kerja
+  - ❌ Menolak penawaran dengan alasan
+  - 💬 Mengajukan negosiasi gaji dengan alasan detail
+- **HR dapat**:
+  - ✏️ Edit penawaran yang sudah dibuat (posisi, gaji, benefits, dll)
+  - ✅ Approve negosiasi kandidat (gaji otomatis terupdate)
+  - ❌ Reject negosiasi dengan catatan
+- **Tracking**: Riwayat negosiasi lengkap dengan timeline
+
+### 📊 Dashboard & Reporting
+- Dashboard HR untuk monitoring rekrutmen
+- Dashboard Kandidat untuk tracking aplikasi
+- Statistik dan metrik proses rekrutmen
+- Audit log untuk semua aktivitas penting
+
+### 🔐 Role & Permission Management
+- **Admin**: Full access ke seluruh sistem
+- **HR**: Manage lowongan, review kandidat, manage offers
+- **Interviewer**: Akses ke interview & feedback
+- **Candidate**: Apply lowongan, respond offers, track status
+
+> 📚 **Dokumentasi Lengkap**:
+> - `DOKUMENTASI_ALUR_PROGRAM_LENGKAP.md` - Dokumentasi sistem lengkap (5776+ baris)
+> - `DOKUMENTASI_UPDATE_OFFER_MANAGEMENT.md` - Update fitur Offer Management terbaru
+> - `README_SISTEM_REKRUTMEN.md` - Overview sistem rekrutmen
+> - `INTERVIEWER_FEATURES_COMPLETED.md` - Fitur interviewer
+> - `TESTING_GUIDE.md` - Panduan testing
+> - `CHANGELOG.md` - Riwayat perubahan
 
 ---
 
@@ -38,28 +70,56 @@ Beberapa fitur yang menjadi tujuan/ruang lingkup RekrutPro:
 
 Proyek ini dibangun menggunakan:
 
-- **PHP** dengan **Laravel** (framework utama)
-- **Blade** sebagai templating engine
-- **Tailwind CSS** untuk styling (lihat `tailwind.config.js`)
-- **Vite** sebagai bundler frontend (lihat `vite.config.js`)
-- **MySQL / MariaDB** (atau database relasional lain yang didukung Laravel)
+### Backend
+- **PHP 8.2+** 
+- **Laravel 11.x** - Framework utama
+- **MySQL / MariaDB** - Database relasional
+- **Eloquent ORM** - Database abstraction
 
-Detail versi dependency bisa dilihat pada:
+### Frontend
+- **Blade** - Templating engine
+- **Tailwind CSS** - Utility-first CSS framework
+- **Alpine.js** - Lightweight JavaScript framework
+- **Font Awesome** - Icon library
 
-- `composer.json`
-- `package.json`
+### Build Tools & Development
+- **Vite** - Frontend bundler (lihat `vite.config.js`)
+- **Composer** - PHP dependency manager
+- **npm** - Node package manager
+- **Laravel Sail** (optional) - Docker development environment
+
+### Key Laravel Packages
+- **Laravel Sanctum** - API authentication
+- **Laravel Pint** - Code style fixer
+- **PHPUnit** - Testing framework
+
+Detail versi dependency lengkap:
+- `composer.json` - PHP dependencies
+- `package.json` - JavaScript dependencies
 
 ---
 
 ## 📦 Prasyarat
 
-Sebelum menjalankan proyek ini, pastikan kamu sudah menginstall:
+Sebelum menjalankan proyek ini, pastikan sudah menginstall:
 
-- PHP (sesuai requirement pada `composer.json`, biasanya 8.x)
-- Composer
-- Node.js & npm
-- MySQL / MariaDB (atau DB lain yang kamu gunakan)
-- Git (opsional, untuk clone repo)
+- **PHP 8.2 atau lebih baru**
+- **Composer** (latest version)
+- **Node.js 18+ & npm**
+- **MySQL 8.0+ / MariaDB 10.3+**
+- **Git** (untuk clone repository)
+- **Web Server** (Apache/Nginx) atau gunakan built-in PHP server
+
+### Ekstensi PHP yang Diperlukan:
+- OpenSSL
+- PDO
+- Mbstring
+- Tokenizer
+- XML
+- Ctype
+- JSON
+- BCMath
+- Fileinfo
 
 ---
 
@@ -107,8 +167,21 @@ Sebelum menjalankan proyek ini, pastikan kamu sudah menginstall:
 
    ```bash
    php artisan migrate
-   # php artisan db:seed   # jika ada seeder
    ```
+
+   Untuk generate data dummy (optional):
+
+   ```bash
+   php artisan db:seed
+   ```
+
+   Atau jalankan sekaligus:
+
+   ```bash
+   php artisan migrate:fresh --seed
+   ```
+
+   > ⚠️ **Warning**: `migrate:fresh` akan menghapus semua data yang ada!
 
 7. **Install dependency frontend (npm)**
 
@@ -144,68 +217,246 @@ Sebelum menjalankan proyek ini, pastikan kamu sudah menginstall:
     http://localhost:8000
     ```
 
+### 🎭 Default Users (jika menggunakan seeder)
+
+Jika kamu menjalankan seeder, berikut adalah user default yang bisa digunakan untuk login:
+
+#### Admin
+- Email: `admin@rekrutpro.com`
+- Password: `password`
+
+#### HR
+- Email: `hr@rekrutpro.com`
+- Password: `password`
+
+#### Interviewer
+- Email: `interviewer@rekrutpro.com`
+- Password: `password`
+
+#### Candidate
+- Email: `candidate@rekrutpro.com`
+- Password: `password`
+
+> 💡 **Note**: Ubah password default setelah login pertama kali untuk keamanan!
+
 ---
 
 ## 🧪 Testing
 
-Panduan lebih detail terkait testing tersedia di:
+RekrutPro dilengkapi dengan test suite untuk memastikan kualitas code.
 
-* `TESTING_GUIDE.md`
-
-Secara umum, untuk menjalankan test bawaan Laravel:
+### Menjalankan Tests
 
 ```bash
+# Menjalankan semua tests
 php artisan test
-```
 
-atau
-
-```bash
+# atau menggunakan PHPUnit langsung
 ./vendor/bin/phpunit
+
+# Menjalankan test spesifik
+php artisan test --filter=UserTest
+
+# Dengan coverage report
+php artisan test --coverage
 ```
+
+### Test Structure
+
+- `tests/Feature/` - Feature tests (HTTP, Database, Integration)
+- `tests/Unit/` - Unit tests (Model, Helper, Service)
+
+### Dokumentasi Testing Lengkap
+
+Panduan detail tersedia di **`TESTING_GUIDE.md`**, termasuk:
+- Cara menulis test
+- Best practices
+- Mocking & Factories
+- Database testing
 
 ---
 
 ## 📂 Struktur & Dokumentasi Tambahan
 
-Dokumen berikut disertakan untuk membantu memahami konteks dan progres pengembangan:
+RekrutPro dilengkapi dengan dokumentasi lengkap untuk memudahkan development:
 
-* `README_SISTEM_REKRUTMEN.md` – Deskripsi sistem rekrutmen yang dibangun
-* `INTERVIEWER_FEATURES_COMPLETED.md` – Fitur-fitur terkait interviewer yang sudah selesai
-* `PROGRESS_SUMMARY.md` – Ringkasan progres pengembangan
-* `SESSION_2_SUMMARY.md` – Ringkasan sesi pengembangan tertentu
-* `CHANGELOG.md` – Catatan perubahan versi
+### 📄 Dokumentasi Utama
+- **`DOKUMENTASI_ALUR_PROGRAM_LENGKAP.md`** ⭐ - Dokumentasi sistem lengkap (5776+ baris)
+  - Database schema & ERD
+  - Alur bisnis proses
+  - API endpoints
+  - Controller & Model documentation
+  - Troubleshooting guide
+
+- **`DOKUMENTASI_UPDATE_OFFER_MANAGEMENT.md`** 🆕 - Update terbaru sistem Offer Management
+  - Fitur negosiasi gaji
+  - HR edit offer functionality
+  - Testing scenarios
+  - Code examples
+
+### 📋 Dokumentasi Fitur
+- **`README_SISTEM_REKRUTMEN.md`** - Overview sistem rekrutmen
+- **`INTERVIEWER_FEATURES_COMPLETED.md`** - Fitur-fitur interviewer
+- **`TESTING_GUIDE.md`** - Panduan testing lengkap
+
+### 📊 Progress & History
+- **`CHANGELOG.md`** - Catatan perubahan versi
+- **`PROGRESS_SUMMARY.md`** - Ringkasan progres pengembangan
+- **`SESSION_2_SUMMARY.md`** - Ringkasan sesi pengembangan
+
+### 🗂 Struktur Folder Penting
+
+```
+rekrutpro/
+├── app/
+│   ├── Http/Controllers/
+│   │   ├── Admin/          # Admin controllers
+│   │   ├── HR/             # HR controllers
+│   │   ├── Interviewer/    # Interviewer controllers
+│   │   └── Candidate/      # Candidate controllers
+│   ├── Models/             # Eloquent models
+│   └── Providers/          # Service providers
+├── database/
+│   ├── migrations/         # Database migrations
+│   ├── seeders/            # Database seeders
+│   └── factories/          # Model factories
+├── resources/
+│   ├── views/              # Blade templates
+│   │   ├── admin/
+│   │   ├── hr/
+│   │   ├── interviewer/
+│   │   └── candidate/
+│   ├── css/                # Stylesheets
+│   └── js/                 # JavaScript files
+├── routes/
+│   ├── web.php             # Web routes
+│   └── api.php             # API routes
+└── tests/
+    ├── Feature/            # Feature tests
+    └── Unit/               # Unit tests
+```
 
 ---
 
 ## 🤝 Kontribusi
 
-Project ini masih dalam tahap pengembangan. Jika ingin berkontribusi:
+Project ini masih dalam tahap pengembangan aktif. Kontribusi sangat diterima!
 
-1. Fork repository ini
-2. Buat branch baru untuk fitur/bugfix kamu:
+### Cara Berkontribusi
+
+1. **Fork** repository ini
+2. **Buat branch** baru untuk fitur/bugfix kamu:
 
    ```bash
    git checkout -b feature/nama-fitur
    ```
-3. Commit perubahan kamu:
+
+3. **Commit** perubahan kamu dengan pesan yang jelas:
 
    ```bash
-   git commit -m "Menambahkan fitur X"
+   git commit -m "feat: Menambahkan fitur X"
    ```
-4. Push ke branch:
+
+   Format commit message yang direkomendasikan:
+   - `feat:` untuk fitur baru
+   - `fix:` untuk bugfix
+   - `docs:` untuk perubahan dokumentasi
+   - `refactor:` untuk refactoring code
+   - `test:` untuk menambahkan tests
+
+4. **Push** ke branch kamu:
 
    ```bash
    git push origin feature/nama-fitur
    ```
-5. Buat Pull Request ke branch `main`
+
+5. **Buat Pull Request** ke branch `main` dengan deskripsi lengkap
+
+### Guidelines
+
+- Ikuti coding standard Laravel (PSR-12)
+- Tulis tests untuk fitur baru
+- Update dokumentasi jika diperlukan
+- Pastikan semua tests passing sebelum PR
 
 ---
 
-## 📧 Kontak
+## 🐛 Bug Reports & Feature Requests
 
-Jika ada pertanyaan, saran, atau masukan terkait RekrutPro, silakan hubungi pemilik repository melalui GitHub:
+Jika menemukan bug atau ingin request fitur:
 
-* [https://github.com/ghilmanfz](https://github.com/ghilmanfz)
+1. Cek [Issues](https://github.com/ghilmanfz/rekrutpro/issues) apakah sudah dilaporkan
+2. Jika belum, buat Issue baru dengan detail:
+   - Deskripsi masalah/fitur
+   - Steps to reproduce (untuk bug)
+   - Expected vs Actual behavior
+   - Screenshots (jika perlu)
+   - Environment (PHP version, Laravel version, dll)
+
+---
+
+## 📧 Kontak & Support
+
+### Developer
+- **GitHub**: [@ghilmanfz](https://github.com/ghilmanfz)
+- **Repository**: [rekrutpro](https://github.com/ghilmanfz/rekrutpro)
+
+### Need Help?
+- 📖 Baca dokumentasi lengkap di folder root
+- 🐛 Report bug via [GitHub Issues](https://github.com/ghilmanfz/rekrutpro/issues)
+- 💬 Diskusi di [GitHub Discussions](https://github.com/ghilmanfz/rekrutpro/discussions)
+
+---
+
+## 📜 License
+
+Project ini dibuat untuk tujuan pembelajaran dan pengembangan. 
+
+---
+
+## 🙏 Acknowledgments
+
+Terima kasih kepada:
+- Laravel Framework Team
+- Tailwind CSS Team
+- Open source community
+
+---
+
+## 🚀 Roadmap
+
+### ✅ Completed
+- [x] User authentication & authorization
+- [x] Job posting management
+- [x] Application tracking system
+- [x] Interview scheduling & feedback
+- [x] Offer management with negotiation
+- [x] Audit logging
+- [x] Dashboard & reporting
+
+### 🔄 In Progress
+- [ ] Email notifications
+- [ ] Advanced search & filters
+- [ ] Bulk operations
+- [ ] API documentation
+
+### 📋 Planned
+- [ ] Candidate assessment scoring
+- [ ] Interview video call integration
+- [ ] Mobile responsive optimization
+- [ ] Export to PDF/Excel
+- [ ] Multi-language support
+- [ ] Advanced analytics
+
+---
+
+<div align="center">
+
+**Made with ❤️ using Laravel**
+
+⭐ Star this repo if you find it helpful!
+
+</div>
+
 
 ```
