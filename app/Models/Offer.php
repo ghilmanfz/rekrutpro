@@ -48,6 +48,16 @@ class Offer extends Model
         return $this->belongsTo(User::class, 'offered_by');
     }
 
+    public function negotiations()
+    {
+        return $this->hasMany(OfferNegotiation::class);
+    }
+
+    public function latestNegotiation()
+    {
+        return $this->hasOne(OfferNegotiation::class)->latestOfMany();
+    }
+
     // Scopes
     public function scopePending($query)
     {

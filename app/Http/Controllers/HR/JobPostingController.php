@@ -118,7 +118,10 @@ class JobPostingController extends Controller
         $positions = Position::where('is_active', true)->get();
         $locations = Location::where('is_active', true)->get();
 
-        return view('hr.job-postings.edit', compact('jobPosting', 'divisions', 'positions', 'locations'));
+        // Alias for view compatibility
+        $job = $jobPosting;
+
+        return view('hr.job-postings.edit', compact('jobPosting', 'job', 'divisions', 'positions', 'locations'));
     }
 
     /**
@@ -133,26 +136,26 @@ class JobPostingController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'requirements' => 'required|string',
+            'responsibilities' => 'nullable|string',
             'benefits' => 'nullable|string',
-            'vacancies' => 'required|integer|min:1',
+            'quota' => 'required|integer|min:1',
             'employment_type' => 'required|in:full_time,part_time,contract,internship',
-            'level' => 'required|in:entry,junior,mid,senior,lead,manager',
+            'experience_level' => 'required|in:entry,junior,mid,senior,lead,manager',
             'salary_min' => 'nullable|numeric|min:0',
             'salary_max' => 'nullable|numeric|min:0',
-            'application_deadline' => 'required|date',
-            'expected_start_date' => 'nullable|date',
+            'closed_at' => 'required|date',
+            'status' => 'nullable|in:draft,active,closed,archived',
         ]);
 
         $oldData = $jobPosting->toArray();
         
-        // Handle action button (draft or publish)
-        if ($request->action === 'publish') {
-            $validated['status'] = 'active';
-            if (!$jobPosting->published_at) {
-                $validated['published_at'] = now();
-            }
-        } else {
+        // Handle status and published_at
+        if (!isset($validated['status'])) {
             $validated['status'] = 'draft';
+        }
+        
+        if ($validated['status'] === 'active' && !$jobPosting->published_at) {
+            $validated['published_at'] = now();
         }
 
         $jobPosting->update($validated);
@@ -184,24 +187,53 @@ class JobPostingController extends Controller
 
     /**
      * Generate unique job code
+     * 
+     * IMPORTANT: Uses withTrashed() to include soft-deleted records
+     * This prevents generating duplicate codes when old job postings are soft-deleted
      */
     protected function generateJobCode($positionId)
     {
         $position = Position::find($positionId);
-        $prefix = strtoupper(substr($position->code, 0, 3));
         
-        // Get last job code with same prefix
-        $lastJob = JobPosting::where('code', 'like', $prefix . '%')
-            ->orderBy('code', 'desc')
-            ->first();
-
-        if ($lastJob) {
-            $lastNumber = (int) substr($lastJob->code, -3);
-            $newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
-        } else {
-            $newNumber = '001';
+        // Use full position code as prefix (already unique per position)
+        $prefix = strtoupper($position->code);
+        
+        // Get all job codes with this prefix and extract numbers
+        // CRITICAL: Include soft-deleted records to prevent duplicate codes
+        $existingCodes = JobPosting::withTrashed()
+            ->where('code', 'like', $prefix . '-%')
+            ->pluck('code')
+            ->toArray();
+        
+        // Extract all numbers from existing codes
+        $existingNumbers = [];
+        foreach ($existingCodes as $code) {
+            $parts = explode('-', $code);
+            if (count($parts) >= 2) {
+                $number = (int) end($parts);
+                $existingNumbers[] = $number;
+            }
         }
-
-        return $prefix . '-' . $newNumber;
+        
+        // Find the next available number
+        if (empty($existingNumbers)) {
+            $newNumber = 1;
+        } else {
+            $maxNumber = max($existingNumbers);
+            $newNumber = $maxNumber + 1;
+        }
+        
+        $newCode = $prefix . '-' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
+        
+        // Extra safety: ensure uniqueness with retry logic
+        // CRITICAL: Also check soft-deleted records here
+        $attempts = 0;
+        while (JobPosting::withTrashed()->where('code', $newCode)->exists() && $attempts < 100) {
+            $newNumber++;
+            $newCode = $prefix . '-' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
+            $attempts++;
+        }
+        
+        return $newCode;
     }
 }

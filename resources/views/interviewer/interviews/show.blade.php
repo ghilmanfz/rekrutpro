@@ -85,158 +85,220 @@
 
             <!-- Assessment Form -->
             @if($interview->status == 'scheduled' && !$interview->assessment)
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                        <h2 class="text-lg font-semibold text-gray-900 mb-6">Form Penilaian</h2>
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
+                        <h2 class="text-xl font-bold text-gray-900 mb-2">Form Penilaian Wawancara</h2>
+                        <p class="text-sm text-gray-600 mb-8">Berikan umpan balik terstruktur untuk kandidat dan buat rekomendasi akhir.</p>
                         
                         <form action="{{ route('interviewer.assessments.store', $interview->id) }}" method="POST">
                             @csrf
 
-                            <div class="space-y-6">
-                                <!-- Technical Skills -->
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                                        Technical Skills <span class="text-red-500">*</span>
-                                    </label>
-                                    <div class="flex items-center gap-4">
-                                        <input 
-                                            type="range" 
-                                            name="technical_skills" 
-                                            min="0" 
-                                            max="100" 
-                                            value="{{ old('technical_skills', 50) }}"
-                                            class="flex-1"
-                                            oninput="this.nextElementSibling.value = this.value"
-                                        >
-                                        <output class="w-16 px-3 py-2 border border-gray-300 rounded-lg text-center font-medium">50</output>
+                            <!-- Profil Kandidat Section -->
+                            <div class="mb-8 pb-6 border-b border-gray-200">
+                                <h3 class="text-base font-semibold text-gray-900 mb-4">Profil Kandidat</h3>
+                                <p class="text-sm text-gray-600 mb-4">Detail kandidat ini tersedia di bawah.</p>
+                                
+                                <div class="flex items-center gap-4 bg-gray-50 p-4 rounded-lg">
+                                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center flex-shrink-0">
+                                        <span class="text-white font-bold text-2xl">
+                                            {{ substr($interview->application->candidate->name, 0, 1) }}
+                                        </span>
                                     </div>
-                                    @error('technical_skills')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
-
-                                <!-- Communication Skills -->
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                                        Communication Skills <span class="text-red-500">*</span>
-                                    </label>
-                                    <select name="communication_skills" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                                        <option value="">Pilih...</option>
-                                        <option value="sangat_baik" {{ old('communication_skills') == 'sangat_baik' ? 'selected' : '' }}>Sangat Baik</option>
-                                        <option value="baik" {{ old('communication_skills') == 'baik' ? 'selected' : '' }}>Baik</option>
-                                        <option value="cukup" {{ old('communication_skills') == 'cukup' ? 'selected' : '' }}>Cukup</option>
-                                        <option value="kurang" {{ old('communication_skills') == 'kurang' ? 'selected' : '' }}>Kurang</option>
-                                    </select>
-                                    @error('communication_skills')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
-
-                                <!-- Problem Solving -->
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                                        Problem Solving <span class="text-red-500">*</span>
-                                    </label>
-                                    <div class="flex items-center gap-4">
-                                        <input 
-                                            type="range" 
-                                            name="problem_solving" 
-                                            min="0" 
-                                            max="100" 
-                                            value="{{ old('problem_solving', 50) }}"
-                                            class="flex-1"
-                                            oninput="this.nextElementSibling.value = this.value"
-                                        >
-                                        <output class="w-16 px-3 py-2 border border-gray-300 rounded-lg text-center font-medium">50</output>
+                                    <div>
+                                        <h4 class="text-lg font-bold text-gray-900">{{ $interview->application->candidate->name }}</h4>
+                                        <p class="text-sm text-gray-600">Posisi Dilamar: {{ $interview->application->jobPosting->title }}</p>
+                                        <p class="text-sm text-gray-500">ID Aplikasi: {{ $interview->application->application_code ?? $interview->application->code ?? 'APP-' . $interview->application->id }}</p>
                                     </div>
-                                    @error('problem_solving')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
-
-                                <!-- Teamwork Potential -->
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                                        Teamwork Potential <span class="text-red-500">*</span>
-                                    </label>
-                                    <select name="teamwork_potential" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                                        <option value="">Pilih...</option>
-                                        <option value="tinggi" {{ old('teamwork_potential') == 'tinggi' ? 'selected' : '' }}>Tinggi</option>
-                                        <option value="sedang" {{ old('teamwork_potential') == 'sedang' ? 'selected' : '' }}>Sedang</option>
-                                        <option value="rendah" {{ old('teamwork_potential') == 'rendah' ? 'selected' : '' }}>Rendah</option>
-                                    </select>
-                                    @error('teamwork_potential')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
-
-                                <!-- Overall Score -->
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                                        Overall Score <span class="text-red-500">*</span>
-                                    </label>
-                                    <div class="flex items-center gap-4">
-                                        <input 
-                                            type="range" 
-                                            name="overall_score" 
-                                            min="0" 
-                                            max="100" 
-                                            value="{{ old('overall_score', 50) }}"
-                                            class="flex-1"
-                                            oninput="this.nextElementSibling.value = this.value"
-                                        >
-                                        <output class="w-16 px-3 py-2 border border-gray-300 rounded-lg text-center font-medium bg-blue-50 text-blue-600">50</output>
-                                    </div>
-                                    @error('overall_score')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
-
-                                <!-- Recommendation -->
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                                        Recommendation <span class="text-red-500">*</span>
-                                    </label>
-                                    <select name="recommendation" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                                        <option value="">Pilih...</option>
-                                        <option value="sangat_direkomendasikan" {{ old('recommendation') == 'sangat_direkomendasikan' ? 'selected' : '' }}>Sangat Direkomendasikan</option>
-                                        <option value="direkomendasikan" {{ old('recommendation') == 'direkomendasikan' ? 'selected' : '' }}>Direkomendasikan</option>
-                                        <option value="cukup" {{ old('recommendation') == 'cukup' ? 'selected' : '' }}>Cukup</option>
-                                        <option value="tidak_direkomendasikan" {{ old('recommendation') == 'tidak_direkomendasikan' ? 'selected' : '' }}>Tidak Direkomendasikan</option>
-                                    </select>
-                                    @error('recommendation')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
-
-                                <!-- Notes -->
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                                        Notes <span class="text-red-500">*</span>
-                                    </label>
-                                    <textarea 
-                                        name="notes" 
-                                        rows="4" 
-                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                                        placeholder="Berikan catatan detail tentang hasil interview..."
-                                    >{{ old('notes') }}</textarea>
-                                    @error('notes')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
-
-                                <!-- Submit Button -->
-                                <div class="flex gap-3">
-                                    <button type="submit" class="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 font-medium">
-                                        <i class="fas fa-save mr-2"></i>Simpan Penilaian
-                                    </button>
-                                    <a href="{{ route('interviewer.interviews.index') }}" 
-                                       class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
-                                        Batal
+                                    <a href="#" class="ml-auto text-blue-600 hover:text-blue-700 text-sm font-medium">
+                                        Lihat Profil Lengkap →
                                     </a>
                                 </div>
                             </div>
+
+                            <!-- Kriteria Penilaian Section -->
+                            <div class="mb-8">
+                                <h3 class="text-base font-semibold text-gray-900 mb-4">Kriteria Penilaian</h3>
+                                <p class="text-sm text-gray-600 mb-6">Berikan nilai untuk setiap kriteria berdasarkan performa kandidat.</p>
+                                
+                                <div class="space-y-8">
+                                    <!-- Keterampilan Teknis -->
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-800 mb-2">
+                                            Keterampilan Teknis
+                                        </label>
+                                        <p class="text-xs text-gray-600 mb-3">Kemampuan kandidat dalam menyelesaikan masalah teknis dan pemahaman konsep IT.</p>
+                                        <div class="flex items-center gap-4">
+                                            <input 
+                                                type="range" 
+                                                name="technical_score" 
+                                                id="technical_score"
+                                                min="0" 
+                                                max="100" 
+                                                value="{{ old('technical_score', 0) }}"
+                                                class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                                                oninput="document.getElementById('technical_score_output').value = this.value"
+                                            >
+                                            <output id="technical_score_output" class="w-12 text-right text-lg font-bold text-gray-900">{{ old('technical_score', 0) }}</output>
+                                        </div>
+                                        @error('technical_score')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    <!-- Kemampuan Komunikasi -->
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-800 mb-2">
+                                            Kemampuan Komunikasi
+                                        </label>
+                                        <p class="text-xs text-gray-600 mb-3">Kejelasan, kemampuan, dan kemampuan kandidat untuk menyampaikan ide-ide secara efektif.</p>
+                                        <div class="space-y-2">
+                                            <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                                                <input type="radio" name="communication_skill" value="sangat_baik" {{ old('communication_skill') == 'sangat_baik' ? 'checked' : '' }} class="w-4 h-4 text-blue-600">
+                                                <span class="ml-3 text-sm text-gray-900">Sangat Baik</span>
+                                            </label>
+                                            <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                                                <input type="radio" name="communication_skill" value="baik" {{ old('communication_skill') == 'baik' ? 'checked' : '' }} class="w-4 h-4 text-blue-600">
+                                                <span class="ml-3 text-sm text-gray-900">Baik</span>
+                                            </label>
+                                            <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                                                <input type="radio" name="communication_skill" value="cukup" {{ old('communication_skill') == 'cukup' ? 'checked' : '' }} class="w-4 h-4 text-blue-600">
+                                                <span class="ml-3 text-sm text-gray-900">Cukup</span>
+                                            </label>
+                                            <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                                                <input type="radio" name="communication_skill" value="kurang" {{ old('communication_skill') == 'kurang' ? 'checked' : '' }} class="w-4 h-4 text-blue-600">
+                                                <span class="ml-3 text-sm text-gray-900">Kurang</span>
+                                            </label>
+                                        </div>
+                                        @error('communication_skill')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    <!-- Pemecahan Masalah -->
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-800 mb-2">
+                                            Pemecahan Masalah
+                                        </label>
+                                        <p class="text-xs text-gray-600 mb-3">Pendekatan kandidat terhadap masalah kompleks dan efektivitas solusinya.</p>
+                                        <div class="flex items-center gap-4">
+                                            <input 
+                                                type="range" 
+                                                name="problem_solving_score" 
+                                                id="problem_solving_score"
+                                                min="0" 
+                                                max="100" 
+                                                value="{{ old('problem_solving_score', 0) }}"
+                                                class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                                                oninput="document.getElementById('problem_solving_score_output').value = this.value"
+                                            >
+                                            <output id="problem_solving_score_output" class="w-12 text-right text-lg font-bold text-gray-900">{{ old('problem_solving_score', 0) }}</output>
+                                        </div>
+                                        @error('problem_solving_score')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    <!-- Potensi Kerja Tim -->
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-800 mb-2">
+                                            Potensi Kerja Tim
+                                        </label>
+                                        <p class="text-xs text-gray-600 mb-3">Kemampuan kandidat untuk bekerja/kolaborasi dan berkontribusi dalam lingkungan tim.</p>
+                                        <div class="space-y-2">
+                                            <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                                                <input type="radio" name="teamwork_potential" value="tinggi" {{ old('teamwork_potential') == 'tinggi' ? 'checked' : '' }} class="w-4 h-4 text-blue-600">
+                                                <span class="ml-3 text-sm text-gray-900">Tinggi</span>
+                                            </label>
+                                            <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                                                <input type="radio" name="teamwork_potential" value="sedang" {{ old('teamwork_potential') == 'sedang' ? 'checked' : '' }} class="w-4 h-4 text-blue-600">
+                                                <span class="ml-3 text-sm text-gray-900">Sedang</span>
+                                            </label>
+                                            <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                                                <input type="radio" name="teamwork_potential" value="rendah" {{ old('teamwork_potential') == 'rendah' ? 'checked' : '' }} class="w-4 h-4 text-blue-600">
+                                                <span class="ml-3 text-sm text-gray-900">Rendah</span>
+                                            </label>
+                                        </div>
+                                        @error('teamwork_potential')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Catatan Tambahan Section -->
+                            <div class="mb-8 pb-6 border-b border-gray-200">
+                                <h3 class="text-base font-semibold text-gray-900 mb-4">Catatan Tambahan</h3>
+                                <p class="text-sm text-gray-600 mb-4">Sertakan catatan atau observasi penting lainnya tentang kandidat.</p>
+                                
+                                <textarea 
+                                    name="additional_notes" 
+                                    rows="5" 
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                                    placeholder="Tuliskan catatan detail Anda di sini..."
+                                >{{ old('additional_notes') }}</textarea>
+                                @error('additional_notes')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Rekomendasi Akhir Section -->
+                            <div class="mb-8">
+                                <h3 class="text-base font-semibold text-gray-900 mb-4">Rekomendasi Akhir</h3>
+                                <p class="text-sm text-gray-600 mb-4">Pilih rekomendasi keseluruhan untuk kandidat ini.</p>
+                                
+                                <div class="space-y-2">
+                                    <label class="flex items-center p-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition has-[:checked]:border-green-500 has-[:checked]:bg-green-50">
+                                        <input type="radio" name="recommendation" value="sangat_direkomendasikan" {{ old('recommendation') == 'sangat_direkomendasikan' ? 'checked' : '' }} class="w-4 h-4 text-green-600">
+                                        <span class="ml-3 text-sm font-medium text-gray-900">Sangat Direkomendasikan</span>
+                                    </label>
+                                    <label class="flex items-center p-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50">
+                                        <input type="radio" name="recommendation" value="direkomendasikan" {{ old('recommendation') == 'direkomendasikan' ? 'checked' : '' }} class="w-4 h-4 text-blue-600">
+                                        <span class="ml-3 text-sm font-medium text-gray-900">Direkomendasikan</span>
+                                    </label>
+                                    <label class="flex items-center p-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition has-[:checked]:border-red-500 has-[:checked]:bg-red-50">
+                                        <input type="radio" name="recommendation" value="tidak_direkomendasikan" {{ old('recommendation') == 'tidak_direkomendasikan' ? 'checked' : '' }} class="w-4 h-4 text-red-600">
+                                        <span class="ml-3 text-sm font-medium text-gray-900">Tidak Direkomendasikan</span>
+                                    </label>
+                                </div>
+                                @error('recommendation')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Overall Score (Hidden/Auto-calculated atau bisa ditampilkan) -->
+                            <input type="hidden" name="overall_score" id="overall_score" value="{{ old('overall_score', 50) }}">
+
+                            <!-- Submit Button -->
+                            <div class="flex gap-3 pt-6 border-t border-gray-200">
+                                <button type="submit" class="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 font-semibold transition">
+                                    Kirim Penilaian
+                                </button>
+                                <a href="{{ route('interviewer.interviews.index') }}" 
+                                   class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition">
+                                    Batal
+                                </a>
+                            </div>
                         </form>
                     </div>
+
+                    <!-- Auto-calculate Overall Score based on inputs -->
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const technicalSkills = document.getElementById('technical_skills');
+                            const problemSolving = document.getElementById('problem_solving');
+                            const overallScore = document.getElementById('overall_score');
+                            
+                            function calculateOverallScore() {
+                                const tech = parseInt(technicalSkills.value) || 0;
+                                const prob = parseInt(problemSolving.value) || 0;
+                                const overall = Math.round((tech + prob) / 2);
+                                overallScore.value = overall;
+                            }
+                            
+                            technicalSkills.addEventListener('input', calculateOverallScore);
+                            problemSolving.addEventListener('input', calculateOverallScore);
+                            calculateOverallScore();
+                        });
+                    </script>
                 @elseif($interview->assessment)
                     <!-- Show Assessment Result -->
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">

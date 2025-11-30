@@ -6,6 +6,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class User extends Authenticatable
 {
@@ -26,11 +28,21 @@ class User extends Authenticatable
         'phone',
         'address',
         'profile_photo',
+        'cv_path',
         'is_active',
         'last_login_at',
         'otp_code',
         'otp_expires_at',
         'is_verified',
+        'date_of_birth',
+        'education',
+        'experience',
+        'skills',
+        'linkedin_url',
+        'github_url',
+        'portfolio_url',
+        'registration_step',
+        'registration_completed',
     ];
 
     /**
@@ -58,6 +70,7 @@ class User extends Authenticatable
             'otp_expires_at' => 'datetime',
             'is_active' => 'boolean',
             'is_verified' => 'boolean',
+            'registration_completed' => 'boolean',
         ];
     }
 
@@ -90,6 +103,47 @@ class User extends Authenticatable
     public function createdJobPostings()
     {
         return $this->hasMany(JobPosting::class, 'created_by');
+    }
+
+    // Model Events
+    protected static function booted()
+    {
+        // Auto-assign candidate role to users created without role_id
+        static::creating(function ($user) {
+            if (empty($user->role_id)) {
+                $candidateRole = Role::where('name', 'candidate')->first();
+                if ($candidateRole) {
+                    $user->role_id = $candidateRole->id;
+                    \Log::info('Auto-assigned candidate role to user during creation', ['email' => $user->email]);
+                }
+            }
+            
+            // Auto-complete registration for internal users (super_admin, hr, interviewer)
+            // They don't need to go through 5-step registration flow
+            if (!empty($user->role_id)) {
+                $internalRoleIds = [1, 2, 3]; // super_admin, hr, interviewer
+                if (in_array($user->role_id, $internalRoleIds)) {
+                    $user->registration_completed = true;
+                    $user->is_verified = true;
+                    $user->is_active = true;
+                    \Log::info('Auto-completed registration for internal user', [
+                        'email' => $user->email, 
+                        'role_id' => $user->role_id
+                    ]);
+                }
+            }
+        });
+
+        // Ensure role_id is never NULL after save
+        static::saved(function ($user) {
+            if (empty($user->role_id)) {
+                $candidateRole = Role::where('name', 'candidate')->first();
+                if ($candidateRole) {
+                    DB::table('users')->where('id', $user->id)->update(['role_id' => $candidateRole->id]);
+                    \Log::warning('Fixed NULL role_id after save', ['user_id' => $user->id, 'email' => $user->email]);
+                }
+            }
+        });
     }
 
     // Helper methods

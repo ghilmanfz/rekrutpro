@@ -222,8 +222,7 @@
                                 <div>
                                     <p class="text-sm text-gray-600">Tanggal & Waktu</p>
                                     <p class="font-medium text-gray-900">
-                                        {{ \Carbon\Carbon::parse($interview->interview_date)->format('d M Y') }} - 
-                                        {{ \Carbon\Carbon::parse($interview->interview_time)->format('H:i') }} WIB
+                                        {{ $interview->scheduled_at->format('d M Y, H:i') }} WIB
                                     </p>
                                 </div>
                                 <div>
@@ -242,14 +241,33 @@
                 @endif
 
                 <!-- Job Offer -->
-                @if($application->offers()->exists())
-                    @php $offer = $application->offers()->latest()->first(); @endphp
+                @if($application->offer)
+                    @php $offer = $application->offer; @endphp
                     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                        <h2 class="text-lg font-semibold text-gray-900 mb-4">Penawaran Kerja</h2>
-                        <div class="space-y-3">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-lg font-semibold text-gray-900">Penawaran Kerja</h2>
+                            <span class="px-3 py-1 text-sm font-semibold rounded-full
+                                @if($offer->status === 'pending') bg-yellow-100 text-yellow-800
+                                @elseif($offer->status === 'accepted') bg-green-100 text-green-800
+                                @elseif($offer->status === 'rejected') bg-red-100 text-red-800
+                                @else bg-gray-100 text-gray-800
+                                @endif">
+                                @if($offer->status === 'pending') Menunggu Respons Anda
+                                @elseif($offer->status === 'accepted') Diterima
+                                @elseif($offer->status === 'rejected') Ditolak
+                                @else Kadaluarsa
+                                @endif
+                            </span>
+                        </div>
+
+                        <div class="space-y-3 mb-6">
+                            <div>
+                                <p class="text-sm text-gray-600">Posisi</p>
+                                <p class="font-semibold text-gray-900">{{ $offer->position_title }}</p>
+                            </div>
                             <div>
                                 <p class="text-sm text-gray-600">Gaji yang Ditawarkan</p>
-                                <p class="font-medium text-gray-900">Rp {{ number_format($offer->offered_salary, 0, ',', '.') }}</p>
+                                <p class="text-xl font-bold text-green-600">Rp {{ number_format($offer->salary, 0, ',', '.') }}</p>
                             </div>
                             <div>
                                 <p class="text-sm text-gray-600">Tipe Kontrak</p>
@@ -259,17 +277,241 @@
                                 <p class="text-sm text-gray-600">Tanggal Mulai</p>
                                 <p class="font-medium text-gray-900">{{ \Carbon\Carbon::parse($offer->start_date)->format('d M Y') }}</p>
                             </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Berlaku Hingga</p>
+                                <p class="font-medium text-gray-900">{{ \Carbon\Carbon::parse($offer->valid_until)->format('d M Y') }}</p>
+                            </div>
                             @if($offer->benefits)
                                 <div>
-                                    <p class="text-sm text-gray-600">Benefits</p>
+                                    <p class="text-sm text-gray-600">Benefits & Fasilitas</p>
                                     <p class="text-gray-900">{{ $offer->benefits }}</p>
                                 </div>
                             @endif
                         </div>
+
+                        @if($offer->status === 'pending')
+                            <!-- Action Buttons for Pending Offers -->
+                            <div class="border-t-4 border-blue-300 pt-6 mt-6 bg-gradient-to-br from-blue-100 to-indigo-100 -mx-6 -mb-6 px-6 pb-8 rounded-b-xl shadow-lg">
+                                <div class="text-center mb-6">
+                                    <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full mb-3 animate-pulse">
+                                        <i class="fas fa-exclamation text-white text-3xl"></i>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-gray-900 mb-2">Respons Anda Diperlukan!</h3>
+                                    <p class="text-sm text-gray-700">
+                                        Silakan pilih salah satu dari 3 opsi di bawah ini:
+                                    </p>
+                                </div>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <!-- Accept Button -->
+                                    <form action="{{ route('candidate.offers.accept', $offer) }}" method="POST" 
+                                          onsubmit="return confirm('Apakah Anda yakin ingin MENERIMA penawaran ini? Anda akan menjadi karyawan tetap.')">
+                                        @csrf
+                                        <button type="submit" 
+                                                class="w-full px-6 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:from-green-600 hover:to-green-700 font-bold text-lg shadow-2xl hover:shadow-green-500/50 transition-all transform hover:scale-105 border-2 border-green-400">
+                                            <i class="fas fa-check-circle text-2xl mb-2 block"></i>
+                                            <span class="block">Terima Tawaran</span>
+                                        </button>
+                                    </form>
+
+                                    <!-- Negotiate Button -->
+                                    <button type="button" 
+                                            onclick="document.getElementById('negotiateModal').classList.remove('hidden')"
+                                            class="w-full px-6 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 font-bold text-lg shadow-2xl hover:shadow-blue-500/50 transition-all transform hover:scale-105 border-2 border-blue-400">
+                                        <i class="fas fa-handshake text-2xl mb-2 block"></i>
+                                        <span class="block">Ajukan Negosiasi</span>
+                                    </button>
+
+                                    <!-- Reject Button -->
+                                    <button type="button" 
+                                            onclick="document.getElementById('rejectModal').classList.remove('hidden')"
+                                            class="w-full px-6 py-4 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl hover:from-red-600 hover:to-red-700 font-bold text-lg shadow-2xl hover:shadow-red-500/50 transition-all transform hover:scale-105 border-2 border-red-400">
+                                        <i class="fas fa-times-circle text-2xl mb-2 block"></i>
+                                        <span class="block">Tolak Tawaran</span>
+                                    </button>
+                                </div>
+                            </div>
+                        @elseif($offer->status === 'accepted')
+                            <div class="border-t pt-4 bg-green-50 -m-6 mt-0 p-6 rounded-b-xl">
+                                <div class="flex items-center text-green-800">
+                                    <i class="fas fa-check-circle text-2xl mr-3"></i>
+                                    <div>
+                                        <p class="font-semibold">Selamat! Anda telah menerima penawaran ini</p>
+                                        <p class="text-sm">Diterima pada: {{ $offer->responded_at->format('d M Y, H:i') }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        @elseif($offer->status === 'rejected')
+                            <div class="border-t pt-4 bg-red-50 -m-6 mt-0 p-6 rounded-b-xl">
+                                <div class="flex items-center text-red-800">
+                                    <i class="fas fa-times-circle text-2xl mr-3"></i>
+                                    <div>
+                                        <p class="font-semibold">Anda telah menolak penawaran ini</p>
+                                        <p class="text-sm">Ditolak pada: {{ $offer->responded_at->format('d M Y, H:i') }}</p>
+                                        @if($offer->rejection_reason)
+                                            <p class="text-sm mt-1">Alasan: {{ $offer->rejection_reason }}</p>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
+                        <!-- Check for pending negotiation -->
+                        @if($offer->latestNegotiation && $offer->latestNegotiation->status === 'pending')
+                            <div class="border-t pt-4 mt-4 bg-blue-50 -m-6 mt-0 p-6">
+                                <div class="flex items-start">
+                                    <i class="fas fa-info-circle text-blue-600 text-xl mr-3 mt-1"></i>
+                                    <div class="flex-1">
+                                        <p class="font-semibold text-blue-900 mb-2">Negosiasi Sedang Diproses</p>
+                                        <div class="text-sm text-blue-800 space-y-1">
+                                            <p>Gaji yang Anda ajukan: <span class="font-semibold">Rp {{ number_format($offer->latestNegotiation->proposed_salary, 0, ',', '.') }}</span></p>
+                                            @if($offer->latestNegotiation->candidate_notes)
+                                                <p>Catatan: {{ $offer->latestNegotiation->candidate_notes }}</p>
+                                            @endif
+                                            <p class="text-xs text-blue-600 mt-2">Diajukan pada: {{ $offer->latestNegotiation->created_at->format('d M Y, H:i') }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @elseif($offer->latestNegotiation && $offer->latestNegotiation->status === 'approved')
+                            <div class="border-t pt-4 mt-4 bg-green-50 -m-6 mt-0 p-6">
+                                <div class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-600 text-xl mr-3 mt-1"></i>
+                                    <div class="flex-1">
+                                        <p class="font-semibold text-green-900 mb-2">Negosiasi Disetujui!</p>
+                                        <div class="text-sm text-green-800 space-y-1">
+                                            <p>HR telah menyetujui negosiasi Anda. Penawaran telah diperbarui dengan gaji baru.</p>
+                                            @if($offer->latestNegotiation->hr_notes)
+                                                <p>Catatan HR: {{ $offer->latestNegotiation->hr_notes }}</p>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @elseif($offer->latestNegotiation && $offer->latestNegotiation->status === 'rejected')
+                            <div class="border-t pt-4 mt-4 bg-red-50 -m-6 mt-0 p-6">
+                                <div class="flex items-start">
+                                    <i class="fas fa-times-circle text-red-600 text-xl mr-3 mt-1"></i>
+                                    <div class="flex-1">
+                                        <p class="font-semibold text-red-900 mb-2">Negosiasi Ditolak</p>
+                                        <div class="text-sm text-red-800 space-y-1">
+                                            <p>Maaf, negosiasi Anda tidak dapat disetujui.</p>
+                                            @if($offer->latestNegotiation->hr_notes)
+                                                <p>Catatan HR: {{ $offer->latestNegotiation->hr_notes }}</p>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 @endif
             </div>
         </div>
     </div>
 </div>
+
+<!-- Negotiate Modal -->
+<div id="negotiateModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+    <div class="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-lg bg-white">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold text-gray-900">Ajukan Negosiasi Gaji</h3>
+            <button onclick="document.getElementById('negotiateModal').classList.add('hidden')" 
+                    class="text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        
+        <form action="{{ route('candidate.offers.negotiate', $application->offer ?? 0) }}" method="POST">
+            @csrf
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Gaji yang Anda Ajukan (Rp) <span class="text-red-500">*</span>
+                    </label>
+                    <input type="number" 
+                           name="proposed_salary" 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                           min="0"
+                           step="100000"
+                           required
+                           placeholder="Contoh: 15000000">
+                    <p class="text-xs text-gray-500 mt-1">Gaji saat ini: Rp {{ number_format($application->offer->salary ?? 0, 0, ',', '.') }}</p>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Alasan Negosiasi <span class="text-red-500">*</span>
+                    </label>
+                    <textarea name="candidate_notes" 
+                              rows="4"
+                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                              required
+                              placeholder="Jelaskan alasan Anda mengajukan negosiasi gaji..."></textarea>
+                    <p class="text-xs text-gray-500 mt-1">Berikan alasan yang jelas dan profesional</p>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-3 mt-6">
+                <button type="button" 
+                        onclick="document.getElementById('negotiateModal').classList.add('hidden')"
+                        class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+                    Batal
+                </button>
+                <button type="submit" 
+                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                    Kirim Negosiasi
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Reject Modal -->
+<div id="rejectModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+    <div class="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-lg bg-white">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold text-gray-900">Tolak Penawaran</h3>
+            <button onclick="document.getElementById('rejectModal').classList.add('hidden')" 
+                    class="text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        
+        <form action="{{ route('candidate.offers.reject', $application->offer ?? 0) }}" method="POST">
+            @csrf
+            <div class="space-y-4">
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                    <p class="text-sm text-yellow-800">
+                        <i class="fas fa-exclamation-triangle mr-2"></i>
+                        <strong>Perhatian:</strong> Setelah menolak penawaran, status aplikasi Anda akan berubah dan Anda tidak dapat mengubahnya kembali.
+                    </p>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Alasan Penolakan (Opsional)
+                    </label>
+                    <textarea name="rejection_reason" 
+                              rows="4"
+                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                              placeholder="Anda dapat memberikan alasan penolakan..."></textarea>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-3 mt-6">
+                <button type="button" 
+                        onclick="document.getElementById('rejectModal').classList.add('hidden')"
+                        class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+                    Batal
+                </button>
+                <button type="submit" 
+                        class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                    Ya, Tolak Penawaran
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 @endsection

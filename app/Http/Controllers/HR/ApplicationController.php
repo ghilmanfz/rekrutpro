@@ -45,7 +45,13 @@ class ApplicationController extends Controller
      */
     public function show(Application $application)
     {
-        $application->load(['candidate', 'jobPosting.position', 'jobPosting.division', 'jobPosting.location']);
+        $application->load([
+            'candidate', 
+            'jobPosting.position', 
+            'jobPosting.division', 
+            'jobPosting.location',
+            'offer' // Load offer relationship
+        ]);
 
         return view('hr.applications.show', compact('application'));
     }

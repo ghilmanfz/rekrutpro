@@ -61,9 +61,9 @@ class PublicJobController extends Controller
 
         // Check if user already applied (if authenticated)
         $hasApplied = false;
-        if (auth()->check() && auth()->user()->role->name === 'Candidate') {
+        if (auth()->check() && auth()->user()->role->name === 'candidate') {
             $hasApplied = $job->applications()
-                ->where('user_id', auth()->id())
+                ->where('candidate_id', auth()->id())
                 ->exists();
         }
 

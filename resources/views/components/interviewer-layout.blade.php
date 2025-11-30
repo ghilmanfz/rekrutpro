@@ -44,11 +44,6 @@
 
             <!-- Bottom Menu -->
             <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
-                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 mb-1">
-                    <i class="fas fa-cog w-5"></i>
-                    <span class="font-medium">Pengaturan</span>
-                </a>
-                
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50">

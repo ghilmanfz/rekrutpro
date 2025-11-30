@@ -12,6 +12,13 @@ class DashboardController extends Controller
     public function index()
     {
         $user = auth()->user();
+        
+        // Check if user has role
+        if (!$user->role) {
+            auth()->logout();
+            return redirect()->route('login')->with('error', 'Akun Anda belum memiliki role. Silakan hubungi administrator.');
+        }
+
         $roleName = $user->role->name;
 
         // Redirect based on role

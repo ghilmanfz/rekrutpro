@@ -14,14 +14,7 @@ class Application extends Model
         'application_code',
         'job_posting_id',
         'candidate_id',
-        'full_name',
-        'email',
-        'phone',
-        'address',
-        'birth_date',
-        'gender',
-        'education',
-        'experience',
+        'candidate_snapshot', // Snapshot data kandidat saat apply
         'cv_file',
         'cover_letter',
         'portfolio_file',
@@ -41,9 +34,7 @@ class Application extends Model
     protected function casts(): array
     {
         return [
-            'birth_date' => 'date',
-            'education' => 'array',
-            'experience' => 'array',
+            'candidate_snapshot' => 'array', // Cast JSON ke array
             'other_documents' => 'array',
             'reviewed_at' => 'datetime',
             'screening_passed_at' => 'datetime',
@@ -84,6 +75,69 @@ class Application extends Model
     public function scopeSubmitted($query)
     {
         return $query->where('status', 'submitted');
+    }
+
+    // Accessor methods untuk kemudahan akses data snapshot
+    public function getCandidateNameAttribute()
+    {
+        return $this->candidate_snapshot['full_name'] ?? $this->candidate->full_name ?? 'N/A';
+    }
+
+    public function getCandidateEmailAttribute()
+    {
+        return $this->candidate_snapshot['email'] ?? $this->candidate->email ?? 'N/A';
+    }
+
+    public function getCandidatePhoneAttribute()
+    {
+        return $this->candidate_snapshot['phone'] ?? $this->candidate->phone ?? 'N/A';
+    }
+
+    public function getCandidateAddressAttribute()
+    {
+        return $this->candidate_snapshot['address'] ?? $this->candidate->address ?? 'N/A';
+    }
+
+    public function getCandidateBirthDateAttribute()
+    {
+        return $this->candidate_snapshot['birth_date'] ?? null;
+    }
+
+    public function getCandidateGenderAttribute()
+    {
+        return $this->candidate_snapshot['gender'] ?? $this->candidate->gender ?? 'N/A';
+    }
+
+    public function getCandidateEducationAttribute()
+    {
+        return $this->candidate_snapshot['education'] ?? [];
+    }
+
+    public function getCandidateExperienceAttribute()
+    {
+        return $this->candidate_snapshot['experience'] ?? [];
+    }
+
+    public function getCandidateProfilePhotoAttribute()
+    {
+        return $this->candidate_snapshot['profile_photo'] ?? $this->candidate->profile_photo ?? null;
+    }
+
+    /**
+     * Check apakah kandidat telah mengupdate profil setelah apply
+     */
+    public function hasProfileChangedSinceApply()
+    {
+        if (!$this->candidate_snapshot) {
+            return false;
+        }
+
+        $snapshot = $this->candidate_snapshot;
+        $current = $this->candidate;
+
+        return $snapshot['email'] !== $current->email ||
+               $snapshot['phone'] !== $current->phone ||
+               $snapshot['full_name'] !== $current->full_name;
     }
 
     public function scopeScreeningPassed($query)

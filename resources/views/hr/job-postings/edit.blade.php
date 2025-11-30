@@ -122,31 +122,31 @@
                     <!-- Level -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Level <span class="text-red-500">*</span>
+                            Level Pengalaman <span class="text-red-500">*</span>
                         </label>
                         <select 
-                            name="level" 
+                            name="experience_level" 
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             required
                         >
-                            <option value="entry" {{ old('level', $job->level) == 'entry' ? 'selected' : '' }}>Entry Level</option>
-                            <option value="junior" {{ old('level', $job->level) == 'junior' ? 'selected' : '' }}>Junior</option>
-                            <option value="mid" {{ old('level', $job->level) == 'mid' ? 'selected' : '' }}>Mid Level</option>
-                            <option value="senior" {{ old('level', $job->level) == 'senior' ? 'selected' : '' }}>Senior</option>
-                            <option value="lead" {{ old('level', $job->level) == 'lead' ? 'selected' : '' }}>Lead</option>
-                            <option value="manager" {{ old('level', $job->level) == 'manager' ? 'selected' : '' }}>Manager</option>
+                            <option value="entry" {{ old('experience_level', $job->experience_level) == 'entry' ? 'selected' : '' }}>Entry Level</option>
+                            <option value="junior" {{ old('experience_level', $job->experience_level) == 'junior' ? 'selected' : '' }}>Junior</option>
+                            <option value="mid" {{ old('experience_level', $job->experience_level) == 'mid' ? 'selected' : '' }}>Mid Level</option>
+                            <option value="senior" {{ old('experience_level', $job->experience_level) == 'senior' ? 'selected' : '' }}>Senior</option>
+                            <option value="lead" {{ old('experience_level', $job->experience_level) == 'lead' ? 'selected' : '' }}>Lead</option>
+                            <option value="manager" {{ old('experience_level', $job->experience_level) == 'manager' ? 'selected' : '' }}>Manager</option>
                         </select>
                     </div>
 
-                    <!-- Vacancies -->
+                    <!-- Quota -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             Jumlah Lowongan <span class="text-red-500">*</span>
                         </label>
                         <input 
                             type="number" 
-                            name="vacancies" 
-                            value="{{ old('vacancies', $job->vacancies) }}"
+                            name="quota" 
+                            value="{{ old('quota', $job->quota) }}"
                             min="1"
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             required
@@ -242,8 +242,8 @@
                         </label>
                         <input 
                             type="date" 
-                            name="application_deadline" 
-                            value="{{ old('application_deadline', $job->application_deadline ? $job->application_deadline->format('Y-m-d') : '') }}"
+                            name="closed_at" 
+                            value="{{ old('closed_at', $job->closed_at ? \Carbon\Carbon::parse($job->closed_at)->format('Y-m-d') : '') }}"
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             required
                         >
@@ -251,14 +251,16 @@
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Tanggal Mulai Kerja
+                            Status Lowongan
                         </label>
-                        <input 
-                            type="date" 
-                            name="expected_start_date" 
-                            value="{{ old('expected_start_date', $job->expected_start_date ? $job->expected_start_date->format('Y-m-d') : '') }}"
+                        <select 
+                            name="status" 
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         >
+                            <option value="draft" {{ old('status', $job->status) == 'draft' ? 'selected' : '' }}>Draft</option>
+                            <option value="active" {{ old('status', $job->status) == 'active' ? 'selected' : '' }}>Active</option>
+                            <option value="closed" {{ old('status', $job->status) == 'closed' ? 'selected' : '' }}>Closed</option>
+                        </select>
                     </div>
                 </div>
             </div>
