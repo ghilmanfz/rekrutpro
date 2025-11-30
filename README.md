@@ -459,4 +459,31 @@ Terima kasih kepada:
 </div>
 
 
+<img width="1883" height="914" alt="Image" src="https://github.com/user-attachments/assets/2d811d76-fb8c-4945-b415-9e2b90672b89" />
+
+<img width="1905" height="916" alt="Image" src="https://github.com/user-attachments/assets/05337634-8576-4118-abaf-349a123570b2" />
+
+<img width="1885" height="915" alt="Image" src="https://github.com/user-attachments/assets/689ae0d9-6334-4508-85fb-706c16804c10" />
+
+<img width="1886" height="918" alt="Image" src="https://github.com/user-attachments/assets/f87d8043-7c53-4161-8e82-31042d6eaeef" />
+
+<img width="1755" height="1991" alt="Image" src="https://github.com/user-attachments/assets/66eb81e0-66bb-4933-8f63-9022a5ff65b8" />
+
+<img width="1919" height="1013" alt="Image" src="https://github.com/user-attachments/assets/31abf65b-cfa7-459d-b011-8703684da8a8" />
+
+<img width="1755" height="1264" alt="Image" src="https://github.com/user-attachments/assets/5978a39a-75f7-42ac-8440-411e6fa234a7" />
+
+<img width="1880" height="918" alt="Image" src="https://github.com/user-attachments/assets/306032ac-fe3e-4b6a-929a-d0a8f5a7944b" />
+
+<img width="1889" height="919" alt="Image" src="https://github.com/user-attachments/assets/50041f76-899c-495c-9827-588cf75051be" />
+
+<img width="1755" height="1975" alt="Image" src="https://github.com/user-attachments/assets/4ec55341-9128-452e-b0b3-a95ebb947f90" />
+
+<img width="1884" height="1409" alt="Image" src="https://github.com/user-attachments/assets/cd5e8b9a-7136-427e-a08c-35f67b969dd2" />
+
+<img width="1911" height="917" alt="Image" src="https://github.com/user-attachments/assets/6af6c46d-afcd-4334-a9f3-52dfe5954a39" />
+
+
+
+
 ```
