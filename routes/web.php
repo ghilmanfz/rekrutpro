@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PublicJobController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\SuperAdmin\DashboardController as SuperAdminDashboardController;
 use App\Http\Controllers\SuperAdmin\AuditController;
 use App\Http\Controllers\SuperAdmin\UserManagementController;
@@ -27,17 +28,39 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/jobs', [PublicJobController::class, 'index'])->name('jobs.index');
 Route::get('/jobs/{id}', [PublicJobController::class, 'show'])->name('jobs.show');
 
-// Main Dashboard - Redirect based on role
-Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+// Multi-Step Registration Routes
+Route::middleware('guest')->group(function () {
+    Route::get('/register', [RegisterController::class, 'showStep1'])->name('register');
+    Route::post('/register/step1', [RegisterController::class, 'processStep1'])->name('register.step1.process');
+});
 
 Route::middleware('auth')->group(function () {
+    // Registration Steps - accessible for incomplete registrations
+    Route::get('/register/step2', [RegisterController::class, 'showStep2'])->name('register.step2');
+    Route::post('/register/step2', [RegisterController::class, 'processStep2'])->name('register.step2.process');
+    
+    Route::get('/register/step3', [RegisterController::class, 'showStep3'])->name('register.step3');
+    Route::post('/register/step3', [RegisterController::class, 'processStep3'])->name('register.step3.process');
+    Route::post('/register/resend-otp', [RegisterController::class, 'resendOTP'])->name('register.resend-otp');
+    
+    Route::get('/register/step4', [RegisterController::class, 'showStep4'])->name('register.step4');
+    Route::post('/register/step4', [RegisterController::class, 'processStep4'])->name('register.step4.process');
+    
+    Route::get('/register/step5', [RegisterController::class, 'showStep5'])->name('register.step5');
+    Route::post('/register/complete', [RegisterController::class, 'complete'])->name('register.complete');
+});
+
+// Main Dashboard - Redirect based on role
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified', 'ensure.registration.completed'])->name('dashboard');
+
+Route::middleware(['auth', 'ensure.registration.completed'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 // Super Admin Routes
-Route::middleware(['auth', 'super.admin'])->prefix('superadmin')->name('superadmin.')->group(function () {
+Route::middleware(['auth', 'super.admin', 'ensure.registration.completed'])->prefix('superadmin')->name('superadmin.')->group(function () {
     Route::get('/dashboard', [SuperAdminDashboardController::class, 'index'])->name('dashboard');
     
     // User Management
@@ -69,7 +92,7 @@ Route::middleware(['auth', 'super.admin'])->prefix('superadmin')->name('superadm
 });
 
 // HR Routes
-Route::middleware(['auth', 'hr'])->prefix('hr')->name('hr.')->group(function () {
+Route::middleware(['auth', 'hr', 'ensure.registration.completed'])->prefix('hr')->name('hr.')->group(function () {
     Route::get('/dashboard', [HRDashboardController::class, 'index'])->name('dashboard');
     
     // Job Postings
@@ -91,12 +114,17 @@ Route::middleware(['auth', 'hr'])->prefix('hr')->name('hr.')->group(function () 
     // Offers
     Route::get('/offers', [\App\Http\Controllers\HR\OfferController::class, 'index'])->name('offers.index');
     Route::get('/offers/{offer}', [\App\Http\Controllers\HR\OfferController::class, 'show'])->name('offers.show');
+    Route::get('/offers/{offer}/edit', [\App\Http\Controllers\HR\OfferController::class, 'edit'])->name('offers.edit');
     Route::post('/offers', [\App\Http\Controllers\HR\OfferController::class, 'store'])->name('offers.store');
     Route::put('/offers/{offer}', [\App\Http\Controllers\HR\OfferController::class, 'update'])->name('offers.update');
+    
+    // Negotiations
+    Route::post('/negotiations/{negotiation}/approve', [\App\Http\Controllers\HR\OfferController::class, 'approveNegotiation'])->name('negotiations.approve');
+    Route::post('/negotiations/{negotiation}/reject', [\App\Http\Controllers\HR\OfferController::class, 'rejectNegotiation'])->name('negotiations.reject');
 });
 
 // Candidate Routes
-Route::middleware(['auth', 'candidate'])->prefix('candidate')->name('candidate.')->group(function () {
+Route::middleware(['auth', 'candidate', 'ensure.registration.completed'])->prefix('candidate')->name('candidate.')->group(function () {
     Route::get('/dashboard', [CandidateDashboardController::class, 'index'])->name('dashboard');
     
     // Applications
@@ -109,12 +137,17 @@ Route::middleware(['auth', 'candidate'])->prefix('candidate')->name('candidate.'
     Route::get('/profile', [CandidateProfileController::class, 'edit'])->name('profile');
     Route::put('/profile', [CandidateProfileController::class, 'update'])->name('profile.update');
     
+    // Offer Actions
+    Route::post('/offers/{offer}/accept', [\App\Http\Controllers\Candidate\OfferController::class, 'accept'])->name('offers.accept');
+    Route::post('/offers/{offer}/reject', [\App\Http\Controllers\Candidate\OfferController::class, 'reject'])->name('offers.reject');
+    Route::post('/offers/{offer}/negotiate', [\App\Http\Controllers\Candidate\OfferController::class, 'negotiate'])->name('offers.negotiate');
+    
     // Notifications
     Route::get('/notifications', [CandidateNotificationController::class, 'index'])->name('notifications');
 });
 
 // Interviewer Routes
-Route::middleware(['auth', 'interviewer'])->prefix('interviewer')->name('interviewer.')->group(function () {
+Route::middleware(['auth', 'interviewer', 'ensure.registration.completed'])->prefix('interviewer')->name('interviewer.')->group(function () {
     Route::get('/dashboard', [InterviewerDashboardController::class, 'index'])->name('dashboard');
     
     // Interviews & Assessments

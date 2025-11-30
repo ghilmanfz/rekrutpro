@@ -87,25 +87,30 @@ class AssessmentController extends Controller
         }
 
         $validated = $request->validate([
-            'technical_skills' => 'required|numeric|min:0|max:100',
-            'communication_skills' => 'required|in:sangat_baik,baik,cukup,kurang',
-            'problem_solving' => 'required|numeric|min:0|max:100',
+            'technical_score' => 'required|numeric|min:0|max:100',
+            'communication_skill' => 'required|in:sangat_baik,baik,cukup,kurang',
+            'problem_solving_score' => 'required|numeric|min:0|max:100',
             'teamwork_potential' => 'required|in:tinggi,sedang,rendah',
             'overall_score' => 'required|numeric|min:0|max:100',
-            'recommendation' => 'required|in:sangat_direkomendasikan,direkomendasikan,cukup,tidak_direkomendasikan',
-            'notes' => 'required|string',
+            'recommendation' => 'required|in:sangat_direkomendasikan,direkomendasikan,tidak_direkomendasikan',
+            'additional_notes' => 'required|string',
+            'strengths' => 'nullable|string',
+            'weaknesses' => 'nullable|string',
         ]);
 
         // Create assessment
         $assessment = Assessment::create([
             'interview_id' => $interview->id,
-            'technical_skills' => $validated['technical_skills'],
-            'communication_skills' => $validated['communication_skills'],
-            'problem_solving' => $validated['problem_solving'],
+            'interviewer_id' => auth()->id(),
+            'technical_score' => $validated['technical_score'],
+            'communication_skill' => $validated['communication_skill'],
+            'problem_solving_score' => $validated['problem_solving_score'],
             'teamwork_potential' => $validated['teamwork_potential'],
             'overall_score' => $validated['overall_score'],
             'recommendation' => $validated['recommendation'],
-            'notes' => $validated['notes'],
+            'additional_notes' => $validated['additional_notes'],
+            'strengths' => $validated['strengths'] ?? null,
+            'weaknesses' => $validated['weaknesses'] ?? null,
         ]);
 
         // Update interview status to completed

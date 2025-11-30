@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'hr' => \App\Http\Middleware\IsHR::class,
             'interviewer' => \App\Http\Middleware\IsInterviewer::class,
             'candidate' => \App\Http\Middleware\IsCandidate::class,
+            'ensure.registration.completed' => \App\Http\Middleware\EnsureRegistrationCompleted::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -167,7 +167,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-semibold text-gray-900">
-                                        Rp {{ number_format($offer->salary_offered, 0, ',', '.') }}
+                                        Rp {{ number_format($offer->salary, 0, ',', '.') }}
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">

@@ -129,17 +129,17 @@
                                         <div class="flex items-center gap-4">
                                             <input 
                                                 type="range" 
-                                                name="technical_skills" 
-                                                id="technical_skills"
+                                                name="technical_score" 
+                                                id="technical_score"
                                                 min="0" 
                                                 max="100" 
-                                                value="{{ old('technical_skills', 0) }}"
+                                                value="{{ old('technical_score', 0) }}"
                                                 class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
-                                                oninput="document.getElementById('technical_skills_output').value = this.value"
+                                                oninput="document.getElementById('technical_score_output').value = this.value"
                                             >
-                                            <output id="technical_skills_output" class="w-12 text-right text-lg font-bold text-gray-900">{{ old('technical_skills', 0) }}</output>
+                                            <output id="technical_score_output" class="w-12 text-right text-lg font-bold text-gray-900">{{ old('technical_score', 0) }}</output>
                                         </div>
-                                        @error('technical_skills')
+                                        @error('technical_score')
                                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                         @enderror
                                     </div>
@@ -152,23 +152,23 @@
                                         <p class="text-xs text-gray-600 mb-3">Kejelasan, kemampuan, dan kemampuan kandidat untuk menyampaikan ide-ide secara efektif.</p>
                                         <div class="space-y-2">
                                             <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition">
-                                                <input type="radio" name="communication_skills" value="sangat_baik" {{ old('communication_skills') == 'sangat_baik' ? 'checked' : '' }} class="w-4 h-4 text-blue-600">
+                                                <input type="radio" name="communication_skill" value="sangat_baik" {{ old('communication_skill') == 'sangat_baik' ? 'checked' : '' }} class="w-4 h-4 text-blue-600">
                                                 <span class="ml-3 text-sm text-gray-900">Sangat Baik</span>
                                             </label>
                                             <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition">
-                                                <input type="radio" name="communication_skills" value="baik" {{ old('communication_skills') == 'baik' ? 'checked' : '' }} class="w-4 h-4 text-blue-600">
+                                                <input type="radio" name="communication_skill" value="baik" {{ old('communication_skill') == 'baik' ? 'checked' : '' }} class="w-4 h-4 text-blue-600">
                                                 <span class="ml-3 text-sm text-gray-900">Baik</span>
                                             </label>
                                             <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition">
-                                                <input type="radio" name="communication_skills" value="cukup" {{ old('communication_skills') == 'cukup' ? 'checked' : '' }} class="w-4 h-4 text-blue-600">
+                                                <input type="radio" name="communication_skill" value="cukup" {{ old('communication_skill') == 'cukup' ? 'checked' : '' }} class="w-4 h-4 text-blue-600">
                                                 <span class="ml-3 text-sm text-gray-900">Cukup</span>
                                             </label>
                                             <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition">
-                                                <input type="radio" name="communication_skills" value="kurang" {{ old('communication_skills') == 'kurang' ? 'checked' : '' }} class="w-4 h-4 text-blue-600">
+                                                <input type="radio" name="communication_skill" value="kurang" {{ old('communication_skill') == 'kurang' ? 'checked' : '' }} class="w-4 h-4 text-blue-600">
                                                 <span class="ml-3 text-sm text-gray-900">Kurang</span>
                                             </label>
                                         </div>
-                                        @error('communication_skills')
+                                        @error('communication_skill')
                                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                         @enderror
                                     </div>
@@ -182,17 +182,17 @@
                                         <div class="flex items-center gap-4">
                                             <input 
                                                 type="range" 
-                                                name="problem_solving" 
-                                                id="problem_solving"
+                                                name="problem_solving_score" 
+                                                id="problem_solving_score"
                                                 min="0" 
                                                 max="100" 
-                                                value="{{ old('problem_solving', 0) }}"
+                                                value="{{ old('problem_solving_score', 0) }}"
                                                 class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
-                                                oninput="document.getElementById('problem_solving_output').value = this.value"
+                                                oninput="document.getElementById('problem_solving_score_output').value = this.value"
                                             >
-                                            <output id="problem_solving_output" class="w-12 text-right text-lg font-bold text-gray-900">{{ old('problem_solving', 0) }}</output>
+                                            <output id="problem_solving_score_output" class="w-12 text-right text-lg font-bold text-gray-900">{{ old('problem_solving_score', 0) }}</output>
                                         </div>
-                                        @error('problem_solving')
+                                        @error('problem_solving_score')
                                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                         @enderror
                                     </div>
@@ -230,12 +230,12 @@
                                 <p class="text-sm text-gray-600 mb-4">Sertakan catatan atau observasi penting lainnya tentang kandidat.</p>
                                 
                                 <textarea 
-                                    name="notes" 
+                                    name="additional_notes" 
                                     rows="5" 
                                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
                                     placeholder="Tuliskan catatan detail Anda di sini..."
-                                >{{ old('notes') }}</textarea>
-                                @error('notes')
+                                >{{ old('additional_notes') }}</textarea>
+                                @error('additional_notes')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -253,10 +253,6 @@
                                     <label class="flex items-center p-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50">
                                         <input type="radio" name="recommendation" value="direkomendasikan" {{ old('recommendation') == 'direkomendasikan' ? 'checked' : '' }} class="w-4 h-4 text-blue-600">
                                         <span class="ml-3 text-sm font-medium text-gray-900">Direkomendasikan</span>
-                                    </label>
-                                    <label class="flex items-center p-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition has-[:checked]:border-yellow-500 has-[:checked]:bg-yellow-50">
-                                        <input type="radio" name="recommendation" value="cukup" {{ old('recommendation') == 'cukup' ? 'checked' : '' }} class="w-4 h-4 text-yellow-600">
-                                        <span class="ml-3 text-sm font-medium text-gray-900">Cukup</span>
                                     </label>
                                     <label class="flex items-center p-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition has-[:checked]:border-red-500 has-[:checked]:bg-red-50">
                                         <input type="radio" name="recommendation" value="tidak_direkomendasikan" {{ old('recommendation') == 'tidak_direkomendasikan' ? 'checked' : '' }} class="w-4 h-4 text-red-600">

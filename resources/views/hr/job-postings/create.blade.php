@@ -281,36 +281,36 @@
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label for="deadline" class="block text-sm font-medium text-gray-700 mb-1">
+                        <label for="application_deadline" class="block text-sm font-medium text-gray-700 mb-1">
                             Deadline Lamaran <span class="text-red-500">*</span>
                         </label>
                         <input 
                             type="date" 
-                            name="deadline" 
-                            id="deadline" 
-                            value="{{ old('deadline') }}" 
+                            name="application_deadline" 
+                            id="application_deadline" 
+                            value="{{ old('application_deadline') }}" 
                             min="{{ date('Y-m-d') }}"
                             required
-                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 @error('deadline') border-red-500 @enderror"
+                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 @error('application_deadline') border-red-500 @enderror"
                         >
-                        @error('deadline')
+                        @error('application_deadline')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div>
-                        <label for="start_date" class="block text-sm font-medium text-gray-700 mb-1">
+                        <label for="expected_start_date" class="block text-sm font-medium text-gray-700 mb-1">
                             Tanggal Mulai Kerja (Opsional)
                         </label>
                         <input 
                             type="date" 
-                            name="start_date" 
-                            id="start_date" 
-                            value="{{ old('start_date') }}" 
+                            name="expected_start_date" 
+                            id="expected_start_date" 
+                            value="{{ old('expected_start_date') }}" 
                             min="{{ date('Y-m-d') }}"
-                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 @error('start_date') border-red-500 @enderror"
+                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 @error('expected_start_date') border-red-500 @enderror"
                         >
-                        @error('start_date')
+                        @error('expected_start_date')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>

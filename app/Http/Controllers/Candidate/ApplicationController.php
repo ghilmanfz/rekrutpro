@@ -60,16 +60,10 @@ class ApplicationController extends Controller
      */
     public function store(Request $request)
     {
+        // Note: We don't validate personal data fields because they come from user profile
+        // and are stored in snapshot automatically
         $validated = $request->validate([
             'job_posting_id' => 'required|exists:job_postings,id',
-            'full_name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'phone' => 'required|string|max:20',
-            'address' => 'required|string',
-            'education' => 'required|in:SMA/SMK,D3,S1,S2,S3',
-            'experience' => 'required|string',
-            'expected_salary' => 'required|numeric|min:0',
-            'availability' => 'required|string',
             'cv' => 'required|file|mimes:pdf,doc,docx|max:5120',
             'portfolio' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
             'cover_letter' => 'nullable|string',
@@ -87,55 +81,95 @@ class ApplicationController extends Controller
                 ->with('info', 'Anda sudah melamar untuk posisi ini.');
         }
 
-        // Upload CV
-        $cvPath = $this->fileUploadService->uploadCV(
-            $request->file('cv'),
-            $validated['full_name']
-        );
+        $user = auth()->user();
 
-        // Upload Portfolio (optional)
-        $portfolioPath = null;
-        if ($request->hasFile('portfolio')) {
-            $portfolioPath = $this->fileUploadService->uploadPortfolio(
-                $request->file('portfolio'),
-                $validated['full_name']
+        try {
+            // Upload CV
+            $cvPath = $this->fileUploadService->uploadCV(
+                $request->file('cv'),
+                $user->full_name ?? $user->name
             );
+
+            // Upload Portfolio (optional)
+            $portfolioPath = null;
+            if ($request->hasFile('portfolio')) {
+                $portfolioPath = $this->fileUploadService->uploadPortfolio(
+                    $request->file('portfolio'),
+                    $user->full_name ?? $user->name
+                );
+            }
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'Gagal mengupload file: ' . $e->getMessage());
         }
 
-        // Generate application code
+        // Generate application code (UNIQUE)
         $applicationCode = 'APP-' . strtoupper(Str::random(8));
+        
+        // Generate unique code for database (required field)
+        $uniqueCode = $this->generateUniqueCode();
 
-        // Create application
-        $application = Application::create([
-            'candidate_id' => auth()->id(),
-            'job_posting_id' => $validated['job_posting_id'],
-            'application_code' => $applicationCode,
-            'education' => $validated['education'],
-            'experience' => $validated['experience'],
-            'expected_salary' => $validated['expected_salary'],
-            'availability' => $validated['availability'],
-            'cv_path' => $cvPath,
-            'portfolio_path' => $portfolioPath,
-            'cover_letter' => $validated['cover_letter'],
-            'status' => 'submitted',
-        ]);
+        // Buat snapshot data kandidat saat apply
+        $candidateSnapshot = [
+            'full_name' => $user->full_name ?? $user->name,
+            'email' => $user->email,
+            'phone' => $user->phone ?? '-',
+            'address' => $user->address ?? '-',
+            'birth_date' => $user->birth_date ?? null,
+            'gender' => $user->gender ?? '-',
+            'education' => $user->education ?? [], // JSON dari users table
+            'experience' => $user->experience ?? [], // JSON dari users table
+            'profile_photo' => $user->profile_photo ?? null,
+            'snapshot_at' => now()->toDateTimeString(), // Timestamp snapshot
+        ];
 
-        // Create audit log
-        AuditLog::create([
-            'user_id' => auth()->id(),
-            'action' => 'application_submitted',
-            'model_type' => 'Application',
-            'model_id' => $application->id,
-            'description' => 'Kandidat mengirim lamaran untuk posisi: ' . $application->jobPosting->title,
-            'ip_address' => $request->ip(),
-            'user_agent' => $request->userAgent(),
-        ]);
+        try {
+            // Create application
+            $application = Application::create([
+                'code' => $uniqueCode, // Required field in database
+                'candidate_id' => $user->id,
+                'job_posting_id' => $validated['job_posting_id'],
+                'application_code' => $applicationCode,
+                'candidate_snapshot' => $candidateSnapshot, // Simpan snapshot
+                'cv_file' => $cvPath,
+                'portfolio_file' => $portfolioPath,
+                'cover_letter' => $validated['cover_letter'],
+                'status' => 'submitted',
+            ]);
 
-        // TODO: Send notification to candidate and HR
+            // Create audit log
+            AuditLog::create([
+                'user_id' => auth()->id(),
+                'action' => 'application_submitted',
+                'model_type' => 'Application',
+                'model_id' => $application->id,
+                'description' => 'Kandidat mengirim lamaran untuk posisi: ' . $application->jobPosting->title,
+                'ip_address' => $request->ip(),
+                'user_agent' => $request->userAgent(),
+            ]);
 
-        return redirect()
-            ->route('candidate.applications.show', $application->id)
-            ->with('success', 'Lamaran Anda berhasil dikirim! Kode lamaran: ' . $applicationCode);
+            // TODO: Send notification to candidate and HR
+
+            return redirect()
+                ->route('candidate.applications.show', $application->id)
+                ->with('success', 'Lamaran Anda berhasil dikirim! Kode lamaran: ' . $applicationCode);
+                
+        } catch (\Exception $e) {
+            // Log the error
+            \Log::error('Application submission failed: ' . $e->getMessage(), [
+                'user_id' => $user->id,
+                'job_posting_id' => $request->job_posting_id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'Gagal mengirim lamaran. Silakan coba lagi atau hubungi administrator. Error: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -148,11 +182,45 @@ class ApplicationController extends Controller
             'jobPosting.division',
             'jobPosting.location',
             'interviews',
-            'offers'
+            'offer.latestNegotiation' // Load latest negotiation for offer
         ])
             ->where('candidate_id', auth()->id())
             ->findOrFail($id);
 
         return view('candidate.applications.show', compact('application'));
+    }
+
+    /**
+     * Generate unique application code
+     */
+    protected function generateUniqueCode()
+    {
+        do {
+            // Format: APP-YYYY-MM-XXXXX (e.g., APP-2025-11-00001)
+            $yearMonth = now()->format('Y-m');
+            
+            // Get last application for this month
+            $lastApplication = Application::where('code', 'like', "APP-{$yearMonth}-%")
+                ->orderBy('code', 'desc')
+                ->first();
+            
+            if ($lastApplication) {
+                // Extract number and increment
+                $lastNumber = (int) substr($lastApplication->code, -5);
+                $newNumber = $lastNumber + 1;
+            } else {
+                // First application this month
+                $newNumber = 1;
+            }
+            
+            // Format: APP-YYYY-MM-XXXXX (5 digits, zero-padded)
+            $code = sprintf("APP-%s-%05d", $yearMonth, $newNumber);
+            
+            // Check if code exists (double check for race conditions)
+            $exists = Application::where('code', $code)->exists();
+            
+        } while ($exists);
+        
+        return $code;
     }
 }

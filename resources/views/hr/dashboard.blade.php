@@ -76,13 +76,13 @@
                                 <div class="flex-shrink-0">
                                     <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
                                         <span class="text-blue-600 font-semibold text-sm">
-                                            {{ substr($application->user->name, 0, 2) }}
+                                            {{ substr($application->candidate->name ?? $application->candidate_name, 0, 2) }}
                                         </span>
                                     </div>
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <p class="text-sm font-medium text-gray-900">
-                                        {{ $application->user->name }}
+                                        {{ $application->candidate->name ?? $application->candidate_name }}
                                     </p>
                                     <p class="text-sm text-gray-500">
                                         {{ $application->jobPosting->title }}
@@ -129,7 +129,7 @@
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <p class="text-sm font-medium text-gray-900">
-                                        {{ $interview->application->user->name }}
+                                        {{ $interview->application->candidate->name ?? $interview->application->candidate_name }}
                                     </p>
                                     <p class="text-sm text-gray-500">
                                         {{ $interview->application->jobPosting->title }}
