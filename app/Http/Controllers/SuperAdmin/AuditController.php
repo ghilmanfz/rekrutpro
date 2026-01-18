@@ -26,9 +26,17 @@ class AuditController extends Controller
         // Get audit logs with filters
         $query = AuditLog::with(['user', 'user.role']);
 
-        // Filter by activity/event
+        // Filter by activity/action
         if ($request->filled('activity')) {
-            $query->where('event', 'like', '%' . $request->activity . '%');
+            $searchTerm = $request->activity;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('action', 'like', '%' . $searchTerm . '%')
+                  ->orWhereHas('user', function($userQuery) use ($searchTerm) {
+                      $userQuery->where('name', 'like', '%' . $searchTerm . '%');
+                  })
+                  ->orWhere('new_values', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('old_values', 'like', '%' . $searchTerm . '%');
+            });
         }
 
         // Filter by user

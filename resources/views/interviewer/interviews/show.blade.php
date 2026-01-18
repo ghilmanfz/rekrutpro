@@ -403,7 +403,7 @@
                             </p>
                             <p class="font-medium text-gray-900 mt-1">
                                 <i class="far fa-clock text-gray-400 mr-2"></i>
-                                {{ $interview->scheduled_at->format('H:i') }} - {{ $interview->scheduled_at->addMinutes($interview->duration ?? 60)->format('H:i') }} WIB
+                                {{ $interview->scheduled_at->format('H:i') }} - {{ $interview->scheduled_at->addMinutes((int)($interview->duration ?? 60))->format('H:i') }} WIB
                             </p>
                         </div>
 

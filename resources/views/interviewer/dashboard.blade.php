@@ -48,7 +48,7 @@
                                                         <span>{{ $interview->scheduled_at->format('d M Y') }}</span>
                                                     </div>
                                                     <div class="flex items-center gap-1.5">
-                                                        <span>{{ $interview->scheduled_at->format('H:i') }} - {{ $interview->scheduled_at->addMinutes($interview->duration ?? 60)->format('H:i') }} WIB</span>
+                                                        <span>{{ $interview->scheduled_at->format('H:i') }} - {{ $interview->scheduled_at->addMinutes((int)($interview->duration ?? 60))->format('H:i') }} WIB</span>
                                                     </div>
                                                     <div class="flex items-center gap-1.5">
                                                         <span>{{ $interview->location }}</span>

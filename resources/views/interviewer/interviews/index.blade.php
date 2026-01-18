@@ -112,7 +112,7 @@
                                         </div>
                                         <div class="flex items-center gap-1.5">
                                             <i class="far fa-clock text-gray-400"></i>
-                                            <span>{{ $interview->scheduled_at->format('H:i') }} - {{ $interview->scheduled_at->addMinutes($interview->duration ?? 60)->format('H:i') }} WIB</span>
+                                            <span>{{ $interview->scheduled_at->format('H:i') }} - {{ $interview->scheduled_at->addMinutes((int)($interview->duration ?? 60))->format('H:i') }} WIB</span>
                                         </div>
                                         <div class="flex items-center gap-1.5">
                                             <i class="fas fa-map-marker-alt text-gray-400"></i>
