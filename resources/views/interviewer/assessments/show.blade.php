@@ -37,7 +37,7 @@
                             </div>
                             <div>
                                 <p class="text-sm text-gray-500">Lokasi</p>
-                                <p class="font-medium text-gray-900">{{ $assessment->interview->application->jobPosting->location ?? '-' }}</p>
+                                <p class="font-medium text-gray-900">{{ $assessment->interview->application->jobPosting->location->name ?? '-' }}</p>
                             </div>
                             <div>
                                 <p class="text-sm text-gray-500">Tanggal Interview</p>

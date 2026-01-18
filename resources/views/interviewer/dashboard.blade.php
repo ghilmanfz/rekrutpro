@@ -248,7 +248,7 @@
                         </div>
                     </div>
                     <div class="text-center">
-                        <p class="text-5xl font-bold text-gray-900">{{ max(0, $stats['completed'] - $recentAssessments->count()) }}</p>
+                        <p class="text-5xl font-bold text-gray-900">{{ $stats['pending_assessments'] }}</p>
                     </div>
                 </div>
             </div>

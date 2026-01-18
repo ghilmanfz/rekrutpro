@@ -63,9 +63,9 @@
             </div>
             @endif
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
                 <!-- Main Content -->
-                <div class="lg:col-span-2 space-y-6">
+                <div class="lg:col-span-3 space-y-6">
                     <!-- Candidate Info - Comparison View -->
                     <div class="bg-white rounded-lg shadow-sm p-6">
                         <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">

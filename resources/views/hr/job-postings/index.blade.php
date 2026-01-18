@@ -106,7 +106,11 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {{ \Carbon\Carbon::parse($job->application_deadline)->format('d M Y') }}
+                                @if($job->closed_at)
+                                    {{ \Carbon\Carbon::parse($job->closed_at)->format('d M Y') }}
+                                @else
+                                    <span class="text-gray-400">-</span>
+                                @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 <a href="{{ route('hr.applications.index', ['job_id' => $job->id]) }}" class="text-blue-600 hover:text-blue-900">
@@ -121,7 +125,12 @@
                                         </svg>
                                     </a>
                                     
-                                    @if($job->applications_count == 0)
+                                    @php
+                                        $isPastDeadline = $job->closed_at && \Carbon\Carbon::parse($job->closed_at)->isPast();
+                                        $canDelete = $job->applications_count == 0 || $isPastDeadline || $job->status == 'closed';
+                                    @endphp
+                                    
+                                    @if($canDelete)
                                     <form action="{{ route('hr.job-postings.destroy', $job->id) }}" method="POST" class="inline" onsubmit="return confirm('Yakin ingin menghapus lowongan ini?')">
                                         @csrf
                                         @method('DELETE')

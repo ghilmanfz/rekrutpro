@@ -49,7 +49,7 @@
                             </div>
                             <div>
                                 <p class="text-sm text-gray-500">Lokasi</p>
-                                <p class="font-medium text-gray-900">{{ $interview->application->jobPosting->location ?? '-' }}</p>
+                                <p class="font-medium text-gray-900">{{ $interview->application->jobPosting->location->name ?? '-' }}</p>
                             </div>
                             <div>
                                 <p class="text-sm text-gray-500">Status</p>
@@ -84,7 +84,7 @@
             </div>
 
             <!-- Assessment Form -->
-            @if($interview->status == 'scheduled' && !$interview->assessment)
+            @if(($interview->status == 'scheduled' || $interview->status == 'completed') && !$interview->assessment)
                     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
                         <h2 class="text-xl font-bold text-gray-900 mb-2">Form Penilaian Wawancara</h2>
                         <p class="text-sm text-gray-600 mb-8">Berikan umpan balik terstruktur untuk kandidat dan buat rekomendasi akhir.</p>

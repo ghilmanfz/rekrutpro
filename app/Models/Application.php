@@ -78,49 +78,73 @@ class Application extends Model
     }
 
     // Accessor methods untuk kemudahan akses data snapshot
+    protected function getSnapshotData()
+    {
+        if (!$this->candidate_snapshot) {
+            return [];
+        }
+        
+        // Jika masih string, decode manual
+        if (is_string($this->candidate_snapshot)) {
+            return json_decode($this->candidate_snapshot, true) ?? [];
+        }
+        
+        // Jika sudah array, return langsung
+        return is_array($this->candidate_snapshot) ? $this->candidate_snapshot : [];
+    }
+    
     public function getCandidateNameAttribute()
     {
-        return $this->candidate_snapshot['full_name'] ?? $this->candidate->full_name ?? 'N/A';
+        $snapshot = $this->getSnapshotData();
+        return $snapshot['full_name'] ?? $this->candidate->name ?? 'N/A';
     }
 
     public function getCandidateEmailAttribute()
     {
-        return $this->candidate_snapshot['email'] ?? $this->candidate->email ?? 'N/A';
+        $snapshot = $this->getSnapshotData();
+        return $snapshot['email'] ?? $this->candidate->email ?? 'N/A';
     }
 
     public function getCandidatePhoneAttribute()
     {
-        return $this->candidate_snapshot['phone'] ?? $this->candidate->phone ?? 'N/A';
+        $snapshot = $this->getSnapshotData();
+        return $snapshot['phone'] ?? $this->candidate->phone ?? 'N/A';
     }
 
     public function getCandidateAddressAttribute()
     {
-        return $this->candidate_snapshot['address'] ?? $this->candidate->address ?? 'N/A';
+        $snapshot = $this->getSnapshotData();
+        return $snapshot['address'] ?? $this->candidate->address ?? 'N/A';
     }
 
     public function getCandidateBirthDateAttribute()
     {
-        return $this->candidate_snapshot['birth_date'] ?? null;
+        $snapshot = $this->getSnapshotData();
+        return $snapshot['birth_date'] ?? null;
     }
 
     public function getCandidateGenderAttribute()
     {
-        return $this->candidate_snapshot['gender'] ?? $this->candidate->gender ?? 'N/A';
+        $snapshot = $this->getSnapshotData();
+        return $snapshot['gender'] ?? $this->candidate->gender ?? 'N/A';
     }
 
     public function getCandidateEducationAttribute()
     {
-        return $this->candidate_snapshot['education'] ?? [];
+        $snapshot = $this->getSnapshotData();
+        return $snapshot['education'] ?? [];
     }
 
     public function getCandidateExperienceAttribute()
     {
-        return $this->candidate_snapshot['experience'] ?? [];
+        $snapshot = $this->getSnapshotData();
+        return $snapshot['experience'] ?? [];
     }
 
     public function getCandidateProfilePhotoAttribute()
     {
-        return $this->candidate_snapshot['profile_photo'] ?? $this->candidate->profile_photo ?? null;
+        $snapshot = $this->getSnapshotData();
+        return $snapshot['profile_photo'] ?? $this->candidate->profile_photo ?? null;
     }
 
     /**
@@ -133,11 +157,17 @@ class Application extends Model
         }
 
         $snapshot = $this->candidate_snapshot;
+        
+        // Pastikan snapshot adalah array
+        if (!is_array($snapshot)) {
+            return false;
+        }
+        
         $current = $this->candidate;
 
-        return $snapshot['email'] !== $current->email ||
-               $snapshot['phone'] !== $current->phone ||
-               $snapshot['full_name'] !== $current->full_name;
+        return ($snapshot['email'] ?? null) !== $current->email ||
+               ($snapshot['phone'] ?? null) !== $current->phone ||
+               ($snapshot['full_name'] ?? null) !== $current->name;
     }
 
     public function scopeScreeningPassed($query)

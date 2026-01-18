@@ -56,12 +56,62 @@ class UserSeeder extends Seeder
                 'is_verified' => true,
             ],
             [
-                'name' => 'Candidate Demo',
-                'email' => 'candidate@example.com',
+                'name' => 'John Developer',
+                'email' => 'candidate1@example.com',
                 'password' => Hash::make('password'),
                 'role_id' => $candidateRole->id,
                 'division_id' => null,
                 'phone' => '081234567893',
+                'is_active' => true,
+                'is_verified' => true,
+            ],
+            [
+                'name' => 'Sarah Designer',
+                'email' => 'candidate2@example.com',
+                'password' => Hash::make('password'),
+                'role_id' => $candidateRole->id,
+                'division_id' => null,
+                'phone' => '081234567894',
+                'is_active' => true,
+                'is_verified' => true,
+            ],
+            [
+                'name' => 'Michael Marketing',
+                'email' => 'candidate3@example.com',
+                'password' => Hash::make('password'),
+                'role_id' => $candidateRole->id,
+                'division_id' => null,
+                'phone' => '081234567895',
+                'is_active' => true,
+                'is_verified' => true,
+            ],
+            [
+                'name' => 'Emma Analyst',
+                'email' => 'candidate4@example.com',
+                'password' => Hash::make('password'),
+                'role_id' => $candidateRole->id,
+                'division_id' => null,
+                'phone' => '081234567896',
+                'is_active' => true,
+                'is_verified' => true,
+            ],
+            [
+                'name' => 'David HR',
+                'email' => 'candidate5@example.com',
+                'password' => Hash::make('password'),
+                'role_id' => $candidateRole->id,
+                'division_id' => null,
+                'phone' => '081234567897',
+                'is_active' => true,
+                'is_verified' => true,
+            ],
+            [
+                'name' => 'Lisa Chen',
+                'email' => 'interviewer2@rekrutpro.com',
+                'password' => Hash::make('password'),
+                'role_id' => $interviewerRole->id,
+                'division_id' => $itDivision->id,
+                'phone' => '081234567898',
                 'is_active' => true,
                 'is_verified' => true,
             ],
@@ -73,5 +123,7 @@ class UserSeeder extends Seeder
                 $userData
             );
         }
+
+        $this->command->info('Users seeded successfully!');
     }
 }

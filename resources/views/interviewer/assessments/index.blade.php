@@ -125,7 +125,7 @@
                             </td>
                             <td class="px-6 py-4">
                                 <div class="text-sm text-gray-900">{{ $assessment->interview->application->jobPosting->title }}</div>
-                                <div class="text-sm text-gray-500">{{ $assessment->interview->application->jobPosting->location ?? '-' }}</div>
+                                <div class="text-sm text-gray-500">{{ $assessment->interview->application->jobPosting->location->name ?? '-' }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-900">
