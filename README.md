@@ -1,330 +1,657 @@
-# RekrutPro
-
-````md
-
-> Make Recruit Process Look Easy# RekrutPro
+# RekrutPro# RekrutPro
 
 
 
-RekrutPro adalah aplikasi web berbasis **Laravel 12** untuk membantu tim HR dan rekruter dalam mengelola proses rekrutmen secara terstruktur — mulai dari pembukaan lowongan, pengelolaan kandidat, penjadwalan interview, hingga penawaran kerja.> Make Recruit Process Look Easy
+> Make Recruit Process Look Easy````md
 
 
 
-<div align="center">RekrutPro adalah aplikasi web berbasis Laravel untuk membantu tim HR dan rekruter dalam mengelola proses rekrutmen secara lebih terstruktur, mulai dari pembukaan lowongan, pengelolaan kandidat, hingga proses interview.
+RekrutPro adalah aplikasi web berbasis **Laravel 12** untuk membantu tim HR dan rekruter dalam mengelola proses rekrutmen secara terstruktur — mulai dari pembukaan lowongan, pengelolaan kandidat, penjadwalan interview, hingga penawaran kerja.> Make Recruit Process Look Easy# RekrutPro
 
 
 
-[![Laravel](https://img.shields.io/badge/Laravel-12.x-red?style=flat-square&logo=laravel)](https://laravel.com)Repo ini dibuat sebagai project pembelajaran/pengembangan sistem rekrutmen dengan fokus pada praktik _clean code_, _testing_, dan dokumentasi.
+<div align="center">
+
+
+
+[![Laravel](https://img.shields.io/badge/Laravel-12.x-red?style=flat-square&logo=laravel)](https://laravel.com)RekrutPro adalah aplikasi web berbasis **Laravel 12** untuk membantu tim HR dan rekruter dalam mengelola proses rekrutmen secara terstruktur — mulai dari pembukaan lowongan, pengelolaan kandidat, penjadwalan interview, hingga penawaran kerja.> Make Recruit Process Look Easy
 
 [![PHP](https://img.shields.io/badge/PHP-8.2+-blue?style=flat-square&logo=php)](https://php.net)
 
-[![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-3.x-38bdf8?style=flat-square&logo=tailwindcss)](https://tailwindcss.com)---
+[![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-3.x-38bdf8?style=flat-square&logo=tailwindcss)](https://tailwindcss.com)
 
 
 
-</div>## ✨ Fitur Utama (High Level)
+</div><div align="center">RekrutPro adalah aplikasi web berbasis Laravel untuk membantu tim HR dan rekruter dalam mengelola proses rekrutmen secara lebih terstruktur, mulai dari pembukaan lowongan, pengelolaan kandidat, hingga proses interview.
 
 
 
----RekrutPro menyediakan fitur lengkap untuk mengelola seluruh proses rekrutmen:
+---
 
 
 
-## ✨ Fitur Utama### 🎯 Manajemen Lowongan
+## ✨ Fitur Utama[![Laravel](https://img.shields.io/badge/Laravel-12.x-red?style=flat-square&logo=laravel)](https://laravel.com)Repo ini dibuat sebagai project pembelajaran/pengembangan sistem rekrutmen dengan fokus pada praktik _clean code_, _testing_, dan dokumentasi.
+
+
+
+### 🎯 Manajemen Lowongan[![PHP](https://img.shields.io/badge/PHP-8.2+-blue?style=flat-square&logo=php)](https://php.net)
 
 - Membuat dan mengelola posisi/jabatan yang dibuka
 
-### 🎯 Manajemen Lowongan- Mengatur deskripsi pekerjaan, kualifikasi, dan requirements
-
-- Membuat dan mengelola posisi/jabatan yang dibuka- Publikasi lowongan dengan status aktif/tidak aktif
-
-- Mengatur deskripsi pekerjaan, kualifikasi, dan requirements- Filter lowongan berdasarkan divisi, lokasi, dan tipe kontrak
+- Mengatur deskripsi pekerjaan, kualifikasi, dan requirements[![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-3.x-38bdf8?style=flat-square&logo=tailwindcss)](https://tailwindcss.com)---
 
 - Publikasi lowongan dengan status aktif/tidak aktif
 
-- Filter lowongan berdasarkan divisi, lokasi, dan tipe kontrak### 👥 Manajemen Kandidat
+- Filter lowongan berdasarkan divisi, lokasi, dan tipe kontrak
+
+
+
+### 👥 Manajemen Kandidat</div>## ✨ Fitur Utama (High Level)
 
 - Registrasi dan profil kandidat lengkap
 
-### 👥 Manajemen Kandidat- Upload CV dan dokumen pendukung
-
-- Registrasi dan profil kandidat lengkap- Apply lamaran ke lowongan yang tersedia
-
-- Upload CV dan dokumen pendukung- Tracking status aplikasi real-time
+- Upload CV dan dokumen pendukung
 
 - Apply lamaran ke lowongan yang tersedia
 
-- Tracking status aplikasi real-time### 📋 Proses Rekrutmen
+- Tracking status aplikasi real-time---RekrutPro menyediakan fitur lengkap untuk mengelola seluruh proses rekrutmen:
 
-- **Screening**: Review aplikasi kandidat oleh HR
 
-### 📋 Alur Proses Rekrutmen- **Interview**: Penjadwalan dan feedback interview (multi-tahap)
 
-| Tahap | Deskripsi |- **Assessment**: Evaluasi kandidat dengan scoring system
+### 📋 Alur Proses Rekrutmen
 
-|-------|-----------|- **Offering**: Penawaran kerja dengan sistem negosiasi gaji
 
-| **Screening** | Review aplikasi kandidat oleh HR |- **Hiring**: Finalisasi kandidat yang diterima
+
+| Tahap | Deskripsi |## ✨ Fitur Utama### 🎯 Manajemen Lowongan
+
+|-------|-----------|
+
+| **Screening** | Review aplikasi kandidat oleh HR |- Membuat dan mengelola posisi/jabatan yang dibuka
 
 | **Interview** | Penjadwalan dan feedback interview multi-tahap |
 
-| **Assessment** | Evaluasi kandidat dengan scoring system |### 💼 Sistem Offer Management (NEW! ✨)
+| **Assessment** | Evaluasi kandidat dengan scoring system |### 🎯 Manajemen Lowongan- Mengatur deskripsi pekerjaan, kualifikasi, dan requirements
 
-| **Offering** | Penawaran kerja dengan sistem negosiasi gaji |- **Kandidat dapat**:
+| **Offering** | Penawaran kerja dengan sistem negosiasi gaji |
 
-| **Hiring** | Finalisasi kandidat yang diterima |  - ✅ Menerima penawaran kerja
+| **Hiring** | Finalisasi kandidat yang diterima |- Membuat dan mengelola posisi/jabatan yang dibuka- Publikasi lowongan dengan status aktif/tidak aktif
 
-  - ❌ Menolak penawaran dengan alasan
 
-### 💼 Offer Management & Negosiasi  - 💬 Mengajukan negosiasi gaji dengan alasan detail
 
-- Kandidat dapat **menerima**, **menolak**, atau **mengajukan negosiasi gaji**- **HR dapat**:
+### 💼 Offer Management & Negosiasi- Mengatur deskripsi pekerjaan, kualifikasi, dan requirements- Filter lowongan berdasarkan divisi, lokasi, dan tipe kontrak
 
-- HR dapat **mengedit penawaran**, **approve/reject negosiasi**  - ✏️ Edit penawaran yang sudah dibuat (posisi, gaji, benefits, dll)
+- Kandidat dapat **menerima**, **menolak**, atau **mengajukan negosiasi gaji**
 
-- Riwayat negosiasi lengkap dengan timeline  - ✅ Approve negosiasi kandidat (gaji otomatis terupdate)
+- HR dapat **mengedit penawaran**, **approve/reject negosiasi**- Publikasi lowongan dengan status aktif/tidak aktif
 
-  - ❌ Reject negosiasi dengan catatan
+- Riwayat negosiasi lengkap dengan timeline
 
-### 📊 Dashboard & Audit- **Tracking**: Riwayat negosiasi lengkap dengan timeline
+- Filter lowongan berdasarkan divisi, lokasi, dan tipe kontrak### 👥 Manajemen Kandidat
 
-- Dashboard HR untuk monitoring rekrutmen
+### 📊 Dashboard & Audit
 
-- Dashboard Kandidat untuk tracking aplikasi### 📊 Dashboard & Reporting
-
-- Audit log untuk semua aktivitas penting- Dashboard HR untuk monitoring rekrutmen
+- Dashboard HR untuk monitoring rekrutmen- Registrasi dan profil kandidat lengkap
 
 - Dashboard Kandidat untuk tracking aplikasi
 
-### 🔐 Role & Permission- Statistik dan metrik proses rekrutmen
+- Audit log untuk semua aktivitas penting### 👥 Manajemen Kandidat- Upload CV dan dokumen pendukung
 
-| Role | Akses |- Audit log untuk semua aktivitas penting
+
+
+### 🔐 Role & Permission- Registrasi dan profil kandidat lengkap- Apply lamaran ke lowongan yang tersedia
+
+
+
+| Role | Akses |- Upload CV dan dokumen pendukung- Tracking status aplikasi real-time
 
 |------|-------|
 
-| **SuperAdmin** | Full access ke seluruh sistem & konfigurasi |### 🔐 Role & Permission Management
+| **SuperAdmin** | Full access ke seluruh sistem & konfigurasi |- Apply lamaran ke lowongan yang tersedia
 
-| **HR** | Manage lowongan, review kandidat, manage offers |- **Admin**: Full access ke seluruh sistem
+| **HR** | Manage lowongan, review kandidat, manage offers |
 
-| **Interviewer** | Akses interview & feedback |- **HR**: Manage lowongan, review kandidat, manage offers
+| **Interviewer** | Akses interview & feedback |- Tracking status aplikasi real-time### 📋 Proses Rekrutmen
 
-| **Candidate** | Apply lowongan, respond offers, track status |- **Interviewer**: Akses ke interview & feedback
+| **Candidate** | Apply lowongan, respond offers, track status |
 
-- **Candidate**: Apply lowongan, respond offers, track status
+- **Screening**: Review aplikasi kandidat oleh HR
 
 ---
 
-> 📚 **Dokumentasi Lengkap**:
+### 📋 Alur Proses Rekrutmen- **Interview**: Penjadwalan dan feedback interview (multi-tahap)
 
-## 🛠 Tech Stack> - `DOKUMENTASI_ALUR_PROGRAM_LENGKAP.md` - Dokumentasi sistem lengkap (5776+ baris)
+## 🛠 Tech Stack
 
-> - `DOKUMENTASI_UPDATE_OFFER_MANAGEMENT.md` - Update fitur Offer Management terbaru
+| Tahap | Deskripsi |- **Assessment**: Evaluasi kandidat dengan scoring system
 
-### Backend> - `README_SISTEM_REKRUTMEN.md` - Overview sistem rekrutmen
+### Backend
 
-- **PHP 8.2+**> - `INTERVIEWER_FEATURES_COMPLETED.md` - Fitur interviewer
+- **PHP 8.2+**|-------|-----------|- **Offering**: Penawaran kerja dengan sistem negosiasi gaji
 
-- **Laravel 12.x**> - `TESTING_GUIDE.md` - Panduan testing
+- **Laravel 12.x**
 
-- **MySQL / MariaDB**> - `CHANGELOG.md` - Riwayat perubahan
+- **MySQL / MariaDB**| **Screening** | Review aplikasi kandidat oleh HR |- **Hiring**: Finalisasi kandidat yang diterima
 
 - **Eloquent ORM**
 
----
+| **Interview** | Penjadwalan dan feedback interview multi-tahap |
 
 ### Frontend
 
-- **Blade** — Templating engine## 🛠 Tech Stack
+- **Blade** — Templating engine| **Assessment** | Evaluasi kandidat dengan scoring system |### 💼 Sistem Offer Management (NEW! ✨)
 
 - **Tailwind CSS 3.x** — Utility-first CSS framework
 
-- **Alpine.js 3.x** — Lightweight JavaScript frameworkProyek ini dibangun menggunakan:
+- **Alpine.js 3.x** — Lightweight JavaScript framework| **Offering** | Penawaran kerja dengan sistem negosiasi gaji |- **Kandidat dapat**:
 
 
 
-### Build Tools### Backend
+### Build Tools| **Hiring** | Finalisasi kandidat yang diterima |  - ✅ Menerima penawaran kerja
 
-- **Vite** — Frontend bundler- **PHP 8.2+** 
+- **Vite** — Frontend bundler
 
-- **Composer** — PHP dependency manager- **Laravel 11.x** - Framework utama
+- **Composer** — PHP dependency manager  - ❌ Menolak penawaran dengan alasan
 
-- **npm** — Node package manager- **MySQL / MariaDB** - Database relasional
+- **npm** — Node package manager
 
-- **Eloquent ORM** - Database abstraction
+### 💼 Offer Management & Negosiasi  - 💬 Mengajukan negosiasi gaji dengan alasan detail
 
 ### Dev Packages
 
-- **Laravel Breeze** — Authentication scaffolding### Frontend
+- **Laravel Breeze** — Authentication scaffolding- Kandidat dapat **menerima**, **menolak**, atau **mengajukan negosiasi gaji**- **HR dapat**:
 
-- **Laravel Pint** — Code style fixer- **Blade** - Templating engine
+- **Laravel Pint** — Code style fixer
 
-- **Laravel Sail** — Docker environment (opsional)- **Tailwind CSS** - Utility-first CSS framework
+- **Laravel Sail** — Docker environment (opsional)- HR dapat **mengedit penawaran**, **approve/reject negosiasi**  - ✏️ Edit penawaran yang sudah dibuat (posisi, gaji, benefits, dll)
 
-- **PHPUnit 11** — Testing framework- **Alpine.js** - Lightweight JavaScript framework
+- **PHPUnit 11** — Testing framework
 
-- **Font Awesome** - Icon library
+- Riwayat negosiasi lengkap dengan timeline  - ✅ Approve negosiasi kandidat (gaji otomatis terupdate)
 
 ---
 
-### Build Tools & Development
+  - ❌ Reject negosiasi dengan catatan
 
-## 📦 Prasyarat- **Vite** - Frontend bundler (lihat `vite.config.js`)
+## 📦 Prasyarat
 
-- **Composer** - PHP dependency manager
+### 📊 Dashboard & Audit- **Tracking**: Riwayat negosiasi lengkap dengan timeline
 
-Pastikan sudah menginstall:- **npm** - Node package manager
+Pastikan sudah menginstall:
 
-- **Laravel Sail** (optional) - Docker development environment
+- Dashboard HR untuk monitoring rekrutmen
 
 - **PHP 8.2+** (dengan ekstensi: OpenSSL, PDO, Mbstring, Tokenizer, XML, Ctype, JSON, BCMath, Fileinfo)
 
-- **Composer** (latest)### Key Laravel Packages
-
-- **Node.js 18+ & npm**- **Laravel Sanctum** - API authentication
-
-- **MySQL 8.0+ / MariaDB 10.3+**- **Laravel Pint** - Code style fixer
-
-- **Git**- **PHPUnit** - Testing framework
-
-
-
----Detail versi dependency lengkap:
-
-- `composer.json` - PHP dependencies
-
-## 🚀 Instalasi & Menjalankan Secara Lokal- `package.json` - JavaScript dependencies
-
-
-
-### 1. Clone repository---
-
-
-
-```bash## 📦 Prasyarat
-
-git clone https://github.com/ghilmanfz/rekrutpro.git
-
-cd rekrutproSebelum menjalankan proyek ini, pastikan sudah menginstall:
-
-```
-
-- **PHP 8.2 atau lebih baru**
-
-### 2. Copy file environment- **Composer** (latest version)
+- **Composer** (latest)- Dashboard Kandidat untuk tracking aplikasi### 📊 Dashboard & Reporting
 
 - **Node.js 18+ & npm**
 
-```bash- **MySQL 8.0+ / MariaDB 10.3+**
+- **MySQL 8.0+ / MariaDB 10.3+**- Audit log untuk semua aktivitas penting- Dashboard HR untuk monitoring rekrutmen
 
-cp .env.example .env- **Git** (untuk clone repository)
+- **Git**
 
-```- **Web Server** (Apache/Nginx) atau gunakan built-in PHP server
+- Dashboard Kandidat untuk tracking aplikasi
 
+---
 
+### 🔐 Role & Permission- Statistik dan metrik proses rekrutmen
 
-### 3. Konfigurasi database di `.env`### Ekstensi PHP yang Diperlukan:
+## 🚀 Instalasi & Menjalankan Secara Lokal
 
-- OpenSSL
+| Role | Akses |- Audit log untuk semua aktivitas penting
 
-```env- PDO
+### 1. Clone repository
 
-DB_CONNECTION=mysql- Mbstring
+|------|-------|
 
-DB_HOST=127.0.0.1- Tokenizer
+```bash
 
-DB_PORT=3306- XML
+git clone https://github.com/ghilmanfz/rekrutpro.git| **SuperAdmin** | Full access ke seluruh sistem & konfigurasi |### 🔐 Role & Permission Management
 
-DB_DATABASE=rekrutpro- Ctype
+cd rekrutpro
 
-DB_USERNAME=root- JSON
-
-DB_PASSWORD=- BCMath
-
-```- Fileinfo
+```| **HR** | Manage lowongan, review kandidat, manage offers |- **Admin**: Full access ke seluruh sistem
 
 
 
-### 4. Install dependencies---
+### 2. Copy file environment| **Interviewer** | Akses interview & feedback |- **HR**: Manage lowongan, review kandidat, manage offers
 
 
 
-```bash## 🚀 Cara Menjalankan Proyek Secara Lokal
+```bash| **Candidate** | Apply lowongan, respond offers, track status |- **Interviewer**: Akses ke interview & feedback
 
-composer install
+cp .env.example .env
 
-npm install1. **Clone repository**
+```- **Candidate**: Apply lowongan, respond offers, track status
+
+
+
+### 3. Konfigurasi database di `.env`---
+
+
+
+```env> 📚 **Dokumentasi Lengkap**:
+
+DB_CONNECTION=mysql
+
+DB_HOST=127.0.0.1## 🛠 Tech Stack> - `DOKUMENTASI_ALUR_PROGRAM_LENGKAP.md` - Dokumentasi sistem lengkap (5776+ baris)
+
+DB_PORT=3306
+
+DB_DATABASE=rekrutpro> - `DOKUMENTASI_UPDATE_OFFER_MANAGEMENT.md` - Update fitur Offer Management terbaru
+
+DB_USERNAME=root
+
+DB_PASSWORD=### Backend> - `README_SISTEM_REKRUTMEN.md` - Overview sistem rekrutmen
 
 ```
 
-   ```bash
+- **PHP 8.2+**> - `INTERVIEWER_FEATURES_COMPLETED.md` - Fitur interviewer
 
-### 5. Generate application key   git clone https://github.com/ghilmanfz/rekrutpro.git
+### 4. Install dependencies
 
-   cd rekrutpro
+- **Laravel 12.x**> - `TESTING_GUIDE.md` - Panduan testing
 
-```bash````
+```bash
+
+composer install- **MySQL / MariaDB**> - `CHANGELOG.md` - Riwayat perubahan
+
+npm install
+
+```- **Eloquent ORM**
+
+
+
+### 5. Generate application key---
+
+
+
+```bash### Frontend
 
 php artisan key:generate
 
-```2. **Copy file environment**
+```- **Blade** — Templating engine## 🛠 Tech Stack
 
 
 
-### 6. Jalankan migrasi & seeder   ```bash
+### 6. Jalankan migrasi & seeder- **Tailwind CSS 3.x** — Utility-first CSS framework
 
-   cp .env.example .env
 
-```bash   ```
+
+```bash- **Alpine.js 3.x** — Lightweight JavaScript frameworkProyek ini dibangun menggunakan:
 
 php artisan migrate --seed
 
+```
+
+
+
+> ⚠️ Gunakan `php artisan migrate:fresh --seed` untuk reset database dari awal (semua data terhapus).### Build Tools### Backend
+
+
+
+### 7. Build frontend assets- **Vite** — Frontend bundler- **PHP 8.2+** 
+
+
+
+```bash- **Composer** — PHP dependency manager- **Laravel 11.x** - Framework utama
+
+# Development (dengan hot reload)
+
+npm run dev- **npm** — Node package manager- **MySQL / MariaDB** - Database relasional
+
+
+
+# Production build- **Eloquent ORM** - Database abstraction
+
+npm run build
+
+```### Dev Packages
+
+
+
+### 8. Jalankan server- **Laravel Breeze** — Authentication scaffolding### Frontend
+
+
+
+```bash- **Laravel Pint** — Code style fixer- **Blade** - Templating engine
+
+php artisan serve
+
+```- **Laravel Sail** — Docker environment (opsional)- **Tailwind CSS** - Utility-first CSS framework
+
+
+
+Akses aplikasi di: **http://localhost:8000**- **PHPUnit 11** — Testing framework- **Alpine.js** - Lightweight JavaScript framework
+
+
+
+---- **Font Awesome** - Icon library
+
+
+
+## 🎭 Default Akun (setelah seeder)---
+
+
+
+| Role | Email | Password |### Build Tools & Development
+
+|------|-------|----------|
+
+| SuperAdmin | `superadmin@rekrutpro.com` | `password` |## 📦 Prasyarat- **Vite** - Frontend bundler (lihat `vite.config.js`)
+
+| HR | `hr@rekrutpro.com` | `password` |
+
+| Interviewer | `interviewer@rekrutpro.com` | `password` |- **Composer** - PHP dependency manager
+
+| Candidate | `candidate@rekrutpro.com` | `password` |
+
+Pastikan sudah menginstall:- **npm** - Node package manager
+
+> 💡 Ubah password setelah login pertama kali!
+
+- **Laravel Sail** (optional) - Docker development environment
+
+---
+
+- **PHP 8.2+** (dengan ekstensi: OpenSSL, PDO, Mbstring, Tokenizer, XML, Ctype, JSON, BCMath, Fileinfo)
+
+## 🧪 Testing
+
+- **Composer** (latest)### Key Laravel Packages
+
+```bash
+
+# Jalankan semua tests- **Node.js 18+ & npm**- **Laravel Sanctum** - API authentication
+
+php artisan test
+
+- **MySQL 8.0+ / MariaDB 10.3+**- **Laravel Pint** - Code style fixer
+
+# Test spesifik
+
+php artisan test --filter=NamaTest- **Git**- **PHPUnit** - Testing framework
+
+
+
+# Dengan coverage report
+
+php artisan test --coverage
+
+```---Detail versi dependency lengkap:
+
+
+
+Struktur test:- `composer.json` - PHP dependencies
+
+- `tests/Feature/` — Feature tests (HTTP, Database, Integration)
+
+- `tests/Unit/` — Unit tests (Model, Service, Helper)## 🚀 Instalasi & Menjalankan Secara Lokal- `package.json` - JavaScript dependencies
+
+
+
+---
+
+
+
+## 🗂 Struktur Folder### 1. Clone repository---
+
+
+
+```
+
+rekrutpro/
+
+├── app/```bash## 📦 Prasyarat
+
+│   ├── Http/Controllers/
+
+│   │   ├── Auth/           # Autentikasigit clone https://github.com/ghilmanfz/rekrutpro.git
+
+│   │   ├── SuperAdmin/     # SuperAdmin controllers
+
+│   │   ├── HR/             # HR controllerscd rekrutproSebelum menjalankan proyek ini, pastikan sudah menginstall:
+
+│   │   ├── Interviewer/    # Interviewer controllers
+
+│   │   └── Candidate/      # Candidate controllers```
+
+│   ├── Models/             # Eloquent models
+
+│   ├── Services/           # Business logic services- **PHP 8.2 atau lebih baru**
+
+│   └── Providers/          # Service providers
+
+├── database/### 2. Copy file environment- **Composer** (latest version)
+
+│   ├── migrations/         # Database migrations
+
+│   ├── seeders/            # Database seeders- **Node.js 18+ & npm**
+
+│   └── factories/          # Model factories
+
+├── resources/```bash- **MySQL 8.0+ / MariaDB 10.3+**
+
+│   ├── views/              # Blade templates
+
+│   │   ├── hr/cp .env.example .env- **Git** (untuk clone repository)
+
+│   │   ├── interviewer/
+
+│   │   └── candidate/```- **Web Server** (Apache/Nginx) atau gunakan built-in PHP server
+
+│   ├── css/
+
+│   └── js/
+
+├── routes/
+
+│   └── web.php### 3. Konfigurasi database di `.env`### Ekstensi PHP yang Diperlukan:
+
+└── tests/
+
+    ├── Feature/- OpenSSL
+
+    └── Unit/
+
+``````env- PDO
+
+
+
+---DB_CONNECTION=mysql- Mbstring
+
+
+
+## 🤝 KontribusiDB_HOST=127.0.0.1- Tokenizer
+
+
+
+1. **Fork** repository iniDB_PORT=3306- XML
+
+2. Buat branch baru:
+
+   ```bashDB_DATABASE=rekrutpro- Ctype
+
+   git checkout -b feature/nama-fitur
+
+   ```DB_USERNAME=root- JSON
+
+3. Commit dengan pesan yang jelas:
+
+   ```bashDB_PASSWORD=- BCMath
+
+   git commit -m "feat: menambahkan fitur X"
+
+   ``````- Fileinfo
+
+   > Format: `feat:` | `fix:` | `docs:` | `refactor:` | `test:`
+
+4. Push dan buat **Pull Request** ke branch `main`
+
+
+
+---### 4. Install dependencies---
+
+
+
+## 🐛 Bug Report & Feature Request
+
+
+
+Buat [Issue baru](https://github.com/ghilmanfz/rekrutpro/issues) dengan menyertakan:```bash## 🚀 Cara Menjalankan Proyek Secara Lokal
+
+- Deskripsi masalah/fitur
+
+- Steps to reproduce (untuk bug)composer install
+
+- Expected vs Actual behavior
+
+- Environment (PHP version, OS, dll)npm install1. **Clone repository**
+
+
+
+---```
+
+
+
+## 🚀 Roadmap   ```bash
+
+
+
+### ✅ Selesai### 5. Generate application key   git clone https://github.com/ghilmanfz/rekrutpro.git
+
+- [x] Authentication & role-based authorization
+
+- [x] Job posting management   cd rekrutpro
+
+- [x] Application tracking
+
+- [x] Interview scheduling & feedback```bash````
+
+- [x] Offer management + negosiasi gaji
+
+- [x] Audit loggingphp artisan key:generate
+
+- [x] Dashboard & reporting
+
+```2. **Copy file environment**
+
+### 📋 Planned
+
+- [ ] Email notifications
+
+- [ ] Advanced search & filters
+
+- [ ] Export to PDF/Excel### 6. Jalankan migrasi & seeder   ```bash
+
+- [ ] Mobile responsive optimization
+
+- [ ] Multi-language support   cp .env.example .env
+
+- [ ] Advanced analytics & reporting
+
+```bash   ```
+
+---
+
+php artisan migrate --seed
+
+## 📧 Kontak
+
 ```3. **Atur konfigurasi database di `.env`**
 
+- **GitHub**: [@ghilmanfz](https://github.com/ghilmanfz)
+
+- **Issues**: [github.com/ghilmanfz/rekrutpro/issues](https://github.com/ghilmanfz/rekrutpro/issues)
 
 
-> ⚠️ Gunakan `php artisan migrate:fresh --seed` untuk reset database dari awal (semua data terhapus).   Sesuaikan dengan konfigurasi lokal kamu:
+
+---> ⚠️ Gunakan `php artisan migrate:fresh --seed` untuk reset database dari awal (semua data terhapus).   Sesuaikan dengan konfigurasi lokal kamu:
 
 
 
-### 7. Build frontend assets   ```env
+## 📜 License
 
-   DB_CONNECTION=mysql
 
-```bash   DB_HOST=127.0.0.1
 
-# Development (dengan hot reload)   DB_PORT=3306
+Project ini dibuat untuk tujuan pembelajaran dan pengembangan. Silakan digunakan dan dimodifikasi sesuai kebutuhan.### 7. Build frontend assets   ```env
 
-npm run dev   DB_DATABASE=rekrutpro
 
-   DB_USERNAME=root
 
-# Production build   DB_PASSWORD=
+---   DB_CONNECTION=mysql
 
-npm run build   ```
 
-```
 
-4. **Install dependency backend (Composer)**
+## 📸 Screenshots```bash   DB_HOST=127.0.0.1
 
-### 8. Jalankan server
 
-   ```bash
 
-```bash   composer install
+<img width="1883" alt="Dashboard HR" src="https://github.com/user-attachments/assets/2d811d76-fb8c-4945-b415-9e2b90672b89" /># Development (dengan hot reload)   DB_PORT=3306
 
-php artisan serve   ```
 
-```
 
-5. **Generate application key**
+<img width="1905" alt="Job Posting" src="https://github.com/user-attachments/assets/05337634-8576-4118-abaf-349a123570b2" />npm run dev   DB_DATABASE=rekrutpro
 
-Akses aplikasi di: **http://localhost:8000**
 
-   ```bash
 
----   php artisan key:generate
+<img width="1885" alt="Kandidat Management" src="https://github.com/user-attachments/assets/689ae0d9-6334-4508-85fb-706c16804c10" />   DB_USERNAME=root
 
-   ```
+
+
+<img width="1886" alt="Proses Interview" src="https://github.com/user-attachments/assets/f87d8043-7c53-4161-8e82-31042d6eaeef" /># Production build   DB_PASSWORD=
+
+
+
+<img width="1755" alt="Offer Management" src="https://github.com/user-attachments/assets/66eb81e0-66bb-4933-8f63-9022a5ff65b8" />npm run build   ```
+
+
+
+<img width="1919" alt="Dashboard Kandidat" src="https://github.com/user-attachments/assets/31abf65b-cfa7-459d-b011-8703684da8a8" />```
+
+
+
+<img width="1755" alt="Assessment" src="https://github.com/user-attachments/assets/5978a39a-75f7-42ac-8440-411e6fa234a7" />4. **Install dependency backend (Composer)**
+
+
+
+<img width="1880" alt="Aplikasi Lamaran" src="https://github.com/user-attachments/assets/306032ac-fe3e-4b6a-929a-d0a8f5a7944b" />### 8. Jalankan server
+
+
+
+<img width="1889" alt="Profile Kandidat" src="https://github.com/user-attachments/assets/50041f76-899c-495c-9827-588cf75051be" />   ```bash
+
+
+
+<img width="1755" alt="Negosiasi Gaji" src="https://github.com/user-attachments/assets/4ec55341-9128-452e-b0b3-a95ebb947f90" />```bash   composer install
+
+
+
+<img width="1884" alt="Audit Log" src="https://github.com/user-attachments/assets/cd5e8b9a-7136-427e-a08c-35f67b969dd2" />php artisan serve   ```
+
+
+
+<img width="1911" alt="SuperAdmin Panel" src="https://github.com/user-attachments/assets/6af6c46d-afcd-4334-a9f3-52dfe5954a39" />```
+
+
+
+---5. **Generate application key**
+
+
+
+<div align="center">Akses aplikasi di: **http://localhost:8000**
+
+
+
+**Made with ❤️ using Laravel**   ```bash
+
+
+
+⭐ Star this repo if you find it helpful!---   php artisan key:generate
+
+
+
+</div>   ```
+
 
 ### 🎭 Default Akun (setelah seeder)
 
