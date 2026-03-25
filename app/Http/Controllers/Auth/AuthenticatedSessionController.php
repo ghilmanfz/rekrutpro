@@ -34,7 +34,14 @@ class AuthenticatedSessionController extends Controller
         // ✅ PERBAIKAN: Jika registrasi belum complete, redirect ke step yang belum selesai
         if (!$user->registration_completed && $user->role->name === 'candidate') {
             // Redirect ke step yang sesuai berdasarkan registration_step
-            $step = $user->registration_step ?? 1;
+            $step = $user->registration_step ?? 2; // Default ke step 2 karena step 1 sudah selesai saat register
+            
+            // Pastikan step valid (2-5)
+            if ($step < 2) {
+                $step = 2;
+            } elseif ($step > 5) {
+                $step = 5;
+            }
             
             return redirect()->route("register.step{$step}")
                 ->with('info', 'Silakan lanjutkan proses registrasi Anda.');
