@@ -7,16 +7,19 @@ use App\Models\Application;
 use App\Models\JobPosting;
 use App\Models\AuditLog;
 use App\Services\FileUploadService;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class ApplicationController extends Controller
 {
     protected $fileUploadService;
+    protected $notificationService;
 
-    public function __construct(FileUploadService $fileUploadService)
+    public function __construct(FileUploadService $fileUploadService, NotificationService $notificationService)
     {
         $this->fileUploadService = $fileUploadService;
+        $this->notificationService = $notificationService;
     }
 
     /**
@@ -150,7 +153,18 @@ class ApplicationController extends Controller
                 'user_agent' => $request->userAgent(),
             ]);
 
-            // TODO: Send notification to candidate and HR
+            // Send WhatsApp notification to candidate
+            if ($user->phone) {
+                $this->notificationService->sendWhatsApp('application_submitted', $user->phone, [
+                    'candidate_name'     => $user->full_name ?? $user->name,
+                    'nama'               => $user->full_name ?? $user->name,
+                    'job_title'          => $application->jobPosting->title,
+                    'posisi'             => $application->jobPosting->title,
+                    'application_number' => $applicationCode,
+                    'kode_lamaran'       => $applicationCode,
+                    'company_name'       => config('app.name', 'RekrutPro'),
+                ]);
+            }
 
             return redirect()
                 ->route('candidate.applications.show', $application->id)

@@ -43,26 +43,17 @@
                 <form method="POST" action="{{ route('register.step4.process') }}">
                     @csrf
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Nomor Telepon *</label>
-                            <input type="tel" name="phone" value="{{ old('phone') }}" placeholder="+62 812 3456 7890" required
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            @error('phone')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Pendidikan Terakhir *</label>
-                            <select name="education" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                <option value="">Pilih Pendidikan</option>
-                                <option value="SMA/SMK">SMA/SMK</option>
-                                <option value="D3">D3</option>
-                                <option value="S1">S1</option>
-                                <option value="S2">S2</option>
-                                <option value="S3">S3</option>
-                            </select>
-                            @error('education')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
-                        </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Pendidikan Terakhir *</label>
+                        <select name="education" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">Pilih Pendidikan</option>
+                            <option value="SMA/SMK">SMA/SMK</option>
+                            <option value="D3">D3</option>
+                            <option value="S1">S1</option>
+                            <option value="S2">S2</option>
+                            <option value="S3">S3</option>
+                        </select>
+                        @error('education')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
 
                     <div class="mb-4">

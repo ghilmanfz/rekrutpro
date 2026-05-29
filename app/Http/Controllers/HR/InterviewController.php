@@ -7,6 +7,7 @@ use App\Models\Application;
 use App\Models\AuditLog;
 use App\Models\Interview;
 use App\Models\User;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 
 class InterviewController extends Controller
@@ -80,7 +81,33 @@ class InterviewController extends Controller
 
         AuditLog::log('create', $interview, [], $validated);
 
-        // TODO: Send notification to candidate and interviewer
+        // Send WhatsApp notification to candidate
+        $application->load(['candidate', 'jobPosting']);
+        $candidate = $application->candidate;
+        if ($candidate && $candidate->phone) {
+            app(NotificationService::class)->sendWhatsApp(
+                'interview_scheduled',
+                $candidate->phone,
+                [
+                    'nama'               => $candidate->full_name ?? $candidate->name,
+                    'candidate_name'     => $candidate->full_name ?? $candidate->name,
+                    'kode_lamaran'       => $application->application_code ?? $application->code,
+                    'application_number' => $application->application_code ?? $application->code,
+                    'posisi'             => $application->jobPosting->title ?? '',
+                    'job_title'          => $application->jobPosting->title ?? '',
+                    'tanggal'            => \Carbon\Carbon::parse($interview->scheduled_at)->format('d/m/Y'),
+                    'interview_date'     => \Carbon\Carbon::parse($interview->scheduled_at)->format('d/m/Y'),
+                    'waktu'              => \Carbon\Carbon::parse($interview->scheduled_at)->format('H:i'),
+                    'interview_time'     => \Carbon\Carbon::parse($interview->scheduled_at)->format('H:i'),
+                    'lokasi'             => $interview->location,
+                    'interview_location' => $interview->location,
+                    'interviewer'        => optional($interview->interviewer)->name ?? '',
+                    'interviewer_name'   => optional($interview->interviewer)->name ?? '',
+                    'interview_type'     => $interview->interview_type ?? '',
+                    'company_name'       => config('app.name', 'RekrutPro'),
+                ]
+            );
+        }
 
         return redirect()->back()->with('success', 'Jadwal interview berhasil dibuat.');
     }

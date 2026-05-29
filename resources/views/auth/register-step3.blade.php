@@ -21,11 +21,11 @@
 
             <div class="bg-white rounded-xl shadow-lg p-8">
                 <div class="text-center mb-6">
-                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-envelope text-blue-600 text-2xl"></i>
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fab fa-whatsapp text-green-600 text-2xl"></i>
                     </div>
-                    <h2 class="text-2xl font-bold text-gray-900">Verifikasi Email</h2>
-                    <p class="text-gray-600 mt-2">Step 3 dari 5 - Masukkan kode OTP yang dikirim ke email Anda</p>
+                    <h2 class="text-2xl font-bold text-gray-900">Verifikasi WhatsApp</h2>
+                    <p class="text-gray-600 mt-2">Step 3 dari 5 - Masukkan kode OTP yang dikirim ke WhatsApp Anda</p>
                 </div>
 
                 <!-- Progress -->

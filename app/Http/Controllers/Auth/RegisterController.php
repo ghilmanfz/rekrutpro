@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Role;
+use App\Models\SystemConfig;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
 class RegisterController extends Controller
@@ -27,8 +29,11 @@ class RegisterController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
+            'phone' => 'required|string|max:20|regex:/^628[0-9]{7,12}$/',
             'password' => 'required|string|min:8|confirmed',
             'agree_terms' => 'required|accepted',
+        ], [
+            'phone.regex' => 'Format nomor WhatsApp tidak valid. Gunakan format 628xxx (contoh: 6281234567890).',
         ]);
 
         // Get candidate role
@@ -43,6 +48,7 @@ class RegisterController extends Controller
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
+            'phone' => $validated['phone'],
             'password' => Hash::make($validated['password']),
             'role_id' => $candidateRole->id,
             'registration_step' => 1,
@@ -124,9 +130,8 @@ class RegisterController extends Controller
             'otp_expires_at' => now()->addMinutes(10),
         ]);
 
-        // TODO: Send OTP via email
-        // For development, show OTP in session
-        session()->flash('otp_code', $otpCode);
+        // Send OTP via WhatsApp (Fonnte API)
+        $this->sendOtpWhatsApp($user->phone, $otpCode);
 
         return view('auth.register-step3');
     }
@@ -180,7 +185,6 @@ class RegisterController extends Controller
     public function processStep4(Request $request)
     {
         $validated = $request->validate([
-            'phone' => 'required|string|max:20',
             'address' => 'required|string',
             'education' => 'required|in:SMA/SMK,D3,S1,S2,S3',
             'experience' => 'nullable|string',
@@ -190,7 +194,6 @@ class RegisterController extends Controller
         $user = auth()->user();
         
         $user->update([
-            'phone' => $validated['phone'],
             'address' => $validated['address'],
             'education' => $validated['education'],
             'experience' => $validated['experience'],
@@ -249,9 +252,34 @@ class RegisterController extends Controller
             'otp_expires_at' => now()->addMinutes(10),
         ]);
 
-        // TODO: Send OTP via email
-        session()->flash('otp_code', $otpCode);
+        // Send OTP via WhatsApp (Fonnte API)
+        $this->sendOtpWhatsApp($user->phone, $otpCode);
 
-        return back()->with('success', 'Kode OTP baru telah dikirim ke email Anda.');
+        return back()->with('success', 'Kode OTP baru telah dikirim ke WhatsApp Anda.');
+    }
+
+    /**
+     * Send OTP via WhatsApp using Fonnte API
+     */
+    private function sendOtpWhatsApp(string $phone, string $otpCode): void
+    {
+        $apiKey = SystemConfig::get('whatsapp_api_key');
+
+        if (!$apiKey) {
+            \Log::warning('WhatsApp API key not configured. OTP (dev): ' . $otpCode);
+            return;
+        }
+
+        $message = "Kode OTP RekrutPro Anda: *{$otpCode}*\n\nKode ini berlaku selama 10 menit. Jangan bagikan kode ini kepada siapapun.";
+
+        try {
+            Http::withHeaders(['Authorization' => $apiKey])
+                ->post('https://api.fonnte.com/send', [
+                    'target' => $phone,
+                    'message' => $message,
+                ]);
+        } catch (\Exception $e) {
+            \Log::error('Failed to send OTP via WhatsApp: ' . $e->getMessage());
+        }
     }
 }

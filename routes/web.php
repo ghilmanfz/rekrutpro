@@ -86,7 +86,6 @@ Route::middleware(['auth', 'super.admin', 'ensure.registration.completed'])->pre
     Route::put('/templates/{template}', [ConfigurationController::class, 'updateTemplate'])->name('templates.update');
     Route::delete('/templates/{template}', [ConfigurationController::class, 'destroyTemplate'])->name('templates.destroy');
     Route::post('/config/whatsapp', [ConfigurationController::class, 'updateWhatsAppConfig'])->name('config.whatsapp');
-    Route::post('/config/email', [ConfigurationController::class, 'updateEmailConfig'])->name('config.email');
     
     // Audit & Reports
     Route::get('/audit', [AuditController::class, 'index'])->name('audit');

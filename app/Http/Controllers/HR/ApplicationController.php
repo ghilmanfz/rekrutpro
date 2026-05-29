@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Application;
 use App\Models\AuditLog;
 use App\Models\JobPosting;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 
 class ApplicationController extends Controller
@@ -106,7 +107,33 @@ class ApplicationController extends Controller
             'user_agent' => $request->userAgent(),
         ]);
 
-        // TODO: Send notification to candidate
+        // Send WhatsApp notification to candidate
+        $eventMap = [
+            'screening_passed'   => 'screening_passed',
+            'interview_passed'   => 'interview_passed',
+            'rejected_admin'     => 'screening_rejected',
+            'rejected_interview' => 'interview_rejected',
+        ];
+
+        if (isset($eventMap[$newStatus])) {
+            $application->load(['candidate', 'jobPosting']);
+            $candidate = $application->candidate;
+            if ($candidate && $candidate->phone) {
+                app(NotificationService::class)->sendWhatsApp(
+                    $eventMap[$newStatus],
+                    $candidate->phone,
+                    [
+                        'nama'           => $candidate->full_name ?? $candidate->name,
+                        'candidate_name' => $candidate->full_name ?? $candidate->name,
+                        'kode_lamaran'   => $application->application_code ?? $application->code,
+                        'application_number' => $application->application_code ?? $application->code,
+                        'posisi'         => $application->jobPosting->title ?? '',
+                        'job_title'      => $application->jobPosting->title ?? '',
+                        'company_name'   => config('app.name', 'RekrutPro'),
+                    ]
+                );
+            }
+        }
 
         return redirect()->back()->with('success', 'Status aplikasi berhasil diperbarui');
     }

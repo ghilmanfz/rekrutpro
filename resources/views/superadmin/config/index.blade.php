@@ -15,7 +15,7 @@
         <div class="bg-white border-b px-8 py-4 flex justify-between items-center">
             <div>
                 <h2 class="text-2xl font-bold text-gray-800">Konfigurasi Sistem</h2>
-                <p class="text-sm text-gray-600 mt-1">Pengaturan WhatsApp API, Email & Template Notifikasi</p>
+                <p class="text-sm text-gray-600 mt-1">Pengaturan WhatsApp API & Template Notifikasi</p>
             </div>
             <div class="flex items-center gap-4">
                 <div class="text-right">
@@ -73,91 +73,12 @@
                 </div>
             </div>
 
-            <!-- Konfigurasi Email Section -->
-            <div class="mb-8">
-                <h3 class="text-lg font-semibold mb-4">Konfigurasi Email</h3>
-                <div class="bg-white rounded-lg shadow-sm border p-6">
-                    <form action="{{ route('superadmin.config.email') }}" method="POST">
-                        @csrf
-                        <div class="grid grid-cols-2 gap-6 mb-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Mail Driver *</label>
-                                <select name="email_driver" required class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-                                    <option value="smtp" {{ $emailDriver == 'smtp' ? 'selected' : '' }}>SMTP</option>
-                                    <option value="sendmail" {{ $emailDriver == 'sendmail' ? 'selected' : '' }}>Sendmail</option>
-                                    <option value="mailgun" {{ $emailDriver == 'mailgun' ? 'selected' : '' }}>Mailgun</option>
-                                    <option value="ses" {{ $emailDriver == 'ses' ? 'selected' : '' }}>Amazon SES</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Host *</label>
-                                <input type="text" name="email_host" value="{{ $emailHost }}" required 
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                                    placeholder="smtp.gmail.com">
-                            </div>
-                        </div>
-                        
-                        <div class="grid grid-cols-2 gap-6 mb-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Port *</label>
-                                <input type="number" name="email_port" value="{{ $emailPort }}" required 
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                                    placeholder="587">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Encryption *</label>
-                                <select name="email_encryption" required class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-                                    <option value="tls" {{ $emailEncryption == 'tls' ? 'selected' : '' }}>TLS</option>
-                                    <option value="ssl" {{ $emailEncryption == 'ssl' ? 'selected' : '' }}>SSL</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-6 mb-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Username *</label>
-                                <input type="text" name="email_username" value="{{ $emailUsername }}" required 
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                                    placeholder="your-email@gmail.com">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Password *</label>
-                                <input type="password" name="email_password" value="{{ $emailPassword }}" required 
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                                    placeholder="••••••••">
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-6 mb-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">From Email *</label>
-                                <input type="email" name="email_from_address" value="{{ $emailFromAddress }}" required 
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                                    placeholder="noreply@rekrutpro.com">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">From Name *</label>
-                                <input type="text" name="email_from_name" value="{{ $emailFromName }}" required 
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                                    placeholder="RekrutPro">
-                            </div>
-                        </div>
-
-                        <div class="mt-4">
-                            <button type="submit" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium">
-                                Simpan Konfigurasi Email
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
             <!-- Template Notifikasi Section -->
             <div class="mb-8">
                 <div class="flex justify-between items-center mb-4">
                     <div>
                         <h3 class="text-lg font-semibold">Template Notifikasi</h3>
-                        <p class="text-sm text-gray-600 mt-1">Kelola template email dan WhatsApp</p>
+                        <p class="text-sm text-gray-600 mt-1">Kelola template WhatsApp</p>
                     </div>
                     <button onclick="openModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm">
                         + Tambah Template
@@ -198,7 +119,7 @@
                                     <span class="text-sm font-medium text-gray-900">{{ $template->event }}</span>
                                 </td>
                                 <td class="px-6 py-4">
-                                    @if($template->channel == 'email')
+                                    @if(($template->channel ?? $template->type) == 'email')
                                     <span class="px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Email</span>
                                     @else
                                     <span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">WhatsApp</span>
@@ -257,18 +178,13 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-2">Channel *</label>
-                        <select name="channel" id="templateChannel" required class="w-full px-3 py-2 border rounded-lg">
-                            <option value="">-- Pilih Channel --</option>
-                            <option value="email">Email</option>
-                            <option value="whatsapp">WhatsApp</option>
-                        </select>
+                        <label class="block text-sm font-medium mb-2">Channel</label>
+                        <input type="hidden" name="channel" value="whatsapp">
+                        <div class="w-full px-3 py-2 border border-gray-200 rounded-lg bg-gray-50 flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span>
+                            <span class="text-sm font-medium text-gray-700">WhatsApp</span>
+                        </div>
                     </div>
-                </div>
-
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Subject (untuk Email)</label>
-                    <input type="text" name="subject" id="templateSubject" class="w-full px-3 py-2 border rounded-lg" placeholder="Contoh: Konfirmasi Lamaran - @{{ posisi }}">
                 </div>
 
                 <div class="mb-4">
@@ -302,10 +218,13 @@
             document.getElementById('templateForm').action = "{{ url('superadmin/templates') }}/" + template.id;
             document.getElementById('templateMethod').value = 'PUT';
             document.getElementById('templateEvent').value = template.event;
-            document.getElementById('templateChannel').value = template.channel;
-            document.getElementById('templateSubject').value = template.subject || '';
             document.getElementById('templateBody').value = template.body;
             document.getElementById('modalTitle').textContent = 'Edit Template Notifikasi';
+            // Set subject if the field exists
+            var subjectField = document.querySelector('[name="subject"]');
+            if (subjectField) {
+                subjectField.value = template.subject || '';
+            }
             openModal();
         }
     </script>

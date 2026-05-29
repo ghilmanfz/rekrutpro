@@ -19,28 +19,11 @@ class ConfigurationController extends Controller
         // Get system configurations
         $whatsappPhone = SystemConfig::get('whatsapp_phone');
         $whatsappApiKey = SystemConfig::get('whatsapp_api_key');
-        
-        $emailDriver = SystemConfig::get('email_driver', 'smtp');
-        $emailHost = SystemConfig::get('email_host');
-        $emailPort = SystemConfig::get('email_port', 587);
-        $emailUsername = SystemConfig::get('email_username');
-        $emailPassword = SystemConfig::get('email_password');
-        $emailEncryption = SystemConfig::get('email_encryption', 'tls');
-        $emailFromAddress = SystemConfig::get('email_from_address');
-        $emailFromName = SystemConfig::get('email_from_name');
 
         return view('superadmin.config.index', compact(
             'templates',
             'whatsappPhone',
-            'whatsappApiKey',
-            'emailDriver',
-            'emailHost',
-            'emailPort',
-            'emailUsername',
-            'emailPassword',
-            'emailEncryption',
-            'emailFromAddress',
-            'emailFromName'
+            'whatsappApiKey'
         ));
     }
 
@@ -50,13 +33,38 @@ class ConfigurationController extends Controller
     public function storeTemplate(Request $request)
     {
         $validated = $request->validate([
-            'event' => 'required|string|max:255|unique:notification_templates',
+            'event' => 'required|string|max:255',
             'channel' => 'required|in:email,whatsapp',
             'subject' => 'nullable|string|max:255',
             'body' => 'required|string',
         ]);
 
-        NotificationTemplate::create($validated);
+        // Check if template with same event + channel already exists
+        $exists = NotificationTemplate::where('event', $validated['event'])
+            ->where(function ($q) use ($validated) {
+                $q->where('type', $validated['channel'])
+                  ->orWhere('channel', $validated['channel']);
+            })
+            ->exists();
+
+        if ($exists) {
+            return back()->with('error', 'Template untuk event ini dengan channel yang sama sudah ada.');
+        }
+
+        // Generate name and slug from event
+        $name = ucwords(str_replace('_', ' ', $validated['event'])) . ' - ' . ucfirst($validated['channel']);
+        $slug = $validated['event'] . '-' . $validated['channel'];
+
+        NotificationTemplate::create([
+            'name' => $name,
+            'slug' => $slug,
+            'type' => $validated['channel'],     // For seeder-based lookup
+            'channel' => $validated['channel'],  // For admin UI-based lookup
+            'event' => $validated['event'],
+            'subject' => $validated['subject'],
+            'body' => $validated['body'],
+            'is_active' => true,
+        ]);
 
         return back()->with('success', 'Template notifikasi berhasil ditambahkan');
     }
@@ -67,13 +75,19 @@ class ConfigurationController extends Controller
     public function updateTemplate(Request $request, NotificationTemplate $template)
     {
         $validated = $request->validate([
-            'event' => 'required|string|max:255|unique:notification_templates,event,' . $template->id,
+            'event' => 'required|string|max:255',
             'channel' => 'required|in:email,whatsapp',
             'subject' => 'nullable|string|max:255',
             'body' => 'required|string',
         ]);
 
-        $template->update($validated);
+        $template->update([
+            'event' => $validated['event'],
+            'type' => $validated['channel'],     // Sync both fields
+            'channel' => $validated['channel'],
+            'subject' => $validated['subject'],
+            'body' => $validated['body'],
+        ]);
 
         return back()->with('success', 'Template notifikasi berhasil diperbarui');
     }
@@ -102,28 +116,5 @@ class ConfigurationController extends Controller
         SystemConfig::set('whatsapp_api_key', $validated['whatsapp_api_key'], 'string', 'API Key dari Fonnte.com');
 
         return back()->with('success', 'Konfigurasi WhatsApp berhasil diperbarui');
-    }
-
-    /**
-     * Update Email configuration
-     */
-    public function updateEmailConfig(Request $request)
-    {
-        $validated = $request->validate([
-            'email_driver' => 'required|in:smtp,sendmail,mailgun,ses',
-            'email_host' => 'required|string|max:255',
-            'email_port' => 'required|integer',
-            'email_username' => 'required|string|max:255',
-            'email_password' => 'required|string|max:255',
-            'email_encryption' => 'required|in:tls,ssl',
-            'email_from_address' => 'required|email|max:255',
-            'email_from_name' => 'required|string|max:255',
-        ]);
-
-        foreach ($validated as $key => $value) {
-            SystemConfig::set($key, $value, 'string');
-        }
-
-        return back()->with('success', 'Konfigurasi Email berhasil diperbarui');
     }
 }

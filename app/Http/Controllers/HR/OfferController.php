@@ -7,6 +7,7 @@ use App\Models\Application;
 use App\Models\AuditLog;
 use App\Models\Offer;
 use App\Models\OfferNegotiation;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 
 class OfferController extends Controller
@@ -64,7 +65,27 @@ class OfferController extends Controller
 
         AuditLog::log('create', $offer, [], $validated);
 
-        // TODO: Send offer letter to candidate
+        // Send WhatsApp notification to candidate
+        $application->load(['candidate', 'jobPosting']);
+        $candidate = $application->candidate;
+        if ($candidate && $candidate->phone) {
+            app(NotificationService::class)->sendWhatsApp(
+                'offer_sent',
+                $candidate->phone,
+                [
+                    'nama'               => $candidate->full_name ?? $candidate->name,
+                    'candidate_name'     => $candidate->full_name ?? $candidate->name,
+                    'kode_lamaran'       => $application->application_code ?? $application->code,
+                    'application_number' => $application->application_code ?? $application->code,
+                    'posisi'             => $application->jobPosting->title ?? '',
+                    'job_title'          => $application->jobPosting->title ?? '',
+                    'gaji'               => number_format((float) $request->salary, 0, ',', '.'),
+                    'salary_range'       => 'Rp ' . number_format((float) $request->salary, 0, ',', '.'),
+                    'start_date'         => $request->start_date,
+                    'company_name'       => config('app.name', 'RekrutPro'),
+                ]
+            );
+        }
 
         return redirect()->back()->with('success', 'Penawaran kerja berhasil dibuat.');
     }

@@ -10,6 +10,7 @@ class NotificationTemplate extends Model
         'name',
         'slug',
         'type',
+        'channel',
         'event',
         'subject',
         'body',
@@ -32,7 +33,8 @@ class NotificationTemplate extends Model
     {
         $body = $this->body;
         foreach ($data as $key => $value) {
-            $body = str_replace('{{'.$key.'}}', $value, $body);
+            // Replace both {{key}} and {{ key }} (with optional spaces)
+            $body = preg_replace('/\{\{\s*' . preg_quote($key, '/') . '\s*\}\}/', $value ?? '', $body);
         }
         return $body;
     }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Offer;
 use App\Models\OfferNegotiation;
 use App\Models\AuditLog;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 
 class OfferController extends Controller
@@ -43,6 +44,24 @@ class OfferController extends Controller
             'status' => 'accepted',
             'action' => 'Kandidat menerima penawaran'
         ]);
+
+        // Send WhatsApp notification to candidate
+        $offer->load(['application.candidate', 'application.jobPosting']);
+        $candidate = $offer->application->candidate;
+        if ($candidate && $candidate->phone) {
+            app(NotificationService::class)->sendWhatsApp(
+                'offer_accepted',
+                $candidate->phone,
+                [
+                    'nama'               => $candidate->full_name ?? $candidate->name,
+                    'candidate_name'     => $candidate->full_name ?? $candidate->name,
+                    'posisi'             => $offer->application->jobPosting->title ?? '',
+                    'job_title'          => $offer->application->jobPosting->title ?? '',
+                    'start_date'         => $offer->start_date ?? '',
+                    'company_name'       => config('app.name', 'RekrutPro'),
+                ]
+            );
+        }
 
         return redirect()->route('candidate.applications.show', $offer->application_id)
             ->with('success', 'Selamat! Anda telah menerima penawaran kerja.');
@@ -85,6 +104,23 @@ class OfferController extends Controller
             'status' => 'rejected',
             'action' => 'Kandidat menolak penawaran'
         ]);
+
+        // Send WhatsApp notification to candidate
+        $offer->load(['application.candidate', 'application.jobPosting']);
+        $candidate = $offer->application->candidate;
+        if ($candidate && $candidate->phone) {
+            app(NotificationService::class)->sendWhatsApp(
+                'offer_rejected',
+                $candidate->phone,
+                [
+                    'nama'               => $candidate->full_name ?? $candidate->name,
+                    'candidate_name'     => $candidate->full_name ?? $candidate->name,
+                    'posisi'             => $offer->application->jobPosting->title ?? '',
+                    'job_title'          => $offer->application->jobPosting->title ?? '',
+                    'company_name'       => config('app.name', 'RekrutPro'),
+                ]
+            );
+        }
 
         return redirect()->route('candidate.applications.show', $offer->application_id)
             ->with('success', 'Anda telah menolak penawaran kerja.');
