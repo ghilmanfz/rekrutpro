@@ -8,12 +8,12 @@ use Illuminate\Database\Seeder;
 
 class AssessmentSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
+    
+
+
     public function run(): void
     {
-        // Get completed interviews that DON'T have assessments yet, ordered by scheduled_at (oldest first)
+         
         $completedInterviews = Interview::where('status', 'completed')
             ->whereDoesntHave('assessment')
             ->orderBy('scheduled_at', 'asc')
@@ -25,7 +25,7 @@ class AssessmentSeeder extends Seeder
             return;
         }
 
-        // Leave the last 2 completed interviews without assessment (pending)
+         
         $total = $completedInterviews->count();
         $toCreate = max(0, $total - 2);
 
@@ -33,7 +33,7 @@ class AssessmentSeeder extends Seeder
         foreach ($completedInterviews->slice(0, $toCreate) as $interview) {
             $title = strtolower($interview->application->jobPosting->title ?? '');
 
-            // deterministic scores based on role keywords
+             
             if (str_contains($title, 'engineer') || str_contains($title, 'developer')) {
                 $technical = 85;
                 $problem = 80;

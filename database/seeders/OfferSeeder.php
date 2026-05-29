@@ -10,9 +10,9 @@ use Carbon\Carbon;
 
 class OfferSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
+    
+
+
     public function run(): void
     {
         $hrRole = \App\Models\Role::where('name', 'hr')->first();
@@ -32,7 +32,7 @@ class OfferSeeder extends Seeder
 
         $offers = [];
 
-        // Offer untuk UI/UX Designer (status: pending - menunggu respon kandidat)
+         
         if ($applications->count() > 0) {
             $app = $applications->first();
             

@@ -9,9 +9,9 @@
 <body class="bg-gray-50">
     @include('components.superadmin-sidebar')
 
-    <!-- Main Content -->
+     
     <main style="margin-left: 256px;">
-        <!-- Top Bar -->
+         
         <div class="bg-white border-b px-8 py-4 flex justify-between items-center">
             <div>
                 <h2 class="text-2xl font-bold text-gray-800">Laporan & Audit</h2>
@@ -28,13 +28,13 @@
             </div>
         </div>
 
-        <!-- Content Area -->
+         
         <div class="p-8">
-            <!-- Ringkasan Laporan -->
+             
             <div class="mb-8">
                 <h3 class="text-lg font-semibold text-gray-800 mb-4">Ringkasan Laporan Rekrutmen</h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- Total Lamaran -->
+                     
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                         <div class="flex items-center justify-between">
                             <div>
@@ -49,7 +49,7 @@
                         </div>
                     </div>
 
-                    <!-- Lolos Screening -->
+                     
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                         <div class="flex items-center justify-between">
                             <div>
@@ -64,7 +64,7 @@
                         </div>
                     </div>
 
-                    <!-- Rata-rata Waktu Hiring -->
+                     
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                         <div class="flex items-center justify-between">
                             <div>
@@ -81,13 +81,13 @@
                 </div>
             </div>
 
-            <!-- Log Audit Section -->
+             
             <div>
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-lg font-semibold text-gray-800">Log Audit</h3>
                 </div>
                 
-                <!-- Search Bar -->
+                 
                 <form method="GET" action="{{ route('superadmin.audit') }}" class="mb-6">
                     <div class="flex gap-3">
                         <div class="flex-1">
@@ -105,7 +105,7 @@
                     </div>
                 </form>
 
-                <!-- Audit Table -->
+                 
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="w-full">
@@ -140,7 +140,6 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                             @php
-                                                // Hanya tampilkan nama kandidat jika model_type adalah Application
                                                 $candidateName = '-';
                                                 if ($log->model_type === 'App\\Models\\Application') {
                                                     if ($log->new_values && isset($log->new_values['candidate_name'])) {
@@ -148,7 +147,6 @@
                                                     } elseif ($log->old_values && isset($log->old_values['candidate_name'])) {
                                                         $candidateName = $log->old_values['candidate_name'];
                                                     } elseif ($log->new_values && isset($log->new_values['name'])) {
-                                                        // Fallback ke 'name' field untuk backward compatibility
                                                         $candidateName = $log->new_values['name'];
                                                     }
                                                 }
@@ -183,7 +181,7 @@
                         </table>
                     </div>
 
-                    <!-- Pagination -->
+                     
                     @if($auditLogs->hasPages())
                         <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
                             {{ $auditLogs->links() }}
@@ -194,7 +192,7 @@
         </div>
     </main>
 
-    <!-- Modal Detail Audit -->
+     
     <div id="auditDetailModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div class="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
@@ -206,29 +204,22 @@
                 </button>
             </div>
             <div id="auditDetailContent" class="p-6">
-                <!-- Content will be loaded here -->
+                 
             </div>
         </div>
     </div>
 
     <script>
         const auditData = @json($auditLogs->items());
-        
-        console.log('Audit Data Loaded:', auditData);
 
         function showAuditDetail(logId) {
-            console.log('Show detail for log ID:', logId);
             const log = auditData.find(item => item.id === logId);
             
             if (!log) {
-                console.error('Log not found:', logId);
                 alert('Data tidak ditemukan!');
                 return;
             }
-            
-            console.log('Log data:', log);
 
-            // Status Change
             let statusChangeHtml = '';
             if (log.old_values && log.new_values && log.old_values.status && log.new_values.status) {
                 statusChangeHtml = `
@@ -239,7 +230,6 @@
                 `;
             }
 
-            // Model Info
             let modelHtml = '';
             if (log.model_type) {
                 const modelName = log.model_type.split('\\').pop();
@@ -251,7 +241,6 @@
                 `;
             }
 
-            // Old Values
             let oldValuesHtml = '';
             if (log.old_values && Object.keys(log.old_values).length > 0) {
                 const oldRows = Object.entries(log.old_values)
@@ -272,7 +261,6 @@
                 `;
             }
 
-            // New Values
             let newValuesHtml = '';
             if (log.new_values && Object.keys(log.new_values).length > 0) {
                 const newRows = Object.entries(log.new_values)
@@ -338,14 +326,12 @@
             document.getElementById('auditDetailModal').classList.add('hidden');
         }
 
-        // Close modal when clicking outside
         document.getElementById('auditDetailModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeAuditDetail();
             }
         });
 
-        // Close modal with Escape key
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeAuditDetail();

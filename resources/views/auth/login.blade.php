@@ -11,7 +11,7 @@
 </head>
 <body class="font-sans antialiased bg-gray-50">
     <div class="min-h-screen flex flex-col">
-        <!-- Header -->
+         
         <header class="bg-white border-b border-gray-100">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between items-center h-16">
@@ -26,29 +26,29 @@
             </div>
         </header>
 
-        <!-- Main Content -->
+         
         <div class="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
             <div class="max-w-md w-full">
-                <!-- Card -->
+                 
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-                    <!-- Title -->
+                     
                     <div class="text-center mb-8">
                         <h2 class="text-2xl font-bold text-gray-900 mb-2">Masuk ke RekrutPro</h2>
                         <p class="text-gray-600">Selamat datang kembali! Silakan masukkan detail Anda di bawah.</p>
                     </div>
 
-                    <!-- Session Status -->
+                     
                     @if (session('status'))
                         <div class="mb-4 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg text-sm">
                             {{ session('status') }}
                         </div>
                     @endif
 
-                    <!-- Form -->
+                     
                     <form method="POST" action="{{ route('login') }}" class="space-y-5">
                         @csrf
 
-                        <!-- Email / Username -->
+                         
                         <div>
                             <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
                                 Email / Nama Pengguna
@@ -69,7 +69,7 @@
                             @enderror
                         </div>
 
-                        <!-- Password -->
+                         
                         <div>
                             <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
                                 Kata Sandi
@@ -88,7 +88,7 @@
                             @enderror
                         </div>
 
-                        <!-- Remember Me & Forgot Password -->
+                         
                         <div class="flex items-center justify-between">
                             <label class="flex items-center">
                                 <input 
@@ -107,7 +107,7 @@
                             @endif
                         </div>
 
-                        <!-- Submit Button -->
+                         
                         <button 
                             type="submit" 
                             class="w-full bg-blue-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
@@ -116,7 +116,7 @@
                         </button>
                     </form>
 
-                    <!-- Register Link -->
+                     
                     <div class="mt-6 text-center">
                         <p class="text-sm text-gray-600">
                             Belum punya akun? 
@@ -126,7 +126,7 @@
                         </p>
                     </div>
 
-                    <!-- Back to Home -->
+                     
                     <div class="mt-6 text-center">
                         <a href="{{ route('home') }}" class="text-sm text-blue-500 hover:text-blue-600 font-medium">
                             Atau kembali ke Halaman Karir
@@ -134,7 +134,7 @@
                     </div>
                 </div>
 
-                <!-- Footer -->
+                 
                 <div class="mt-8 text-center">
                     <p class="text-sm text-gray-500">© {{ date('Y') }} RekrutPro. All rights reserved.</p>
                 </div>

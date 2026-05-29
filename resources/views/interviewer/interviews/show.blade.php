@@ -21,9 +21,9 @@
     @endif
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Main Content -->
+         
         <div class="lg:col-span-2 space-y-6">
-            <!-- Candidate Profile -->
+             
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                 <h2 class="text-lg font-semibold text-gray-900 mb-4">Profil Kandidat</h2>
                 
@@ -83,7 +83,7 @@
                 </div>
             </div>
 
-            <!-- Assessment Form -->
+             
             @if(($interview->status == 'scheduled' || $interview->status == 'completed') && !$interview->assessment)
                     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
                         <h2 class="text-xl font-bold text-gray-900 mb-2">Form Penilaian Wawancara</h2>
@@ -92,7 +92,7 @@
                         <form action="{{ route('interviewer.assessments.store', $interview->id) }}" method="POST">
                             @csrf
 
-                            <!-- Profil Kandidat Section -->
+                             
                             <div class="mb-8 pb-6 border-b border-gray-200">
                                 <h3 class="text-base font-semibold text-gray-900 mb-4">Profil Kandidat</h3>
                                 <p class="text-sm text-gray-600 mb-4">Detail kandidat ini tersedia di bawah.</p>
@@ -114,13 +114,13 @@
                                 </div>
                             </div>
 
-                            <!-- Kriteria Penilaian Section -->
+                             
                             <div class="mb-8">
                                 <h3 class="text-base font-semibold text-gray-900 mb-4">Kriteria Penilaian</h3>
                                 <p class="text-sm text-gray-600 mb-6">Berikan nilai untuk setiap kriteria berdasarkan performa kandidat.</p>
                                 
                                 <div class="space-y-8">
-                                    <!-- Keterampilan Teknis -->
+                                     
                                     <div>
                                         <label class="block text-sm font-semibold text-gray-800 mb-2">
                                             Keterampilan Teknis
@@ -144,7 +144,7 @@
                                         @enderror
                                     </div>
 
-                                    <!-- Kemampuan Komunikasi -->
+                                     
                                     <div>
                                         <label class="block text-sm font-semibold text-gray-800 mb-2">
                                             Kemampuan Komunikasi
@@ -173,7 +173,7 @@
                                         @enderror
                                     </div>
 
-                                    <!-- Pemecahan Masalah -->
+                                     
                                     <div>
                                         <label class="block text-sm font-semibold text-gray-800 mb-2">
                                             Pemecahan Masalah
@@ -197,7 +197,7 @@
                                         @enderror
                                     </div>
 
-                                    <!-- Potensi Kerja Tim -->
+                                     
                                     <div>
                                         <label class="block text-sm font-semibold text-gray-800 mb-2">
                                             Potensi Kerja Tim
@@ -224,7 +224,7 @@
                                 </div>
                             </div>
 
-                            <!-- Catatan Tambahan Section -->
+                             
                             <div class="mb-8 pb-6 border-b border-gray-200">
                                 <h3 class="text-base font-semibold text-gray-900 mb-4">Catatan Tambahan</h3>
                                 <p class="text-sm text-gray-600 mb-4">Sertakan catatan atau observasi penting lainnya tentang kandidat.</p>
@@ -240,7 +240,7 @@
                                 @enderror
                             </div>
 
-                            <!-- Rekomendasi Akhir Section -->
+                             
                             <div class="mb-8">
                                 <h3 class="text-base font-semibold text-gray-900 mb-4">Rekomendasi Akhir</h3>
                                 <p class="text-sm text-gray-600 mb-4">Pilih rekomendasi keseluruhan untuk kandidat ini.</p>
@@ -264,10 +264,10 @@
                                 @enderror
                             </div>
 
-                            <!-- Overall Score (Hidden/Auto-calculated atau bisa ditampilkan) -->
+                             
                             <input type="hidden" name="overall_score" id="overall_score" value="{{ old('overall_score', 50) }}">
 
-                            <!-- Submit Button -->
+                             
                             <div class="flex gap-3 pt-6 border-t border-gray-200">
                                 <button type="submit" class="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 font-semibold transition">
                                     Kirim Penilaian
@@ -280,7 +280,7 @@
                         </form>
                     </div>
 
-                    <!-- Auto-calculate Overall Score based on inputs -->
+                     
                     <script>
                         document.addEventListener('DOMContentLoaded', function() {
                             const technicalSkills = document.getElementById('technical_skills');
@@ -300,7 +300,7 @@
                         });
                     </script>
                 @elseif($interview->assessment)
-                    <!-- Show Assessment Result -->
+                     
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                         <h2 class="text-lg font-semibold text-gray-900 mb-4">Hasil Penilaian</h2>
                         
@@ -346,7 +346,7 @@
                     </div>
                 @endif
 
-                <!-- Candidate Documents -->
+                 
                 @if($interview->application->cv_path || $interview->application->portfolio_path)
                     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                         <h2 class="text-lg font-semibold text-gray-900 mb-4">Dokumen Kandidat</h2>
@@ -388,9 +388,9 @@
             </div>
 
 
-            <!-- Sidebar -->
+             
             <div class="space-y-6">
-                <!-- Interview Info -->
+                 
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Info Interview</h3>
                     
@@ -444,7 +444,7 @@
                     </div>
                 @endif
 
-                <!-- Candidate Info -->
+                 
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Info Tambahan</h3>
                     <div class="space-y-3">

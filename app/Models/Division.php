@@ -20,7 +20,7 @@ class Division extends Model
         ];
     }
 
-    // Relationships
+     
     public function positions()
     {
         return $this->hasMany(Position::class);

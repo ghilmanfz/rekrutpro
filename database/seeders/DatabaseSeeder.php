@@ -10,14 +10,14 @@ class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
 
-    /**
-     * Seed the application's database.
-     */
+    
+
+
     public function run(): void
     {
-        // Urutan seeding penting karena ada foreign key dependencies
+         
         $this->call([
-            // Master Data
+             
             RoleSeeder::class,
             DivisionSeeder::class,
             PositionSeeder::class,
@@ -25,18 +25,16 @@ class DatabaseSeeder extends Seeder
             NotificationTemplateSeeder::class,
             SystemConfigSeeder::class,
             
-            // Users
+             
             UserSeeder::class,
             
-            // Recruitment Process Data
+             
             JobPostingSeeder::class,
             ApplicationSeeder::class,
-            InterviewSeeder::class,
-            AssessmentSeeder::class,
             OfferSeeder::class,
             OfferNegotiationSeeder::class,
             
-            // Audit Logs
+             
             AuditLogSeeder::class,
         ]);
 

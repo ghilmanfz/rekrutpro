@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+    
+
+
     public function up(): void
     {
         Schema::create('interviews', function (Blueprint $table) {
@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('scheduled_by')->constrained('users')->onDelete('cascade');
             
             $table->dateTime('scheduled_at');
-            $table->string('location')->nullable(); // Meeting room / Google Meet / Zoom
+            $table->string('location')->nullable();  
             $table->text('notes')->nullable();
             
             $table->enum('status', ['scheduled', 'completed', 'cancelled', 'rescheduled'])->default('scheduled');
@@ -28,9 +28,9 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
+    
+
+
     public function down(): void
     {
         Schema::dropIfExists('interviews');

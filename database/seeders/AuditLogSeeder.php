@@ -12,9 +12,9 @@ use Carbon\Carbon;
 
 class AuditLogSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
+    
+
+
     public function run(): void
     {
         $hrRole = \App\Models\Role::where('name', 'hr')->first();
@@ -28,7 +28,7 @@ class AuditLogSeeder extends Seeder
 
         $logs = [];
 
-        // Application audit logs
+         
         $application = Application::first();
         if ($application && $candidates->isNotEmpty()) {
             $logs[] = [
@@ -73,7 +73,7 @@ class AuditLogSeeder extends Seeder
             }
         }
 
-        // Interview audit logs
+         
         $interview = Interview::first();
         if ($interview && $hr) {
             $logs[] = [
@@ -107,7 +107,7 @@ class AuditLogSeeder extends Seeder
             }
         }
 
-        // Offer audit logs
+         
         $offer = Offer::first();
         if ($offer && $hr) {
             $logs[] = [
@@ -127,7 +127,7 @@ class AuditLogSeeder extends Seeder
             ];
         }
 
-        // User login logs
+         
         if ($hr) {
             $logs[] = [
                 'user_id' => $hr->id,

@@ -14,12 +14,12 @@
         <form action="{{ route('hr.job-postings.store') }}" method="POST" class="p-6 space-y-6">
             @csrf
 
-            <!-- Basic Information -->
+             
             <div class="border-b border-gray-200 pb-6">
                 <h3 class="text-lg font-medium text-gray-900 mb-4">Informasi Dasar</h3>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Job Title -->
+                     
                     <div class="md:col-span-2">
                         <label for="title" class="block text-sm font-medium text-gray-700 mb-1">
                             Judul Lowongan <span class="text-red-500">*</span>
@@ -38,7 +38,7 @@
                         @enderror
                     </div>
 
-                    <!-- Position -->
+                     
                     <div>
                         <label for="position_id" class="block text-sm font-medium text-gray-700 mb-1">
                             Posisi <span class="text-red-500">*</span>
@@ -61,7 +61,7 @@
                         @enderror
                     </div>
 
-                    <!-- Division -->
+                     
                     <div>
                         <label for="division_id" class="block text-sm font-medium text-gray-700 mb-1">
                             Divisi <span class="text-red-500">*</span>
@@ -84,7 +84,7 @@
                         @enderror
                     </div>
 
-                    <!-- Location -->
+                     
                     <div>
                         <label for="location_id" class="block text-sm font-medium text-gray-700 mb-1">
                             Lokasi <span class="text-red-500">*</span>
@@ -107,7 +107,7 @@
                         @enderror
                     </div>
 
-                    <!-- Employment Type -->
+                     
                     <div>
                         <label for="employment_type" class="block text-sm font-medium text-gray-700 mb-1">
                             Tipe Pekerjaan <span class="text-red-500">*</span>
@@ -129,7 +129,7 @@
                         @enderror
                     </div>
 
-                    <!-- Level -->
+                     
                     <div>
                         <label for="level" class="block text-sm font-medium text-gray-700 mb-1">
                             Level <span class="text-red-500">*</span>
@@ -153,7 +153,7 @@
                         @enderror
                     </div>
 
-                    <!-- Vacancies -->
+                     
                     <div>
                         <label for="vacancies" class="block text-sm font-medium text-gray-700 mb-1">
                             Jumlah Posisi <span class="text-red-500">*</span>
@@ -174,7 +174,7 @@
                 </div>
             </div>
 
-            <!-- Salary Range -->
+             
             <div class="border-b border-gray-200 pb-6">
                 <h3 class="text-lg font-medium text-gray-900 mb-4">Gaji (Opsional)</h3>
                 
@@ -217,11 +217,11 @@
                 </div>
             </div>
 
-            <!-- Job Details -->
+             
             <div class="border-b border-gray-200 pb-6">
                 <h3 class="text-lg font-medium text-gray-900 mb-4">Detail Pekerjaan</h3>
                 
-                <!-- Description -->
+                 
                 <div class="mb-6">
                     <label for="description" class="block text-sm font-medium text-gray-700 mb-1">
                         Deskripsi Pekerjaan <span class="text-red-500">*</span>
@@ -239,7 +239,7 @@
                     @enderror
                 </div>
 
-                <!-- Requirements -->
+                 
                 <div class="mb-6">
                     <label for="requirements" class="block text-sm font-medium text-gray-700 mb-1">
                         Kualifikasi & Persyaratan <span class="text-red-500">*</span>
@@ -257,7 +257,7 @@
                     @enderror
                 </div>
 
-                <!-- Benefits -->
+                 
                 <div>
                     <label for="benefits" class="block text-sm font-medium text-gray-700 mb-1">
                         Benefit (Opsional)
@@ -275,7 +275,7 @@
                 </div>
             </div>
 
-            <!-- Timeline -->
+             
             <div class="border-b border-gray-200 pb-6">
                 <h3 class="text-lg font-medium text-gray-900 mb-4">Timeline</h3>
                 
@@ -317,7 +317,7 @@
                 </div>
             </div>
 
-            <!-- Action Buttons -->
+             
             <div class="flex justify-end gap-3">
                 <a href="{{ route('hr.job-postings.index') }}" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
                     Batal

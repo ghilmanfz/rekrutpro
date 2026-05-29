@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+ 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -11,14 +11,14 @@ use Illuminate\Support\Facades\Log;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+     
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    
+
+
+
+
     protected $fillable = [
         'name',
         'email',
@@ -45,27 +45,28 @@ class User extends Authenticatable
         'registration_completed',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
+    
+
+
+
+
     protected $hidden = [
         'password',
         'remember_token',
         'otp_code',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
+    
+
+
+
+
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'date_of_birth' => 'date',
             'last_login_at' => 'datetime',
             'otp_expires_at' => 'datetime',
             'is_active' => 'boolean',
@@ -74,7 +75,7 @@ class User extends Authenticatable
         ];
     }
 
-    // Relationships
+     
     public function role()
     {
         return $this->belongsTo(Role::class);
@@ -105,10 +106,15 @@ class User extends Authenticatable
         return $this->hasMany(JobPosting::class, 'created_by');
     }
 
-    // Model Events
+    public function scopeWithRoleName($query, string $roleName)
+    {
+        return $query->whereHas('role', fn ($roleQuery) => $roleQuery->where('name', $roleName));
+    }
+
+     
     protected static function booted()
     {
-        // Auto-assign candidate role to users created without role_id
+         
         static::creating(function ($user) {
             if (empty($user->role_id)) {
                 $candidateRole = Role::where('name', 'candidate')->first();
@@ -118,11 +124,11 @@ class User extends Authenticatable
                 }
             }
             
-            // Auto-complete registration for internal users (super_admin, hr, interviewer)
-            // They don't need to go through 5-step registration flow
+             
             if (!empty($user->role_id)) {
-                $internalRoleIds = [1, 2, 3]; // super_admin, hr, interviewer
-                if (in_array($user->role_id, $internalRoleIds)) {
+                $roleName = Role::whereKey($user->role_id)->value('name');
+
+                if (in_array($roleName, Role::internalNames(), true)) {
                     $user->registration_completed = true;
                     $user->is_verified = true;
                     $user->is_active = true;
@@ -134,7 +140,7 @@ class User extends Authenticatable
             }
         });
 
-        // Ensure role_id is never NULL after save
+         
         static::saved(function ($user) {
             if (empty($user->role_id)) {
                 $candidateRole = Role::where('name', 'candidate')->first();
@@ -146,7 +152,7 @@ class User extends Authenticatable
         });
     }
 
-    // Helper methods
+     
     public function isSuperAdmin()
     {
         return $this->role && $this->role->name === Role::SUPER_ADMIN;

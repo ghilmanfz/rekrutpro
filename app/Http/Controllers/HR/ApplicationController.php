@@ -6,31 +6,33 @@ use App\Http\Controllers\Controller;
 use App\Models\Application;
 use App\Models\AuditLog;
 use App\Models\JobPosting;
+use App\Models\Role;
+use App\Models\User;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
 
 class ApplicationController extends Controller
 {
-    /**
-     * Display a listing of applications
-     */
+    
+
+
     public function index(Request $request)
     {
         $query = Application::with(['candidate', 'jobPosting.division', 'jobPosting.location']);
 
-        // Search by candidate name
+         
         if ($request->filled('search')) {
             $query->whereHas('candidate', function ($q) use ($request) {
                 $q->where('name', 'like', '%' . $request->search . '%');
             });
         }
 
-        // Filter by status
+         
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
 
-        // Filter by job
+         
         if ($request->filled('job_id')) {
             $query->where('job_posting_id', $request->job_id);
         }
@@ -41,9 +43,9 @@ class ApplicationController extends Controller
         return view('hr.applications.index', compact('applications', 'jobs'));
     }
 
-    /**
-     * Display the specified application
-     */
+    
+
+
     public function show(Application $application)
     {
         $application->load([
@@ -51,15 +53,21 @@ class ApplicationController extends Controller
             'jobPosting.position', 
             'jobPosting.division', 
             'jobPosting.location',
-            'offer' // Load offer relationship
+            'offer',
+            'interviews.interviewer',
+            'interviews.assessment',
         ]);
 
-        return view('hr.applications.show', compact('application'));
+        $interviewers = User::withRoleName(Role::INTERVIEWER)
+            ->orderBy('name')
+            ->get();
+
+        return view('hr.applications.show', compact('application', 'interviewers'));
     }
 
-    /**
-     * Update application status
-     */
+    
+
+
     public function updateStatus(Request $request, Application $application)
     {
         $request->validate([
@@ -70,13 +78,13 @@ class ApplicationController extends Controller
         $oldStatus = $application->status;
         $newStatus = $request->status;
 
-        // Update status
+         
         $application->update([
             'status' => $newStatus,
             'status_notes' => $request->notes,
         ]);
 
-        // Set timestamp based on status
+         
         switch ($newStatus) {
             case 'screening_passed':
                 $application->update(['screening_passed_at' => now()]);
@@ -95,7 +103,7 @@ class ApplicationController extends Controller
                 break;
         }
 
-        // Log the status change
+         
         AuditLog::create([
             'user_id' => auth()->id(),
             'model_type' => Application::class,
@@ -107,7 +115,7 @@ class ApplicationController extends Controller
             'user_agent' => $request->userAgent(),
         ]);
 
-        // Send WhatsApp notification to candidate
+         
         $eventMap = [
             'screening_passed'   => 'screening_passed',
             'interview_passed'   => 'interview_passed',
@@ -138,12 +146,45 @@ class ApplicationController extends Controller
         return redirect()->back()->with('success', 'Status aplikasi berhasil diperbarui');
     }
 
-    /**
-     * Export applications to Excel
-     */
+    
+
+
     public function export(Request $request)
     {
-        // TODO: Implement export functionality
-        return back()->with('info', 'Export functionality coming soon');
+        $applications = Application::with(['candidate', 'jobPosting.division', 'jobPosting.location'])
+            ->latest()
+            ->get();
+
+        $filename = 'applications-'.now()->format('Ymd-His').'.csv';
+
+        return response()->streamDownload(function () use ($applications) {
+            $handle = fopen('php://output', 'w');
+
+            fputcsv($handle, [
+                'Kode Lamaran',
+                'Nama Kandidat',
+                'Email',
+                'Posisi',
+                'Divisi',
+                'Lokasi',
+                'Status',
+                'Tanggal Apply',
+            ]);
+
+            foreach ($applications as $application) {
+                fputcsv($handle, [
+                    $application->application_code ?? $application->code,
+                    $application->candidate_name,
+                    $application->candidate_email,
+                    $application->jobPosting?->title,
+                    $application->jobPosting?->division?->name,
+                    $application->jobPosting?->location?->name,
+                    $application->status,
+                    $application->created_at->format('Y-m-d H:i:s'),
+                ]);
+            }
+
+            fclose($handle);
+        }, $filename, ['Content-Type' => 'text/csv; charset=UTF-8']);
     }
 }

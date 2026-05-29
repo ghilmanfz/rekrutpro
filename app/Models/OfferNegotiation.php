@@ -25,7 +25,7 @@ class OfferNegotiation extends Model
         ];
     }
 
-    // Relationships
+     
     public function offer()
     {
         return $this->belongsTo(Offer::class);

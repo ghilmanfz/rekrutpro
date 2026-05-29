@@ -9,9 +9,9 @@
 <body class="bg-gray-50">
     @include('components.superadmin-sidebar')
 
-    <!-- Main Content -->
+     
     <main style="margin-left: 256px;">
-        <!-- Top Bar -->
+         
         <div class="bg-white border-b px-8 py-4 flex justify-between items-center">
             <div>
                 <h2 class="text-2xl font-bold text-gray-800">Data Master</h2>
@@ -28,7 +28,7 @@
             </div>
         </div>
 
-        <!-- Content -->
+         
         <div class="p-8">
             @if(session('success'))
             <div class="mb-6 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg">
@@ -42,7 +42,7 @@
             </div>
             @endif
 
-            <!-- Tabs -->
+             
             <div class="mb-6">
                 <div class="border-b border-gray-200">
                     <nav class="-mb-px flex space-x-8">
@@ -59,7 +59,7 @@
                 </div>
             </div>
 
-            <!-- Divisions Tab -->
+             
             <div id="content-divisions" class="tab-content">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-lg font-semibold">Daftar Divisi</h3>
@@ -102,7 +102,7 @@
                 </div>
             </div>
 
-            <!-- Positions Tab -->
+             
             <div id="content-positions" class="tab-content hidden">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-lg font-semibold">Daftar Posisi</h3>
@@ -145,7 +145,7 @@
                 </div>
             </div>
 
-            <!-- Locations Tab -->
+             
             <div id="content-locations" class="tab-content hidden">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-lg font-semibold">Daftar Lokasi</h3>
@@ -190,7 +190,7 @@
         </div>
     </main>
 
-    <!-- Modal Divisi -->
+     
     <div id="divisionModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
         <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
             <h3 class="text-lg font-bold mb-4" id="divisionModalTitle">Tambah Divisi</h3>
@@ -213,7 +213,7 @@
         </div>
     </div>
 
-    <!-- Modal Posisi -->
+     
     <div id="positionModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
         <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
             <h3 class="text-lg font-bold mb-4" id="positionModalTitle">Tambah Posisi</h3>
@@ -236,7 +236,7 @@
         </div>
     </div>
 
-    <!-- Modal Lokasi -->
+     
     <div id="locationModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
         <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
             <h3 class="text-lg font-bold mb-4" id="locationModalTitle">Tambah Lokasi</h3>

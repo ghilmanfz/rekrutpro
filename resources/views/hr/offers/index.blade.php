@@ -6,18 +6,18 @@
     </x-slot>
 
     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        <!-- Success Message -->
+         
         @if(session('success'))
             <div class="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded relative" role="alert">
                 <span class="block sm:inline">{{ session('success') }}</span>
             </div>
         @endif
 
-        <!-- Filters -->
+         
         <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
             <form method="GET" action="{{ route('hr.offers.index') }}" class="space-y-4">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <!-- Search -->
+                     
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Cari Kandidat</label>
                         <input type="text" name="search" value="{{ request('search') }}" 
@@ -25,7 +25,7 @@
                             class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200">
                     </div>
 
-                    <!-- Status Filter -->
+                     
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
                         <select name="status" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200">
@@ -46,7 +46,7 @@
             </form>
         </div>
 
-        <!-- Statistics Cards -->
+         
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
             <div class="bg-white rounded-lg shadow-sm p-6">
                 <div class="flex items-center justify-between">
@@ -111,7 +111,7 @@
             </div>
         </div>
 
-        <!-- Offers Table -->
+         
         <div class="bg-white rounded-lg shadow-sm overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
@@ -212,7 +212,7 @@
                 </table>
             </div>
 
-            <!-- Pagination -->
+             
             <div class="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
                 {{ $offers->links() }}
             </div>

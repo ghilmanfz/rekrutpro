@@ -12,31 +12,31 @@ use Illuminate\Http\Request;
 
 class InterviewController extends Controller
 {
-    /**
-     * Display a listing of interviews
-     */
+    
+
+
     public function index(Request $request)
     {
         $query = Interview::with(['application.candidate', 'application.jobPosting', 'interviewer']);
 
-        // Filter by status
+         
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
 
-        // Filter by interviewer
+         
         if ($request->filled('interviewer_id')) {
             $query->where('interviewer_id', $request->interviewer_id);
         }
 
-        // Search by candidate name
+         
         if ($request->filled('search')) {
             $query->whereHas('application.candidate', function ($q) use ($request) {
                 $q->where('name', 'like', '%' . $request->search . '%');
             });
         }
 
-        // Filter by date range
+         
         if ($request->filled('date_from')) {
             $query->whereDate('scheduled_at', '>=', $request->date_from);
         }
@@ -46,15 +46,15 @@ class InterviewController extends Controller
 
         $interviews = $query->orderBy('scheduled_at', 'desc')->paginate(15);
         
-        // Get all active users as potential interviewers (HR staff)
+         
         $interviewers = User::where('email', 'like', '%@%')->take(50)->get();
 
         return view('hr.interviews.index', compact('interviews', 'interviewers'));
     }
 
-    /**
-     * Store a newly created interview
-     */
+    
+
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -72,7 +72,7 @@ class InterviewController extends Controller
 
         $interview = Interview::create($validated);
 
-        // Update application status
+         
         $application = Application::find($request->application_id);
         $application->update([
             'status' => 'interview_scheduled',
@@ -81,7 +81,7 @@ class InterviewController extends Controller
 
         AuditLog::log('create', $interview, [], $validated);
 
-        // Send WhatsApp notification to candidate
+         
         $application->load(['candidate', 'jobPosting']);
         $candidate = $application->candidate;
         if ($candidate && $candidate->phone) {
@@ -112,9 +112,9 @@ class InterviewController extends Controller
         return redirect()->back()->with('success', 'Jadwal interview berhasil dibuat.');
     }
 
-    /**
-     * Display the specified interview
-     */
+    
+
+
     public function show(Interview $interview)
     {
         $interview->load([
@@ -128,9 +128,9 @@ class InterviewController extends Controller
         return view('hr.interviews.show', compact('interview'));
     }
 
-    /**
-     * Update the specified interview
-     */
+    
+
+
     public function update(Request $request, Interview $interview)
     {
         $validated = $request->validate([
@@ -148,14 +148,14 @@ class InterviewController extends Controller
 
         AuditLog::log('update', $interview, $oldData, $validated);
 
-        // TODO: Send notification if rescheduled
+         
 
         return redirect()->back()->with('success', 'Interview berhasil diperbarui.');
     }
 
-    /**
-     * Remove the specified interview
-     */
+    
+
+
     public function destroy(Interview $interview)
     {
         if ($interview->status === 'completed') {
@@ -164,7 +164,7 @@ class InterviewController extends Controller
 
         $oldData = $interview->toArray();
         
-        // Update application status back to screening_passed
+         
         $interview->application->update([
             'status' => 'screening_passed',
         ]);

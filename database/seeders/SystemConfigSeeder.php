@@ -7,13 +7,13 @@ use Illuminate\Database\Seeder;
 
 class SystemConfigSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
+    
+
+
     public function run(): void
     {
         $configs = [
-            // WhatsApp Configuration (Fonnte.com)
+             
             [
                 'key' => 'whatsapp_phone',
                 'value' => '628123456789',
@@ -27,7 +27,7 @@ class SystemConfigSeeder extends Seeder
                 'description' => 'API Key dari Fonnte.com',
             ],
             
-            // Email Configuration
+             
             [
                 'key' => 'email_driver',
                 'value' => 'smtp',

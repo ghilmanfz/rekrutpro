@@ -6,19 +6,19 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $job->title }} - RekrutPro</title>
     
-    <!-- Fonts -->
+     
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     
-    <!-- Scripts -->
+     
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="font-sans antialiased bg-white">
-    <!-- Header -->
+     
     <header class="bg-white border-b border-gray-200">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <!-- Back & Logo -->
+                 
                 <div class="flex items-center gap-4">
                     <a href="{{ route('jobs.index') }}" class="text-gray-600 hover:text-gray-900">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -34,7 +34,7 @@
                     </div>
                 </div>
 
-                <!-- Auth Buttons -->
+                 
                 <div class="flex items-center gap-3">
                     @guest
                         <a href="{{ route('login') }}" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900">
@@ -53,9 +53,9 @@
         </div>
     </header>
 
-    <!-- Main Content -->
+     
     <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Breadcrumb -->
+         
         <div class="mb-6">
             <nav class="flex items-center text-sm text-gray-600 gap-2">
                 <a href="{{ route('home') }}" class="hover:text-blue-600">Beranda</a>
@@ -66,12 +66,12 @@
             </nav>
         </div>
 
-        <!-- Job Card -->
+         
         <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-            <!-- Job Header -->
+             
             <div class="bg-blue-600 text-white p-6 rounded-t-lg">
                 <div class="flex items-start gap-4">
-                    <!-- Company Icon -->
+                     
                     <div class="w-16 h-16 bg-white rounded-lg flex items-center justify-center flex-shrink-0">
                         <svg class="w-10 h-10 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clip-rule="evenodd" />
@@ -79,7 +79,7 @@
                         </svg>
                     </div>
 
-                    <!-- Job Info -->
+                     
                     <div class="flex-1">
                         <h1 class="text-2xl font-bold mb-3">{{ $job->title }}</h1>
                         <div class="flex flex-wrap gap-4 text-sm text-blue-100">
@@ -107,9 +107,9 @@
                 </div>
             </div>
 
-            <!-- Job Details -->
+             
             <div class="p-6">
-                <!-- Quick Info Grid -->
+                 
                 <div class="grid grid-cols-2 gap-6 mb-8 pb-6 border-b border-gray-200">
                     <div>
                         <div class="text-sm text-gray-500 mb-1">Gaji</div>
@@ -128,27 +128,27 @@
                     </div>
                 </div>
 
-                <!-- Deskripsi Pekerjaan -->
+                 
                 <div class="mb-8">
                     <h2 class="text-lg font-bold text-gray-900 mb-4">Deskripsi Pekerjaan</h2>
                     <div class="text-gray-700 space-y-2 whitespace-pre-line leading-relaxed">{{ $job->description }}</div>
                 </div>
 
-                <!-- Kualifikasi -->
+                 
                 <div class="mb-8">
                     <h2 class="text-lg font-bold text-gray-900 mb-4">Kualifikasi</h2>
                     <div class="text-gray-700 space-y-2 whitespace-pre-line leading-relaxed">{{ $job->requirements }}</div>
                 </div>
 
                 @if($job->benefits)
-                    <!-- Benefit -->
+                     
                     <div class="mb-8">
                         <h2 class="text-lg font-bold text-gray-900 mb-4">Benefit</h2>
                         <div class="text-gray-700 space-y-2 whitespace-pre-line leading-relaxed">{{ $job->benefits }}</div>
                     </div>
                 @endif
 
-                <!-- CTA Section -->
+                 
                 <div class="mt-8 pt-6 border-t border-gray-200">
                     <p class="text-center text-sm text-gray-600 mb-4">Silakan login atau daftar untuk melamar posisi ini</p>
                     
@@ -192,7 +192,7 @@
                     @endauth
                 </div>
 
-                <!-- Job Meta Info -->
+                 
                 <div class="mt-6 text-center text-sm text-gray-500">
                     <p>Dipublikasikan {{ \Carbon\Carbon::parse($job->published_at)->diffForHumans() }}</p>
                     <p class="mt-1">Kode Lowongan: {{ $job->code }}</p>
@@ -201,11 +201,11 @@
         </div>
     </main>
 
-    <!-- Footer -->
+     
     <footer class="bg-white border-t border-gray-200 mt-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <!-- Brand -->
+                 
                 <div class="col-span-1 md:col-span-1">
                     <div class="flex items-center mb-4">
                         <svg class="w-8 h-8 text-blue-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -217,7 +217,7 @@
                     <p class="text-sm text-gray-600">Find your dream job with RekrutPro, your trusted partner in career advancement.</p>
                 </div>
 
-                <!-- Tentang Kami -->
+                 
                 <div>
                     <h3 class="text-sm font-semibold text-gray-900 mb-4">Tentang Kami</h3>
                     <ul class="space-y-2 text-sm text-gray-600">
@@ -227,7 +227,7 @@
                     </ul>
                 </div>
 
-                <!-- Pencari Kerja -->
+                 
                 <div>
                     <h3 class="text-sm font-semibold text-gray-900 mb-4">Pencari Kerja</h3>
                     <ul class="space-y-2 text-sm text-gray-600">
@@ -237,7 +237,7 @@
                     </ul>
                 </div>
 
-                <!-- Perusahaan -->
+                 
                 <div>
                     <h3 class="text-sm font-semibold text-gray-900 mb-4">Perusahaan</h3>
                     <ul class="space-y-2 text-sm text-gray-600">
@@ -248,12 +248,12 @@
                 </div>
             </div>
 
-            <!-- Bottom Footer -->
+             
             <div class="mt-8 pt-8 border-t border-gray-200">
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                     <p class="text-sm text-gray-500">© {{ date('Y') }} RekrutPro. All rights reserved.</p>
                     
-                    <!-- Social Links -->
+                     
                     <div class="flex gap-4">
                         <a href="#" class="text-gray-400 hover:text-gray-600">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>

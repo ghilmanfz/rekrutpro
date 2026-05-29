@@ -10,9 +10,9 @@ use Illuminate\Http\Request;
 
 class AssessmentController extends Controller
 {
-    /**
-     * Display a listing of assessments for this interviewer
-     */
+    
+
+
     public function index(Request $request)
     {
         $interviewerId = auth()->id();
@@ -22,28 +22,28 @@ class AssessmentController extends Controller
         })
             ->with(['interview.application.candidate', 'interview.application.jobPosting']);
 
-        // Search by candidate name
+         
         if ($request->filled('search')) {
             $query->whereHas('interview.application.candidate', function ($q) use ($request) {
                 $q->where('name', 'like', '%' . $request->search . '%');
             });
         }
 
-        // Filter by position
+         
         if ($request->filled('position')) {
             $query->whereHas('interview.application.jobPosting', function ($q) use ($request) {
                 $q->where('title', 'like', '%' . $request->position . '%');
             });
         }
 
-        // Filter by recommendation
+         
         if ($request->filled('recommendation')) {
             $query->where('recommendation', $request->recommendation);
         }
 
         $assessments = $query->orderBy('created_at', 'desc')->paginate(15);
 
-        // Calculate statistics
+         
         $allAssessments = Assessment::whereHas('interview', function ($query) use ($interviewerId) {
             $query->where('interviewer_id', $interviewerId);
         })->get();
@@ -54,9 +54,9 @@ class AssessmentController extends Controller
         return view('interviewer.assessments.index', compact('assessments', 'averageScore', 'recommendedCount'));
     }
 
-    /**
-     * Show interview detail and assessment form
-     */
+    
+
+
     public function show($interviewId)
     {
         $interview = Interview::with([
@@ -71,15 +71,15 @@ class AssessmentController extends Controller
         return view('interviewer.interviews.show', compact('interview'));
     }
 
-    /**
-     * Store assessment for an interview
-     */
+    
+
+
     public function store(Request $request, $interviewId)
     {
         $interview = Interview::where('interviewer_id', auth()->id())
             ->findOrFail($interviewId);
 
-        // Check if assessment already exists
+         
         if ($interview->assessment) {
             return redirect()
                 ->route('interviewer.interviews.show', $interviewId)
@@ -98,7 +98,7 @@ class AssessmentController extends Controller
             'weaknesses' => 'nullable|string',
         ]);
 
-        // Create assessment
+         
         $assessment = Assessment::create([
             'interview_id' => $interview->id,
             'interviewer_id' => auth()->id(),
@@ -113,10 +113,10 @@ class AssessmentController extends Controller
             'weaknesses' => $validated['weaknesses'] ?? null,
         ]);
 
-        // Update interview status to completed
+         
         $interview->update(['status' => 'completed']);
 
-        // Create audit log
+         
         AuditLog::create([
             'user_id' => auth()->id(),
             'action' => 'assessment_created',
@@ -127,16 +127,16 @@ class AssessmentController extends Controller
             'user_agent' => $request->userAgent(),
         ]);
 
-        // TODO: Notify HR about completed assessment
+         
 
         return redirect()
             ->route('interviewer.interviews.show', $interviewId)
             ->with('success', 'Assessment berhasil disimpan!');
     }
 
-    /**
-     * Display a specific assessment
-     */
+    
+
+
     public function showAssessment($assessmentId)
     {
         $assessment = Assessment::with([

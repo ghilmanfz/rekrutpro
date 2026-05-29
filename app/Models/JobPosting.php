@@ -41,7 +41,7 @@ class JobPosting extends Model
         ];
     }
 
-    // Relationships
+     
     public function position()
     {
         return $this->belongsTo(Position::class);
@@ -67,7 +67,7 @@ class JobPosting extends Model
         return $this->hasMany(Application::class);
     }
 
-    // Scopes
+     
     public function scopeActive($query)
     {
         return $query->where('status', 'active');

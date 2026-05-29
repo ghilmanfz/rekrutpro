@@ -3,7 +3,7 @@
 @section('content')
 <div class="min-h-screen bg-gray-50 py-12">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Header -->
+         
         <div class="mb-8">
             <a href="{{ route('jobs.show', $job->id) }}" class="text-blue-600 hover:text-blue-800 text-sm mb-2 inline-block">
                 ← Kembali ke Detail Lowongan
@@ -12,12 +12,12 @@
             <p class="text-gray-600 mt-2">{{ $job->title }} - {{ $job->division->name }}</p>
         </div>
 
-        <!-- Application Form -->
+         
         <form action="{{ route('candidate.applications.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
             @csrf
             <input type="hidden" name="job_posting_id" value="{{ $job->id }}">
 
-            <!-- Personal Information -->
+             
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <h2 class="text-lg font-semibold text-gray-900 mb-4">Informasi Pribadi</h2>
                 
@@ -88,7 +88,7 @@
                 </div>
             </div>
 
-            <!-- Education & Experience -->
+             
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <h2 class="text-lg font-semibold text-gray-900 mb-4">Pendidikan & Pengalaman</h2>
                 
@@ -162,7 +162,7 @@
                 </div>
             </div>
 
-            <!-- Documents Upload -->
+             
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <h2 class="text-lg font-semibold text-gray-900 mb-4">Dokumen Lamaran</h2>
                 
@@ -199,7 +199,7 @@
                 </div>
             </div>
 
-            <!-- Cover Letter -->
+             
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <h2 class="text-lg font-semibold text-gray-900 mb-4">Cover Letter</h2>
                 
@@ -216,7 +216,7 @@
                 </div>
             </div>
 
-            <!-- Terms & Conditions -->
+             
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <div class="flex items-start">
                     <input 
@@ -234,7 +234,7 @@
                 </div>
             </div>
 
-            <!-- Submit Button -->
+             
             <div class="flex items-center justify-between">
                 <a href="{{ route('jobs.show', $job->id) }}" class="text-gray-600 hover:text-gray-900">
                     ← Batal

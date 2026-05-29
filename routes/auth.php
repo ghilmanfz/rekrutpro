@@ -7,19 +7,10 @@ use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
-use App\Http\Controllers\Auth\RegisteredUserController;
-use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
-    // Use custom multi-step registration controller so new users are created
-    // with the correct role and registration flow.
-    Route::get('register', [RegisterController::class, 'showStep1'])
-        ->name('register');
-
-    Route::post('register', [RegisterController::class, 'processStep1'])->name('register.step1.process');
-
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
         ->name('login');
 

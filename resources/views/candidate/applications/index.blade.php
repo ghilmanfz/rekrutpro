@@ -1,7 +1,7 @@
 <x-candidate-layout>
     <x-slot name="header">Aplikasi Saya</x-slot>
 
-    <!-- Filter & Search -->
+     
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
@@ -46,7 +46,7 @@
         </div>
     </div>
 
-    <!-- Stats Summary -->
+     
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div class="flex items-center justify-between">
@@ -89,7 +89,7 @@
         </div>
     </div>
 
-    <!-- Applications List -->
+     
     <div class="bg-white rounded-lg shadow-sm border border-gray-200">
         <div class="p-6 border-b border-gray-200">
             <div class="flex items-center justify-between">
@@ -166,7 +166,7 @@
                 </table>
             </div>
 
-            <!-- Pagination -->
+             
             @if($applications->hasPages())
                 <div class="px-6 py-4 border-t border-gray-200">
                     {{ $applications->links() }}
@@ -185,7 +185,6 @@
     </div>
 
     <script>
-        // Filter and search functionality
         const searchInput = document.getElementById('searchInput');
         const filterStatus = document.getElementById('filterStatus');
         const sortBy = document.getElementById('sortBy');
@@ -196,7 +195,6 @@
             const searchTerm = searchInput.value.toLowerCase();
             const statusFilter = filterStatus.value.toLowerCase();
             
-            // Filter rows
             const filteredRows = rows.filter(row => {
                 const position = row.dataset.position;
                 const code = row.dataset.code;
@@ -209,7 +207,6 @@
                 return matchSearch && matchStatus;
             });
 
-            // Sort rows
             const sortValue = sortBy.value;
             filteredRows.sort((a, b) => {
                 if (sortValue === 'newest') {
@@ -222,7 +219,6 @@
                 return 0;
             });
 
-            // Show/hide rows
             rows.forEach(row => {
                 row.style.display = filteredRows.includes(row) ? '' : 'none';
             });

@@ -13,9 +13,9 @@ class SystemConfig extends Model
         'description',
     ];
 
-    /**
-     * Get config value by key
-     */
+    
+
+
     public static function get(string $key, $default = null)
     {
         $config = static::where('key', $key)->first();
@@ -31,9 +31,9 @@ class SystemConfig extends Model
         };
     }
 
-    /**
-     * Set config value by key
-     */
+    
+
+
     public static function set(string $key, $value, string $type = 'string', ?string $description = null): void
     {
         $valueToStore = is_array($value) ? json_encode($value) : $value;

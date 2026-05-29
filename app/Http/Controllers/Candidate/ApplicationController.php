@@ -22,9 +22,9 @@ class ApplicationController extends Controller
         $this->notificationService = $notificationService;
     }
 
-    /**
-     * Show all applications from candidate
-     */
+    
+
+
     public function index()
     {
         $applications = Application::with(['jobPosting.division', 'jobPosting.position'])
@@ -35,16 +35,16 @@ class ApplicationController extends Controller
         return view('candidate.applications.index', compact('applications'));
     }
 
-    /**
-     * Show the application form for a specific job
-     */
+    
+
+
     public function create($jobId)
     {
         $job = JobPosting::with(['division', 'position', 'location'])
             ->where('status', 'active')
             ->findOrFail($jobId);
 
-        // Check if user already applied for this job
+         
         $existingApplication = Application::where('candidate_id', auth()->id())
             ->where('job_posting_id', $jobId)
             ->first();
@@ -58,13 +58,13 @@ class ApplicationController extends Controller
         return view('candidate.applications.create', compact('job'));
     }
 
-    /**
-     * Store a new application
-     */
+    
+
+
     public function store(Request $request)
     {
-        // Note: We don't validate personal data fields because they come from user profile
-        // and are stored in snapshot automatically
+         
+         
         $validated = $request->validate([
             'job_posting_id' => 'required|exists:job_postings,id',
             'cv' => 'required|file|mimes:pdf,doc,docx|max:5120',
@@ -73,7 +73,7 @@ class ApplicationController extends Controller
             'agree_terms' => 'required|accepted',
         ]);
 
-        // Check if already applied
+         
         $existingApplication = Application::where('candidate_id', auth()->id())
             ->where('job_posting_id', $request->job_posting_id)
             ->first();
@@ -87,13 +87,13 @@ class ApplicationController extends Controller
         $user = auth()->user();
 
         try {
-            // Upload CV
+             
             $cvPath = $this->fileUploadService->uploadCV(
                 $request->file('cv'),
                 $user->full_name ?? $user->name
             );
 
-            // Upload Portfolio (optional)
+             
             $portfolioPath = null;
             if ($request->hasFile('portfolio')) {
                 $portfolioPath = $this->fileUploadService->uploadPortfolio(
@@ -108,41 +108,41 @@ class ApplicationController extends Controller
                 ->with('error', 'Gagal mengupload file: ' . $e->getMessage());
         }
 
-        // Generate application code (UNIQUE)
+         
         $applicationCode = 'APP-' . strtoupper(Str::random(8));
         
-        // Generate unique code for database (required field)
+         
         $uniqueCode = $this->generateUniqueCode();
 
-        // Buat snapshot data kandidat saat apply
+         
         $candidateSnapshot = [
             'full_name' => $user->full_name ?? $user->name,
             'email' => $user->email,
             'phone' => $user->phone ?? '-',
             'address' => $user->address ?? '-',
-            'birth_date' => $user->birth_date ?? null,
+            'birth_date' => $user->date_of_birth?->toDateString(),
             'gender' => $user->gender ?? '-',
-            'education' => $user->education ?? [], // JSON dari users table
-            'experience' => $user->experience ?? [], // JSON dari users table
+            'education' => $user->education ?? [],  
+            'experience' => $user->experience ?? [],  
             'profile_photo' => $user->profile_photo ?? null,
-            'snapshot_at' => now()->toDateTimeString(), // Timestamp snapshot
+            'snapshot_at' => now()->toDateTimeString(),  
         ];
 
         try {
-            // Create application
+             
             $application = Application::create([
-                'code' => $uniqueCode, // Required field in database
+                'code' => $uniqueCode,  
                 'candidate_id' => $user->id,
                 'job_posting_id' => $validated['job_posting_id'],
                 'application_code' => $applicationCode,
-                'candidate_snapshot' => $candidateSnapshot, // Simpan snapshot
+                'candidate_snapshot' => $candidateSnapshot,  
                 'cv_file' => $cvPath,
                 'portfolio_file' => $portfolioPath,
                 'cover_letter' => $validated['cover_letter'],
                 'status' => 'submitted',
             ]);
 
-            // Create audit log
+             
             AuditLog::create([
                 'user_id' => auth()->id(),
                 'action' => 'application_submitted',
@@ -153,7 +153,7 @@ class ApplicationController extends Controller
                 'user_agent' => $request->userAgent(),
             ]);
 
-            // Send WhatsApp notification to candidate
+             
             if ($user->phone) {
                 $this->notificationService->sendWhatsApp('application_submitted', $user->phone, [
                     'candidate_name'     => $user->full_name ?? $user->name,
@@ -171,7 +171,7 @@ class ApplicationController extends Controller
                 ->with('success', 'Lamaran Anda berhasil dikirim! Kode lamaran: ' . $applicationCode);
                 
         } catch (\Exception $e) {
-            // Log the error
+             
             \Log::error('Application submission failed: ' . $e->getMessage(), [
                 'user_id' => $user->id,
                 'job_posting_id' => $request->job_posting_id,
@@ -186,9 +186,9 @@ class ApplicationController extends Controller
         }
     }
 
-    /**
-     * Show candidate's application detail
-     */
+    
+
+
     public function show($id)
     {
         $application = Application::with([
@@ -196,7 +196,7 @@ class ApplicationController extends Controller
             'jobPosting.division',
             'jobPosting.location',
             'interviews',
-            'offer.latestNegotiation' // Load latest negotiation for offer
+            'offer.latestNegotiation'  
         ])
             ->where('candidate_id', auth()->id())
             ->findOrFail($id);
@@ -204,33 +204,33 @@ class ApplicationController extends Controller
         return view('candidate.applications.show', compact('application'));
     }
 
-    /**
-     * Generate unique application code
-     */
+    
+
+
     protected function generateUniqueCode()
     {
         do {
-            // Format: APP-YYYY-MM-XXXXX (e.g., APP-2025-11-00001)
+             
             $yearMonth = now()->format('Y-m');
             
-            // Get last application for this month
+             
             $lastApplication = Application::where('code', 'like', "APP-{$yearMonth}-%")
                 ->orderBy('code', 'desc')
                 ->first();
             
             if ($lastApplication) {
-                // Extract number and increment
+                 
                 $lastNumber = (int) substr($lastApplication->code, -5);
                 $newNumber = $lastNumber + 1;
             } else {
-                // First application this month
+                 
                 $newNumber = 1;
             }
             
-            // Format: APP-YYYY-MM-XXXXX (5 digits, zero-padded)
+             
             $code = sprintf("APP-%s-%05d", $yearMonth, $newNumber);
             
-            // Check if code exists (double check for race conditions)
+             
             $exists = Application::where('code', $code)->exists();
             
         } while ($exists);

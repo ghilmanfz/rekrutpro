@@ -5,9 +5,9 @@
         </h2>
     </x-slot>
 
-    <!-- Statistics Cards -->
+     
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-        <!-- Active Jobs -->
+         
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
             <div class="flex items-center justify-between">
                 <div>
@@ -25,7 +25,7 @@
             </div>
         </div>
 
-        <!-- Pending Applications -->
+         
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
             <div class="flex items-center justify-between">
                 <div>
@@ -43,7 +43,7 @@
             </div>
         </div>
 
-        <!-- Upcoming Interviews -->
+         
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
             <div class="flex items-center justify-between">
                 <div>
@@ -63,7 +63,7 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- Recent Applications -->
+         
         <div class="bg-white shadow rounded-lg">
             <div class="px-6 py-4 border-b border-gray-200">
                 <h3 class="text-lg font-semibold text-gray-900">Lamaran Terbaru</h3>
@@ -110,7 +110,7 @@
             </div>
         </div>
 
-        <!-- Upcoming Interviews -->
+         
         <div class="bg-white shadow rounded-lg">
             <div class="px-6 py-4 border-b border-gray-200">
                 <h3 class="text-lg font-semibold text-gray-900">Interview Mendatang</h3>

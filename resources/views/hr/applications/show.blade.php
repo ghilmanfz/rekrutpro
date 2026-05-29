@@ -7,7 +7,7 @@
 
     <div class="py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Header -->
+             
             <div class="mb-6 flex items-center justify-between">
                 <div>
                     <a href="{{ route('hr.applications.index') }}" class="text-blue-600 hover:text-blue-800 text-sm mb-2 inline-block">
@@ -44,7 +44,7 @@
                 </span>
             </div>
 
-            <!-- Alert jika profil berubah -->
+             
             @if($application->hasProfileChangedSinceApply())
             <div class="mb-6 bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-lg">
                 <div class="flex items-start">
@@ -64,9 +64,9 @@
             @endif
 
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                <!-- Main Content -->
+                 
                 <div class="lg:col-span-3 space-y-6">
-                    <!-- Candidate Info - Comparison View -->
+                     
                     <div class="bg-white rounded-lg shadow-sm p-6">
                         <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                             <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -76,7 +76,7 @@
                         </h2>
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Data Saat Melamar (Snapshot) -->
+                             
                             <div class="border-2 border-blue-200 rounded-lg p-4 bg-blue-50">
                                 <h3 class="font-semibold text-blue-900 mb-3 flex items-center gap-2">
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -127,7 +127,7 @@
                                         </div>
                                     </div>
 
-                                    <!-- Education -->
+                                     
                                     @php
                                         $education = $application->candidate_education;
                                         if (is_string($education)) {
@@ -147,7 +147,7 @@
                                     </div>
                                     @endif
 
-                                    <!-- Experience -->
+                                     
                                     @php
                                         $experience = $application->candidate_experience;
                                         if (is_string($experience)) {
@@ -169,7 +169,7 @@
                                 </div>
                             </div>
 
-                            <!-- Data Profil Terkini -->
+                             
                             <div class="border-2 border-green-200 rounded-lg p-4 bg-green-50">
                                 <h3 class="font-semibold text-green-900 mb-3 flex items-center gap-2">
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -190,14 +190,14 @@
                                         @else
                                         <div class="w-16 h-16 rounded-full bg-green-200 flex items-center justify-center border-2 border-green-300">
                                             <span class="text-green-700 font-bold text-xl">
-                                                {{ substr($application->candidate->full_name, 0, 1) }}
+                                                {{ substr($application->candidate->name, 0, 1) }}
                                             </span>
                                         </div>
                                         @endif
                                         <div class="flex-1">
                                             <p class="font-semibold text-gray-900">
-                                                {{ $application->candidate->full_name }}
-                                                @if($application->candidate_name !== $application->candidate->full_name)
+                                                {{ $application->candidate->name }}
+                                                @if($application->candidate_name !== $application->candidate->name)
                                                 <span class="text-xs text-orange-600 font-normal">(berubah)</span>
                                                 @endif
                                             </p>
@@ -219,8 +219,8 @@
                                     <div class="pt-3 border-t border-green-200">
                                         <p class="text-xs text-gray-600 mb-1">Alamat</p>
                                         <p class="text-sm font-medium text-gray-900">
-                                            {{ $application->candidate->address }}
-                                            @if($application->candidate_address !== $application->candidate->address)
+                                            {{ $application->current_candidate_address }}
+                                            @if($application->current_candidate_address_changed)
                                             <span class="text-xs text-orange-600">(berubah)</span>
                                             @endif
                                         </p>
@@ -230,22 +230,26 @@
                                         <div>
                                             <p class="text-xs text-gray-600 mb-1">Tanggal Lahir</p>
                                             <p class="text-sm font-medium text-gray-900">
-                                                {{ $application->candidate->birth_date ? $application->candidate->birth_date->format('d M Y') : '-' }}
+                                                {{ $application->current_candidate_birth_date ? \Carbon\Carbon::parse($application->current_candidate_birth_date)->format('d M Y') : '-' }}
+                                                @if($application->current_candidate_birth_date_changed)
+                                                <span class="text-xs text-orange-600">(berubah)</span>
+                                                @endif
                                             </p>
                                         </div>
                                         <div>
                                             <p class="text-xs text-gray-600 mb-1">Jenis Kelamin</p>
-                                            <p class="text-sm font-medium text-gray-900">{{ ucfirst($application->candidate->gender) }}</p>
+                                            <p class="text-sm font-medium text-gray-900">
+                                                {{ ucfirst($application->current_candidate_gender ?? '-') }}
+                                                @if($application->current_candidate_gender_changed)
+                                                <span class="text-xs text-orange-600">(berubah)</span>
+                                                @endif
+                                            </p>
                                         </div>
                                     </div>
 
-                                    <!-- Education -->
+                                     
                                     @php
-                                        $currentEducation = $application->candidate->education ?? [];
-                                        if (is_string($currentEducation)) {
-                                            $currentEducation = json_decode($currentEducation, true) ?? [];
-                                        }
-                                        $currentEducation = is_array($currentEducation) ? $currentEducation : [];
+                                        $currentEducation = $application->current_candidate_education;
                                     @endphp
                                     @if(count($currentEducation) > 0)
                                     <div class="pt-3 border-t border-green-200">
@@ -259,13 +263,9 @@
                                     </div>
                                     @endif
 
-                                    <!-- Experience -->
+                                     
                                     @php
-                                        $currentExperience = $application->candidate->experience ?? [];
-                                        if (is_string($currentExperience)) {
-                                            $currentExperience = json_decode($currentExperience, true) ?? [];
-                                        }
-                                        $currentExperience = is_array($currentExperience) ? $currentExperience : [];
+                                        $currentExperience = $application->current_candidate_experience;
                                     @endphp
                                     @if(count($currentExperience) > 0)
                                     <div class="pt-3 border-t border-green-200">
@@ -283,7 +283,7 @@
                         </div>
                     </div>
 
-                    <!-- Job Info -->
+                     
                     <div class="bg-white rounded-lg shadow-sm p-6">
                         <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                             <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -311,7 +311,7 @@
                         </div>
                     </div>
 
-                    <!-- Cover Letter -->
+                     
                     @if($application->cover_letter)
                     <div class="bg-white rounded-lg shadow-sm p-6">
                         <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
@@ -326,7 +326,184 @@
                     </div>
                     @endif
 
-                    <!-- Documents -->
+                     
+                    @if($application->interviews->isNotEmpty())
+                    <div class="bg-white rounded-lg shadow-sm p-6">
+                        <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path>
+                            </svg>
+                            Hasil Interview
+                        </h2>
+
+                        @foreach($application->interviews as $interview)
+                        <div class="mb-6 border border-gray-200 rounded-lg overflow-hidden @if(!$loop->last) mb-6 @endif">
+                             
+                            <div class="bg-gray-50 px-4 py-3 flex items-center justify-between border-b">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-sm font-semibold text-gray-700">
+                                        Interview #{{ $loop->iteration }} — {{ \Carbon\Carbon::parse($interview->scheduled_at)->format('d M Y, H:i') }}
+                                    </span>
+                                    <span class="px-2 py-1 text-xs font-semibold rounded-full
+                                        @if($interview->interview_type === 'video') bg-blue-100 text-blue-700
+                                        @elseif($interview->interview_type === 'onsite') bg-green-100 text-green-700
+                                        @else bg-gray-100 text-gray-700
+                                        @endif">
+                                        {{ $interview->interview_type === 'video' ? 'Video' : ($interview->interview_type === 'onsite' ? 'On-site' : 'Telepon') }}
+                                    </span>
+                                </div>
+                                <span class="px-3 py-1 text-xs font-semibold rounded-full
+                                    @if($interview->status === 'scheduled') bg-yellow-100 text-yellow-800
+                                    @elseif($interview->status === 'completed') bg-green-100 text-green-800
+                                    @elseif($interview->status === 'cancelled') bg-red-100 text-red-800
+                                    @else bg-gray-100 text-gray-700
+                                    @endif">
+                                    @if($interview->status === 'scheduled') Terjadwal
+                                    @elseif($interview->status === 'completed') Selesai
+                                    @elseif($interview->status === 'cancelled') Dibatalkan
+                                    @else Dijadwalkan Ulang
+                                    @endif
+                                </span>
+                            </div>
+
+                             
+                            <div class="p-4 grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <div>
+                                    <p class="text-xs text-gray-500 mb-1">Pewawancara</p>
+                                    <p class="text-sm font-medium text-gray-900">{{ optional($interview->interviewer)->name ?? '-' }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 mb-1">Durasi</p>
+                                    <p class="text-sm font-medium text-gray-900">{{ $interview->duration }} menit</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 mb-1">Lokasi / Link</p>
+                                    <p class="text-sm font-medium text-gray-900">{{ $interview->location ?? '-' }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 mb-1">Catatan Interview</p>
+                                    <p class="text-sm text-gray-700">{{ $interview->notes ?? '-' }}</p>
+                                </div>
+                            </div>
+
+                             
+                            @if($interview->assessment)
+                            @php $a = $interview->assessment; @endphp
+                            <div class="border-t border-gray-200 p-4 bg-purple-50">
+                                <h3 class="text-sm font-semibold text-purple-900 mb-4 flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                                    </svg>
+                                    Hasil Penilaian Interview
+                                </h3>
+
+                                 
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                                    <div class="bg-white rounded-lg p-3 text-center shadow-sm">
+                                        <p class="text-xs text-gray-500 mb-1">Teknis</p>
+                                        @if($a->technical_score !== null)
+                                        <p class="text-2xl font-bold {{ $a->technical_score >= 75 ? 'text-green-600' : ($a->technical_score >= 50 ? 'text-yellow-600' : 'text-red-600') }}">
+                                            {{ $a->technical_score }}
+                                        </p>
+                                        <p class="text-xs text-gray-400">/100</p>
+                                        @else
+                                        <p class="text-sm text-gray-400">-</p>
+                                        @endif
+                                    </div>
+                                    <div class="bg-white rounded-lg p-3 text-center shadow-sm">
+                                        <p class="text-xs text-gray-500 mb-1">Problem Solving</p>
+                                        @if($a->problem_solving_score !== null)
+                                        <p class="text-2xl font-bold {{ $a->problem_solving_score >= 75 ? 'text-green-600' : ($a->problem_solving_score >= 50 ? 'text-yellow-600' : 'text-red-600') }}">
+                                            {{ $a->problem_solving_score }}
+                                        </p>
+                                        <p class="text-xs text-gray-400">/100</p>
+                                        @else
+                                        <p class="text-sm text-gray-400">-</p>
+                                        @endif
+                                    </div>
+                                    <div class="bg-white rounded-lg p-3 text-center shadow-sm">
+                                        <p class="text-xs text-gray-500 mb-1">Komunikasi</p>
+                                        @if($a->communication_skill)
+                                        <p class="text-sm font-semibold {{ $a->communication_skill === 'sangat_baik' ? 'text-green-600' : ($a->communication_skill === 'baik' ? 'text-blue-600' : ($a->communication_skill === 'cukup' ? 'text-yellow-600' : 'text-red-600')) }}">
+                                            {{ str_replace('_', ' ', ucfirst($a->communication_skill)) }}
+                                        </p>
+                                        @else
+                                        <p class="text-sm text-gray-400">-</p>
+                                        @endif
+                                    </div>
+                                    <div class="bg-white rounded-lg p-3 text-center shadow-sm border-2 border-purple-200">
+                                        <p class="text-xs text-gray-500 mb-1">Nilai Akhir</p>
+                                        @if($a->overall_score !== null)
+                                        <p class="text-2xl font-bold {{ $a->overall_score >= 75 ? 'text-green-600' : ($a->overall_score >= 50 ? 'text-yellow-600' : 'text-red-600') }}">
+                                            {{ number_format($a->overall_score, 1) }}
+                                        </p>
+                                        <p class="text-xs text-gray-400">/100</p>
+                                        @else
+                                        <p class="text-sm text-gray-400">-</p>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                 
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+                                    @if($a->teamwork_potential)
+                                    <div class="bg-white rounded-lg p-3 shadow-sm">
+                                        <p class="text-xs text-gray-500 mb-1">Potensi Kerjasama Tim</p>
+                                        <span class="px-2 py-1 text-xs font-semibold rounded-full
+                                            {{ $a->teamwork_potential === 'tinggi' ? 'bg-green-100 text-green-700' : ($a->teamwork_potential === 'sedang' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700') }}">
+                                            {{ ucfirst($a->teamwork_potential) }}
+                                        </span>
+                                    </div>
+                                    @endif
+                                    @if($a->strengths)
+                                    <div class="bg-white rounded-lg p-3 shadow-sm">
+                                        <p class="text-xs text-gray-500 mb-1">Kelebihan</p>
+                                        <p class="text-sm text-gray-700">{{ $a->strengths }}</p>
+                                    </div>
+                                    @endif
+                                    @if($a->weaknesses)
+                                    <div class="bg-white rounded-lg p-3 shadow-sm">
+                                        <p class="text-xs text-gray-500 mb-1">Kekurangan</p>
+                                        <p class="text-sm text-gray-700">{{ $a->weaknesses }}</p>
+                                    </div>
+                                    @endif
+                                </div>
+
+                                @if($a->additional_notes)
+                                <div class="bg-white rounded-lg p-3 shadow-sm mb-3">
+                                    <p class="text-xs text-gray-500 mb-1">Catatan Tambahan</p>
+                                    <p class="text-sm text-gray-700">{{ $a->additional_notes }}</p>
+                                </div>
+                                @endif
+
+                                 
+                                @if($a->recommendation)
+                                <div class="flex items-center gap-2">
+                                    <p class="text-xs text-gray-500">Rekomendasi:</p>
+                                    <span class="px-3 py-1 text-sm font-bold rounded-full
+                                        @if($a->recommendation === 'sangat_direkomendasikan') bg-green-600 text-white
+                                        @elseif($a->recommendation === 'direkomendasikan') bg-blue-500 text-white
+                                        @else bg-red-500 text-white
+                                        @endif">
+                                        @if($a->recommendation === 'sangat_direkomendasikan') ✓ Sangat Direkomendasikan
+                                        @elseif($a->recommendation === 'direkomendasikan') ✓ Direkomendasikan
+                                        @else ✗ Tidak Direkomendasikan
+                                        @endif
+                                    </span>
+                                </div>
+                                @endif
+                            </div>
+                            @else
+                            <div class="border-t border-gray-200 px-4 py-3 bg-gray-50 text-sm text-gray-500 italic">
+                                Belum ada penilaian untuk interview ini.
+                            </div>
+                            @endif
+                        </div>
+                        @endforeach
+                    </div>
+                    @endif
+
+                     
                     <div class="bg-white rounded-lg shadow-sm p-6">
                         <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                             <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -379,9 +556,9 @@
                     </div>
                 </div>
 
-                <!-- Sidebar -->
+                 
                 <div class="space-y-6">
-                    <!-- Offer Management - if offer exists -->
+                     
                     @if($application->offer)
                     <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg shadow-lg p-6 border-2 border-purple-200">
                         <h2 class="text-lg font-bold text-purple-900 mb-4 flex items-center gap-2">
@@ -433,7 +610,7 @@
                     </div>
                     @endif
 
-                    <!-- Schedule Interview Button -->
+                     
                     @if(in_array($application->status, ['screening_passed', 'submitted']))
                     <div class="bg-white rounded-lg shadow-sm p-6">
                         <button onclick="openInterviewModal()" 
@@ -447,7 +624,7 @@
                     </div>
                     @endif
 
-                    <!-- Status Actions -->
+                     
                     <div class="bg-white rounded-lg shadow-sm p-6">
                         <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                             <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -485,7 +662,7 @@
                         </form>
                     </div>
 
-                    <!-- Timeline -->
+                     
                     <div class="bg-white rounded-lg shadow-sm p-6">
                         <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                             <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -532,7 +709,7 @@
         </div>
     </div>
 
-    <!-- Interview Schedule Modal -->
+     
     <div id="interviewModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
         <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-2/3 lg:w-1/2 shadow-lg rounded-lg bg-white">
             <div class="flex items-center justify-between mb-4">
@@ -553,9 +730,6 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">Interviewer</label>
                         <select name="interviewer_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" required>
                             <option value="">Pilih Interviewer</option>
-                            @php
-                                $interviewers = \App\Models\User::where('role_id', 3)->get();
-                            @endphp
                             @foreach($interviewers as $interviewer)
                                 <option value="{{ $interviewer->id }}">{{ $interviewer->name }}</option>
                             @endforeach
@@ -629,7 +803,6 @@
             document.getElementById('interviewModal').classList.add('hidden');
         }
 
-        // Close modal when clicking outside
         document.getElementById('interviewModal')?.addEventListener('click', function(e) {
             if (e.target === this) {
                 closeInterviewModal();

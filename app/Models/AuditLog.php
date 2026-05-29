@@ -25,21 +25,21 @@ class AuditLog extends Model
         ];
     }
 
-    // Relationships
+     
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    // Get the auditable model
+     
     public function auditable()
     {
         return $this->morphTo('model');
     }
 
-    /**
-     * Log an action
-     */
+    
+
+
     public static function log(string $action, $model = null, array $oldValues = [], array $newValues = [])
     {
         return static::create([

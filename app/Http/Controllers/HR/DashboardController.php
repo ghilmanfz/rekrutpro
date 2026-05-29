@@ -10,12 +10,12 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    /**
-     * Display HR dashboard with statistics
-     */
+    
+
+
     public function index()
     {
-        // Get statistics
+         
         $stats = [
             'active_jobs' => JobPosting::active()->count(),
             'total_applications' => Application::count(),
@@ -25,13 +25,13 @@ class DashboardController extends Controller
             'hired' => Application::where('status', 'hired')->count(),
         ];
 
-        // Recent applications (last 10)
+         
         $recentApplications = Application::with(['jobPosting', 'candidate'])
             ->latest()
             ->take(10)
             ->get();
 
-        // Upcoming interviews (next 7 days)
+         
         $upcomingInterviews = Interview::with(['application.candidate', 'interviewer'])
             ->where('status', 'scheduled')
             ->where('scheduled_at', '>=', now())
@@ -39,7 +39,7 @@ class DashboardController extends Controller
             ->orderBy('scheduled_at')
             ->get();
 
-        // Active job postings
+         
         $activeJobs = JobPosting::with(['position', 'division', 'location'])
             ->active()
             ->withCount('applications')

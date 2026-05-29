@@ -9,7 +9,7 @@
     @endif
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Profile Card -->
+         
         <div class="lg:col-span-1">
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                 <div class="text-center">
@@ -25,7 +25,7 @@
                     <h3 class="text-xl font-bold text-gray-900 mb-1">{{ auth()->user()->name }}</h3>
                     <p class="text-sm text-gray-600 mb-4">{{ auth()->user()->email }}</p>
 
-                    <!-- Profile Completion -->
+                     
                     <div class="mb-6">
                         <div class="flex items-center justify-between text-sm mb-2">
                             <span class="text-gray-600">Kelengkapan Profil:</span>
@@ -39,7 +39,7 @@
                         @endif
                     </div>
 
-                    <!-- Quick Stats -->
+                     
                     <div class="border-t border-gray-200 pt-4 grid grid-cols-2 gap-4 text-center">
                         <div>
                             <p class="text-2xl font-bold text-gray-900">{{ $totalApplications ?? 0 }}</p>
@@ -53,7 +53,7 @@
                 </div>
             </div>
 
-            <!-- Account Info -->
+             
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mt-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Informasi Akun</h3>
                 <div class="space-y-3 text-sm">
@@ -79,13 +79,13 @@
             </div>
         </div>
 
-        <!-- Profile Form -->
+         
         <div class="lg:col-span-2">
             <form method="POST" action="{{ route('candidate.profile.update') }}" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
-                <!-- Personal Information -->
+                 
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                         <i class="fas fa-user text-blue-600"></i>
@@ -150,7 +150,7 @@
                     </div>
                 </div>
 
-                <!-- Education -->
+                 
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                         <i class="fas fa-graduation-cap text-blue-600"></i>
@@ -173,7 +173,7 @@
                     </div>
                 </div>
 
-                <!-- Experience & Skills -->
+                 
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                         <i class="fas fa-briefcase text-blue-600"></i>
@@ -201,7 +201,7 @@
                     </div>
                 </div>
 
-                <!-- Social Media -->
+                 
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                         <i class="fas fa-share-alt text-blue-600"></i>
@@ -253,7 +253,7 @@
                     </div>
                 </div>
 
-                <!-- Submit Button -->
+                 
                 <div class="flex items-center justify-end gap-4">
                     <a href="{{ route('candidate.dashboard') }}" 
                        class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium">

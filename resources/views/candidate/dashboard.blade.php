@@ -2,11 +2,11 @@
     <x-slot name="header">Dashboard Kandidat</x-slot>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Main Content (Left + Center) -->
+         
         <div class="lg:col-span-2 space-y-6">
-            <!-- Stats Cards -->
+             
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <!-- Dikirim -->
+                 
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                     <div class="flex items-center justify-between mb-2">
                         <span class="text-sm text-gray-600">Dikirim</span>
@@ -15,7 +15,7 @@
                     <h3 class="text-4xl font-bold text-gray-900">{{ $stats['total'] }}</h3>
                 </div>
 
-                <!-- Wawancara Terjadwal -->
+                 
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                     <div class="flex items-center justify-between mb-2">
                         <span class="text-sm text-gray-600">Wawancara Terjadwal</span>
@@ -24,7 +24,7 @@
                     <h3 class="text-4xl font-bold text-gray-900">{{ $stats['interview'] }}</h3>
                 </div>
 
-                <!-- Ditawarkan -->
+                 
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                     <div class="flex items-center justify-between mb-2">
                         <span class="text-sm text-gray-600">Ditawarkan</span>
@@ -33,7 +33,7 @@
                     <h3 class="text-4xl font-bold text-gray-900">{{ $stats['success'] }}</h3>
                 </div>
 
-                <!-- Ditolak -->
+                 
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                     <div class="flex items-center justify-between mb-2">
                         <span class="text-sm text-gray-600">Ditolak</span>
@@ -43,7 +43,7 @@
                 </div>
             </div>
 
-            <!-- Daftar Aplikasi -->
+             
             <div class="bg-white rounded-lg shadow-sm border border-gray-200">
                 <div class="p-6 border-b border-gray-200">
                     <h2 class="text-lg font-semibold text-gray-900">Daftar Aplikasi</h2>
@@ -103,7 +103,7 @@
                         </table>
                     </div>
 
-                    <!-- Pagination -->
+                     
                     @if($applications->hasPages())
                         <div class="px-6 py-4 border-t border-gray-200">
                             {{ $applications->links() }}
@@ -122,9 +122,9 @@
             </div>
         </div>
 
-        <!-- Sidebar (Right) -->
+         
         <div class="space-y-6">
-            <!-- Profile Card -->
+             
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                 <div class="text-center">
                     <img src="{{ auth()->user()->profile_photo ? Storage::url(auth()->user()->profile_photo) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&size=200' }}" 
@@ -136,15 +136,15 @@
                     
                     <div class="flex items-center justify-center gap-2 text-sm text-gray-600 mb-1">
                         <i class="fas fa-phone text-gray-400"></i>
-                        <span>{{ auth()->user()->phone ?? '+62 812 3456 7890' }}</span>
+                        <span>{{ auth()->user()->phone ?? 'Belum diisi' }}</span>
                     </div>
                     
                     <div class="flex items-center justify-center gap-2 text-sm text-gray-600 mb-4">
                         <i class="fas fa-map-marker-alt text-gray-400"></i>
-                        <span>{{ auth()->user()->address ?? 'Jakarta, Indonesia' }}</span>
+                        <span>{{ auth()->user()->address ?? 'Belum diisi' }}</span>
                     </div>
 
-                    <!-- Profile Completion -->
+                     
                     <div class="mb-4">
                         <div class="flex items-center justify-between text-sm mb-2">
                             <span class="text-gray-600">Kelengkapan Profil:</span>
@@ -167,7 +167,7 @@
                 </div>
             </div>
 
-            <!-- Notifikasi Terbaru -->
+             
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Notifikasi Terbaru</h3>
                 
@@ -183,43 +183,13 @@
                             </div>
                         </div>
                     @empty
-                        <div class="flex gap-3 p-3 bg-blue-50 rounded-lg">
-                            <div class="flex-shrink-0">
-                                <i class="fas fa-envelope text-blue-600"></i>
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm text-gray-900 mb-1">Undangan wawancara untuk Posisi Software Engineer.</p>
-                                <p class="text-xs text-gray-500">1 hari yang lalu</p>
-                            </div>
-                        </div>
-
                         <div class="flex gap-3 p-3 bg-gray-50 rounded-lg">
                             <div class="flex-shrink-0">
-                                <i class="fas fa-bell text-gray-600"></i>
+                                <i class="fas fa-bell-slash text-gray-500"></i>
                             </div>
                             <div class="flex-1 min-w-0">
-                                <p class="text-sm text-gray-900 mb-1">Status aplikasi Anda untuk UI/UX Designer telah berubah menjadi "Ditawarkan".</p>
-                                <p class="text-xs text-gray-500">1 hari yang lalu</p>
-                            </div>
-                        </div>
-
-                        <div class="flex gap-3 p-3 bg-gray-50 rounded-lg">
-                            <div class="flex-shrink-0">
-                                <i class="fas fa-clipboard-list text-gray-600"></i>
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm text-gray-900 mb-1">Aplikasi Anda untuk Data Analyst telah dikirim.</p>
-                                <p class="text-xs text-gray-500">3 hari yang lalu</p>
-                            </div>
-                        </div>
-
-                        <div class="flex gap-3 p-3 bg-gray-50 rounded-lg">
-                            <div class="flex-shrink-0">
-                                <i class="fas fa-calendar text-gray-600"></i>
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm text-gray-900 mb-1">Pengingat wawancara untuk Posisi Product Manager besok.</p>
-                                <p class="text-xs text-gray-500">1 minggu yang lalu</p>
+                                <p class="text-sm text-gray-900 mb-1">Belum ada notifikasi terbaru</p>
+                                <p class="text-xs text-gray-500">Aktivitas lamaran Anda akan muncul di sini.</p>
                             </div>
                         </div>
                     @endforelse
@@ -228,4 +198,3 @@
         </div>
     </div>
 </x-candidate-layout>
-

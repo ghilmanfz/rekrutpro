@@ -11,30 +11,30 @@ use Illuminate\Http\Request;
 
 class OfferController extends Controller
 {
-    /**
-     * Accept an offer
-     */
+    
+
+
     public function accept(Offer $offer)
     {
-        // Verify offer belongs to current candidate
+         
         if ($offer->application->candidate_id !== auth()->id()) {
             abort(403, 'Unauthorized');
         }
 
-        // Only pending offers can be accepted
+         
         if ($offer->status !== 'pending') {
             return redirect()->back()->with('error', 'Penawaran ini tidak dapat diterima.');
         }
 
         $oldData = $offer->toArray();
 
-        // Update offer status
+         
         $offer->update([
             'status' => 'accepted',
             'responded_at' => now(),
         ]);
 
-        // Update application status to hired
+         
         $offer->application->update([
             'status' => 'hired',
             'hired_at' => now(),
@@ -45,7 +45,7 @@ class OfferController extends Controller
             'action' => 'Kandidat menerima penawaran'
         ]);
 
-        // Send WhatsApp notification to candidate
+         
         $offer->load(['application.candidate', 'application.jobPosting']);
         $candidate = $offer->application->candidate;
         if ($candidate && $candidate->phone) {
@@ -67,17 +67,17 @@ class OfferController extends Controller
             ->with('success', 'Selamat! Anda telah menerima penawaran kerja.');
     }
 
-    /**
-     * Reject an offer
-     */
+    
+
+
     public function reject(Request $request, Offer $offer)
     {
-        // Verify offer belongs to current candidate
+         
         if ($offer->application->candidate_id !== auth()->id()) {
             abort(403, 'Unauthorized');
         }
 
-        // Only pending offers can be rejected
+         
         if ($offer->status !== 'pending') {
             return redirect()->back()->with('error', 'Penawaran ini tidak dapat ditolak.');
         }
@@ -88,14 +88,14 @@ class OfferController extends Controller
 
         $oldData = $offer->toArray();
 
-        // Update offer status
+         
         $offer->update([
             'status' => 'rejected',
             'rejection_reason' => $validated['rejection_reason'] ?? null,
             'responded_at' => now(),
         ]);
 
-        // Update application status
+         
         $offer->application->update([
             'status' => 'rejected_offer',
         ]);
@@ -105,7 +105,7 @@ class OfferController extends Controller
             'action' => 'Kandidat menolak penawaran'
         ]);
 
-        // Send WhatsApp notification to candidate
+         
         $offer->load(['application.candidate', 'application.jobPosting']);
         $candidate = $offer->application->candidate;
         if ($candidate && $candidate->phone) {
@@ -126,22 +126,22 @@ class OfferController extends Controller
             ->with('success', 'Anda telah menolak penawaran kerja.');
     }
 
-    /**
-     * Submit a negotiation request
-     */
+    
+
+
     public function negotiate(Request $request, Offer $offer)
     {
-        // Verify offer belongs to current candidate
+         
         if ($offer->application->candidate_id !== auth()->id()) {
             abort(403, 'Unauthorized');
         }
 
-        // Only pending offers can be negotiated
+         
         if ($offer->status !== 'pending') {
             return redirect()->back()->with('error', 'Penawaran ini tidak dapat dinegosiasikan.');
         }
 
-        // Check if there's already a pending negotiation
+         
         $hasPendingNegotiation = $offer->negotiations()
             ->where('status', 'pending')
             ->exists();
@@ -155,7 +155,7 @@ class OfferController extends Controller
             'candidate_notes' => 'required|string|max:1000',
         ]);
 
-        // Create negotiation record
+         
         $negotiation = OfferNegotiation::create([
             'offer_id' => $offer->id,
             'candidate_id' => auth()->id(),

@@ -9,9 +9,9 @@
 </head>
 <body class="bg-gray-50">
     <div class="flex min-h-screen">
-        <!-- Sidebar -->
+         
         <div class="w-64 bg-white shadow-sm fixed h-full">
-            <!-- Logo -->
+             
             <div class="p-6 border-b border-gray-200">
                 <div class="flex items-center gap-2">
                     <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
@@ -21,7 +21,7 @@
                 </div>
             </div>
 
-            <!-- Menu -->
+             
             <nav class="p-4">
                 <a href="{{ route('candidate.dashboard') }}" 
                    class="flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('candidate.dashboard') ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50' }} mb-1">
@@ -48,7 +48,7 @@
                 </a>
             </nav>
 
-            <!-- Bottom Menu -->
+             
             <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
@@ -60,16 +60,16 @@
             </div>
         </div>
 
-        <!-- Main Content -->
+         
         <div class="flex-1 ml-64">
-            <!-- Header -->
+             
             <div class="bg-white border-b border-gray-200 sticky top-0 z-10">
                 <div class="px-8 py-4 flex items-center justify-between">
                     <div>
                         <h1 class="text-2xl font-bold text-gray-900">{{ $header ?? 'Dashboard Kandidat' }}</h1>
                     </div>
                     
-                    <!-- User Profile -->
+                     
                     <div class="flex items-center gap-3">
                         <div class="relative">
                             <img src="{{ auth()->user()->profile_photo ? Storage::url(auth()->user()->profile_photo) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) }}" 
@@ -81,12 +81,12 @@
                 </div>
             </div>
 
-            <!-- Page Content -->
+             
             <div class="p-8">
                 {{ $slot }}
             </div>
 
-            <!-- Footer -->
+             
             <div class="px-8 py-4 text-center text-sm text-gray-500 border-t border-gray-200">
                 © 2025 RekrutPro. All rights reserved.
             </div>

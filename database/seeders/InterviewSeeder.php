@@ -10,9 +10,9 @@ use Carbon\Carbon;
 
 class InterviewSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
+    
+
+
     public function run(): void
     {
         $interviewerRole = \App\Models\Role::where('name', 'interviewer')->first();
@@ -35,15 +35,15 @@ class InterviewSeeder extends Seeder
 
     $interviews = [];
 
-    // make interviewer assignment deterministic
+     
     $interviewer1 = $interviewers->values()->get(0)->id ?? null;
     $interviewer2 = $interviewers->values()->get(1)->id ?? $interviewer1;
 
-        // Interview untuk aplikasi pertama (Software Engineer) - Multiple stages
+         
         if ($applications->count() > 0) {
             $app1 = $applications->first();
             
-            // HR Interview - Completed (fixed date)
+             
             $interviews[] = [
                 'application_id' => $app1->id,
                 'interviewer_id' => $hr->id,
@@ -56,7 +56,7 @@ class InterviewSeeder extends Seeder
                 'notes' => 'HR Interview: Kandidat sangat komunikatif dan antusias. Rekomedasi lanjut ke technical interview.',
             ];
 
-            // Technical Interview - Completed (fixed date)
+             
             $interviews[] = [
                 'application_id' => $app1->id,
                 'interviewer_id' => $interviewer1,
@@ -69,7 +69,7 @@ class InterviewSeeder extends Seeder
                 'notes' => 'Technical Interview: Covering backend and system design. Score: 90/100. PASS.',
             ];
 
-            // Final Interview - Scheduled (future fixed date)
+             
             $interviews[] = [
                 'application_id' => $app1->id,
                 'interviewer_id' => $interviewer2,
@@ -83,11 +83,11 @@ class InterviewSeeder extends Seeder
             ];
         }
 
-        // Interview untuk aplikasi kedua (UI/UX Designer) - Completed all stages
+         
         if ($applications->count() > 1) {
             $app2 = $applications->skip(1)->first();
 
-            // HR Interview - Completed (Design challenge)
+             
             $interviews[] = [
                 'application_id' => $app2->id,
                 'interviewer_id' => $interviewer1,
@@ -100,7 +100,7 @@ class InterviewSeeder extends Seeder
                 'notes' => 'Design Challenge: outstanding portfolio and UX thinking.',
             ];
 
-            // Final Interview - Completed (fixed date)
+             
             $interviews[] = [
                 'application_id' => $app2->id,
                 'interviewer_id' => $interviewer2,
@@ -114,7 +114,7 @@ class InterviewSeeder extends Seeder
             ];
         }
 
-        // Interview untuk aplikasi ketiga - Completed (NEEDS ASSESSMENT)
+         
         if ($applications->count() > 2) {
             $app3 = $applications->skip(2)->first();
             
@@ -131,11 +131,11 @@ class InterviewSeeder extends Seeder
             ];
         }
 
-        // Interview untuk aplikasi keempat - Scheduled untuk minggu ini
+         
         if ($applications->count() > 3) {
             $app4 = $applications->skip(3)->first();
             
-            // Upcoming interview this week (fixed)
+             
             $interviews[] = [
                 'application_id' => $app4->id,
                 'interviewer_id' => $hr->id,

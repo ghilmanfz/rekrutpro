@@ -22,7 +22,7 @@ class Location extends Model
         ];
     }
 
-    // Relationships
+     
     public function jobPostings()
     {
         return $this->hasMany(JobPosting::class);

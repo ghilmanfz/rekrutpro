@@ -10,9 +10,9 @@ use Carbon\Carbon;
 
 class OfferNegotiationSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
+    
+
+
     public function run(): void
     {
         $offers = Offer::all();
@@ -25,10 +25,10 @@ class OfferNegotiationSeeder extends Seeder
         $hrRole = \App\Models\Role::where('name', 'hr')->first();
         $hr = User::where('role_id', $hrRole->id)->first();
 
-        // Untuk demo, kita buat beberapa skenario negosiasi
+         
         $negotiations = [];
 
-        // Negosiasi untuk offer pertama (UI/UX Designer) - Status: Pending
+         
         if ($offers->count() > 0) {
             $offer = $offers->first();
             $candidate = $offer->application->candidate;

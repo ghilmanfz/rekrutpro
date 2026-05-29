@@ -7,21 +7,21 @@
 
     <title>{{ config('app.name', 'Laravel') }} - HR Dashboard</title>
 
-    <!-- Fonts -->
+     
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-    <!-- Scripts -->
+     
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="font-sans antialiased bg-gray-100">
     <div class="min-h-screen">
-        <!-- Navigation -->
+         
         <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
             <div class="px-6">
                 <div class="flex justify-between h-16">
                     <div class="flex items-center">
-                        <!-- Logo -->
+                         
                         <a href="{{ route('hr.dashboard') }}" class="flex items-center">
                             <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
                                 <span class="text-white font-bold text-lg">RP</span>
@@ -30,7 +30,7 @@
                         </a>
                     </div>
 
-                    <!-- User Menu -->
+                     
                     <div class="flex items-center gap-4">
                         <div class="relative">
                             <x-dropdown align="right" width="48">
@@ -56,7 +56,7 @@
                                         {{ __('Profile') }}
                                     </x-dropdown-link>
 
-                                    <!-- Authentication -->
+                                     
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
                                         <x-dropdown-link :href="route('logout')"
@@ -74,7 +74,7 @@
         </nav>
 
         <div class="flex">
-            <!-- Sidebar -->
+             
             <aside class="w-64 bg-white border-r border-gray-200 min-h-screen">
                 <nav class="mt-8 px-4 space-y-1">
                     <a href="{{ route('hr.dashboard') }}" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg {{ request()->routeIs('hr.dashboard') ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900' }} transition-colors">
@@ -113,7 +113,7 @@
                     </a>
                 </nav>
 
-                <!-- Bottom Section -->
+                 
                 <div class="absolute bottom-0 w-64 border-t border-gray-200 p-4 space-y-1">
                     <a href="#" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors">
                         <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -135,9 +135,9 @@
                 </div>
             </aside>
 
-            <!-- Main Content -->
+             
             <main class="flex-1">
-                <!-- Page Heading -->
+                 
                 @if (isset($header))
                     <header class="bg-white shadow">
                         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -154,17 +154,17 @@
                     </header>
                 @endif
 
-                <!-- Page Content -->
+                 
                 <div class="py-6">
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <!-- Success Message -->
+                         
                         @if (session('success'))
                             <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
                                 <span class="block sm:inline">{{ session('success') }}</span>
                             </div>
                         @endif
 
-                        <!-- Error Message -->
+                         
                         @if (session('error'))
                             <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
                                 <span class="block sm:inline">{{ session('error') }}</span>

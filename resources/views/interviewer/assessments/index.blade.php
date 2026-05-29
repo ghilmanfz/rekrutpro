@@ -3,7 +3,7 @@
         <h1 class="text-2xl font-bold text-gray-900">Riwayat Penilaian</h1>
     </x-slot>
 
-    <!-- Statistics Cards -->
+     
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div class="flex items-center">
@@ -42,7 +42,7 @@
         </div>
     </div>
 
-    <!-- Filters -->
+     
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
         <form method="GET" action="{{ route('interviewer.assessments.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
@@ -89,7 +89,7 @@
         </form>
     </div>
 
-    <!-- Assessment List -->
+     
     <div class="bg-white rounded-lg shadow-sm border border-gray-200">
         <div class="overflow-x-auto">
             <table class="w-full">
@@ -177,7 +177,7 @@
             </table>
         </div>
 
-        <!-- Pagination -->
+         
         @if($assessments->hasPages())
             <div class="px-6 py-4 border-t border-gray-200">
                 {{ $assessments->links() }}

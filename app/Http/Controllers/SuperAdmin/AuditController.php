@@ -5,28 +5,29 @@ namespace App\Http\Controllers\SuperAdmin;
 use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\Application;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 class AuditController extends Controller
 {
-    /**
-     * Display audit logs and reports
-     */
+    
+
+
     public function index(Request $request)
     {
-        // Report Summary Statistics
+         
         $stats = [
             'total_applications' => Application::count(),
             'screening_passed' => Application::where('status', 'screening_passed')->count(),
             'avg_hiring_time' => $this->calculateAverageHiringTime(),
         ];
 
-        // Get audit logs with filters
+         
         $query = AuditLog::with(['user', 'user.role']);
 
-        // Filter by activity/action
+         
         if ($request->filled('activity')) {
             $searchTerm = $request->activity;
             $query->where(function($q) use ($searchTerm) {
@@ -39,12 +40,12 @@ class AuditController extends Controller
             });
         }
 
-        // Filter by user
+         
         if ($request->filled('user_id')) {
             $query->where('user_id', $request->user_id);
         }
 
-        // Filter by date range
+         
         if ($request->filled('date_from')) {
             $query->whereDate('created_at', '>=', $request->date_from);
         }
@@ -54,17 +55,17 @@ class AuditController extends Controller
 
         $auditLogs = $query->orderBy('created_at', 'desc')->paginate(10);
 
-        // Get users for filter dropdown
-        $users = User::whereIn('role_id', [1, 2, 3]) // super_admin, hr, interviewer
+         
+        $users = User::whereHas('role', fn ($query) => $query->internal())
             ->orderBy('name')
             ->get();
 
         return view('superadmin.audit', compact('stats', 'auditLogs', 'users'));
     }
 
-    /**
-     * Calculate average hiring time in days
-     */
+    
+
+
     private function calculateAverageHiringTime()
     {
         $hiredApplications = Application::where('status', 'hired')
@@ -72,7 +73,7 @@ class AuditController extends Controller
             ->get();
 
         if ($hiredApplications->isEmpty()) {
-            return '15 Hari'; // Default
+            return '15 Hari';  
         }
 
         $totalDays = 0;
@@ -89,12 +90,43 @@ class AuditController extends Controller
         return $average . ' Hari';
     }
 
-    /**
-     * Export audit logs
-     */
+    
+
+
     public function export(Request $request)
     {
-        // TODO: Implement export to Excel/CSV
-        return back()->with('success', 'Data berhasil diekspor');
+        $auditLogs = AuditLog::with('user')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $filename = 'audit-logs-'.now()->format('Ymd-His').'.csv';
+
+        return response()->streamDownload(function () use ($auditLogs) {
+            $handle = fopen('php://output', 'w');
+
+            fputcsv($handle, [
+                'Waktu',
+                'Pengguna',
+                'Aktivitas',
+                'Model',
+                'Model ID',
+                'IP Address',
+                'User Agent',
+            ]);
+
+            foreach ($auditLogs as $log) {
+                fputcsv($handle, [
+                    $log->created_at->format('Y-m-d H:i:s'),
+                    $log->user?->name,
+                    $log->action,
+                    $log->model_type,
+                    $log->model_id,
+                    $log->ip_address,
+                    $log->user_agent,
+                ]);
+            }
+
+            fclose($handle);
+        }, $filename, ['Content-Type' => 'text/csv; charset=UTF-8']);
     }
 }

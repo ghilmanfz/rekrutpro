@@ -3,14 +3,14 @@
 @section('content')
 <div class="min-h-screen bg-gray-50 py-8">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Back Button -->
+         
         <div class="mb-6">
             <a href="{{ route('candidate.dashboard') }}" class="text-blue-600 hover:text-blue-800 text-sm">
                 ← Kembali ke Dashboard
             </a>
         </div>
 
-        <!-- Application Header -->
+         
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
             <div class="flex items-start justify-between">
                 <div>
@@ -38,9 +38,9 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Main Content -->
+             
             <div class="lg:col-span-2 space-y-6">
-                <!-- Personal Information -->
+                 
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                     <h2 class="text-lg font-semibold text-gray-900 mb-4">Informasi Pribadi</h2>
                     <div class="grid grid-cols-2 gap-4">
@@ -63,7 +63,7 @@
                     </div>
                 </div>
 
-                <!-- Education & Experience -->
+                 
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                     <h2 class="text-lg font-semibold text-gray-900 mb-4">Pendidikan & Pengalaman</h2>
                     <div class="grid grid-cols-2 gap-4">
@@ -86,7 +86,7 @@
                     </div>
                 </div>
 
-                <!-- Cover Letter -->
+                 
                 @if($application->cover_letter)
                     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                         <h2 class="text-lg font-semibold text-gray-900 mb-4">Cover Letter</h2>
@@ -94,7 +94,7 @@
                     </div>
                 @endif
 
-                <!-- Documents -->
+                 
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                     <h2 class="text-lg font-semibold text-gray-900 mb-4">Dokumen</h2>
                     <div class="space-y-3">
@@ -138,7 +138,7 @@
                     </div>
                 </div>
 
-                <!-- Status Notes -->
+                 
                 @if($application->status_notes)
                     <div class="bg-blue-50 border border-blue-200 rounded-xl p-6">
                         <h3 class="font-semibold text-blue-900 mb-2">Catatan dari HR</h3>
@@ -147,9 +147,9 @@
                 @endif
             </div>
 
-            <!-- Sidebar -->
+             
             <div class="space-y-6">
-                <!-- Timeline -->
+                 
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                     <h2 class="text-lg font-semibold text-gray-900 mb-4">Timeline</h2>
                     <div class="space-y-4">
@@ -213,7 +213,7 @@
                     </div>
                 </div>
 
-                <!-- Interview Details -->
+                 
                 @if($application->interviews()->exists())
                     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                         <h2 class="text-lg font-semibold text-gray-900 mb-4">Jadwal Interview</h2>
@@ -240,7 +240,7 @@
                     </div>
                 @endif
 
-                <!-- Job Offer -->
+                 
                 @if($application->offer)
                     @php $offer = $application->offer; @endphp
                     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
@@ -290,7 +290,7 @@
                         </div>
 
                         @if($offer->status === 'pending')
-                            <!-- Action Buttons for Pending Offers -->
+                             
                             <div class="border-t-4 border-blue-300 pt-6 mt-6 bg-gradient-to-br from-blue-100 to-indigo-100 -mx-6 -mb-6 px-6 pb-8 rounded-b-xl shadow-lg">
                                 <div class="text-center mb-6">
                                     <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full mb-3 animate-pulse">
@@ -303,7 +303,7 @@
                                 </div>
                                 
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <!-- Accept Button -->
+                                     
                                     <form action="{{ route('candidate.offers.accept', $offer) }}" method="POST" 
                                           onsubmit="return confirm('Apakah Anda yakin ingin MENERIMA penawaran ini? Anda akan menjadi karyawan tetap.')">
                                         @csrf
@@ -314,7 +314,7 @@
                                         </button>
                                     </form>
 
-                                    <!-- Negotiate Button -->
+                                     
                                     <button type="button" 
                                             onclick="document.getElementById('negotiateModal').classList.remove('hidden')"
                                             class="w-full px-6 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 font-bold text-lg shadow-2xl hover:shadow-blue-500/50 transition-all transform hover:scale-105 border-2 border-blue-400">
@@ -322,7 +322,7 @@
                                         <span class="block">Ajukan Negosiasi</span>
                                     </button>
 
-                                    <!-- Reject Button -->
+                                     
                                     <button type="button" 
                                             onclick="document.getElementById('rejectModal').classList.remove('hidden')"
                                             class="w-full px-6 py-4 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl hover:from-red-600 hover:to-red-700 font-bold text-lg shadow-2xl hover:shadow-red-500/50 transition-all transform hover:scale-105 border-2 border-red-400">
@@ -356,7 +356,7 @@
                             </div>
                         @endif
 
-                        <!-- Check for pending negotiation -->
+                         
                         @if($offer->latestNegotiation && $offer->latestNegotiation->status === 'pending')
                             <div class="border-t pt-4 mt-4 bg-blue-50 -m-6 mt-0 p-6">
                                 <div class="flex items-start">
@@ -411,7 +411,7 @@
     </div>
 </div>
 
-<!-- Negotiate Modal -->
+ 
 <div id="negotiateModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
     <div class="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-lg bg-white">
         <div class="flex justify-between items-center mb-4">
@@ -467,7 +467,7 @@
     </div>
 </div>
 
-<!-- Reject Modal -->
+ 
 <div id="rejectModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
     <div class="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-lg bg-white">
         <div class="flex justify-between items-center mb-4">

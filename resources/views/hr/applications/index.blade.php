@@ -6,17 +6,17 @@
     </x-slot>
 
     <div class="max-w-7xl mx-auto">
-        <!-- Success Message -->
+         
         @if(session('success'))
             <div class="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded relative" role="alert">
                 <span class="block sm:inline">{{ session('success') }}</span>
             </div>
         @endif
 
-        <!-- Filters -->
+         
         <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
             <form action="{{ route('hr.applications.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <!-- Search -->
+                 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Cari Kandidat</label>
                     <input 
@@ -28,7 +28,7 @@
                     >
                 </div>
 
-                <!-- Status Filter -->
+                 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
                     <select 
@@ -47,7 +47,7 @@
                     </select>
                 </div>
 
-                <!-- Job Filter -->
+                 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Lowongan</label>
                     <select 
@@ -63,7 +63,7 @@
                     </select>
                 </div>
 
-                <!-- Submit -->
+                 
                 <div class="flex gap-2 items-end">
                     <button type="submit" class="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-medium">
                         <i class="fas fa-search mr-2"></i>Filter
@@ -75,7 +75,7 @@
             </form>
         </div>
 
-        <!-- Statistics Cards -->
+         
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
             <div class="bg-white rounded-lg shadow-sm p-6">
                 <div class="flex items-center justify-between">
@@ -140,7 +140,7 @@
             </div>
         </div>
 
-        <!-- Applications Table -->
+         
         <div class="bg-white rounded-lg shadow-sm overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
@@ -254,7 +254,7 @@
                 </table>
             </div>
 
-            <!-- Pagination -->
+             
             @if($applications->hasPages())
                 <div class="bg-gray-50 px-6 py-4 border-t border-gray-200">
                     {{ $applications->links() }}

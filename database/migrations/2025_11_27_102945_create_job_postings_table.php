@@ -6,14 +6,14 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+    
+
+
     public function up(): void
     {
         Schema::create('job_postings', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique(); // Auto generate: SE001, PM002, etc
+            $table->string('code')->unique();  
             $table->foreignId('position_id')->constrained('positions')->onDelete('cascade');
             $table->foreignId('division_id')->constrained('divisions')->onDelete('cascade');
             $table->foreignId('location_id')->constrained('locations')->onDelete('cascade');
@@ -26,8 +26,8 @@ return new class extends Migration
             $table->text('benefits')->nullable();
             
             $table->integer('quota')->default(1);
-            $table->string('employment_type')->default('full_time'); // full_time, part_time, contract, internship
-            $table->string('experience_level')->default('mid'); // junior, mid, senior
+            $table->string('employment_type')->default('full_time');  
+            $table->string('experience_level')->default('mid');  
             
             $table->decimal('salary_min', 12, 2)->nullable();
             $table->decimal('salary_max', 12, 2)->nullable();
@@ -42,9 +42,9 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
+    
+
+
     public function down(): void
     {
         Schema::dropIfExists('job_postings');

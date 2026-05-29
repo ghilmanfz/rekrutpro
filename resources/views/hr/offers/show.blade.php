@@ -115,7 +115,7 @@
             </div>
             @endif
 
-            <!-- Negotiations Section -->
+             
             @if($offer->negotiations->isNotEmpty())
             <div class="mb-6 border border-gray-200 rounded-lg overflow-hidden">
                 <div class="bg-gray-50 px-4 py-3 border-b border-gray-200">
@@ -154,7 +154,7 @@
                             @endif
 
                             @if($negotiation->status === 'pending')
-                                <!-- Action Buttons for Pending Negotiation -->
+                                 
                                 <div class="flex gap-2 mt-3">
                                     <form action="{{ route('hr.negotiations.approve', $negotiation) }}" method="POST" class="inline">
                                         @csrf
@@ -224,7 +224,7 @@
         </div>
     </div>
 
-    <!-- Approve Negotiation Modal -->
+     
     <div id="approveModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
         <div class="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-lg bg-white">
             <div class="flex justify-between items-center mb-4">
@@ -271,7 +271,7 @@
         </div>
     </div>
 
-    <!-- Reject Negotiation Modal -->
+     
     <div id="rejectNegotiationModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
         <div class="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-lg bg-white">
             <div class="flex justify-between items-center mb-4">

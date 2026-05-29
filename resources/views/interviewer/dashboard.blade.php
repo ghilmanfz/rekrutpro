@@ -4,12 +4,12 @@
     </x-slot>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Main Content (Left & Center - 2 columns) -->
+         
         <div class="lg:col-span-2 space-y-6">
-            <!-- Main Content (Left & Center) -->
+             
             <div class="lg:col-span-2 space-y-6">
                 
-                <!-- Jadwal Interview Mendatang -->
+                 
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200">
                     <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
                         <h2 class="text-lg font-semibold text-gray-900">Jadwal Interview Mendatang</h2>
@@ -24,7 +24,7 @@
                                 <div class="px-6 py-4 hover:bg-gray-50 transition">
                                     <div class="flex items-start justify-between">
                                         <div class="flex items-start gap-4 flex-1">
-                                            <!-- Avatar -->
+                                             
                                             <div class="flex-shrink-0">
                                                 <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
                                                     <span class="text-white font-semibold text-sm">
@@ -33,7 +33,7 @@
                                                 </div>
                                             </div>
                                             
-                                            <!-- Info -->
+                                             
                                             <div class="flex-1 min-w-0">
                                                 <h3 class="text-base font-semibold text-gray-900">
                                                     {{ $interview->application->candidate->name }}
@@ -42,7 +42,7 @@
                                                     {{ $interview->application->jobPosting->title }}
                                                 </p>
                                                 
-                                                <!-- Schedule Info -->
+                                                 
                                                 <div class="flex flex-wrap items-center gap-4 mt-2 text-sm text-gray-500">
                                                     <div class="flex items-center gap-1.5">
                                                         <span>{{ $interview->scheduled_at->format('d M Y') }}</span>
@@ -57,7 +57,7 @@
                                             </div>
                                         </div>
 
-                                        <!-- Action Button -->
+                                         
                                         <div class="ml-4">
                                             <a href="{{ route('interviewer.interviews.show', $interview->id) }}" 
                                                class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition">
@@ -79,7 +79,7 @@
                     @endif
                 </div>
 
-                <!-- Penilaian Terbaru -->
+                 
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200">
                     <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
                         <h2 class="text-lg font-semibold text-gray-900">Penilaian Terbaru</h2>
@@ -128,10 +128,10 @@
                 </div>
             </div>
 
-            <!-- Right Sidebar -->
+             
             <div class="space-y-6">
                 
-                <!-- Notifikasi -->
+                 
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200">
                     <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
                         <h2 class="text-lg font-semibold text-gray-900">Notifikasi</h2>
@@ -144,7 +144,6 @@
                         @php
                             $notifications = [];
                             
-                            // Notifikasi interview baru (dari upcoming interviews)
                             foreach($upcomingInterviews->take(3) as $interview) {
                                 if($interview->created_at->diffInHours(now()) <= 48) {
                                     $notifications[] = [
@@ -157,7 +156,6 @@
                                 }
                             }
                             
-                            // Notifikasi jadwal interview yang sudah diperbarui
                             foreach($upcomingInterviews->take(2) as $interview) {
                                 if($interview->updated_at->diffInHours(now()) <= 24 && $interview->updated_at != $interview->created_at) {
                                     $notifications[] = [
@@ -170,7 +168,6 @@
                                 }
                             }
                             
-                            // Notifikasi penilaian jatuh tempo
                             foreach($recentAssessments->take(2) as $assessment) {
                                 $notifications[] = [
                                     'type' => 'reminder',
@@ -181,7 +178,6 @@
                                 ];
                             }
                             
-                            // Batasi max 5 notifikasi
                             $notifications = array_slice($notifications, 0, 5);
                         @endphp
                         
@@ -222,7 +218,7 @@
                     </div>
                 </div>
 
-                <!-- Interview Minggu Ini -->
+                 
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                     <div class="flex items-center justify-between mb-2">
                         <h3 class="text-sm font-medium text-gray-600">Interview Minggu Ini</h3>
@@ -237,7 +233,7 @@
                     </div>
                 </div>
 
-                <!-- Penilaian Tertunda -->
+                 
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                     <div class="flex items-center justify-between mb-2">
                         <h3 class="text-sm font-medium text-gray-600">Penilaian Tertunda</h3>

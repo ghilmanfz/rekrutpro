@@ -9,9 +9,9 @@
 <body class="bg-gray-50">
     @include('components.superadmin-sidebar')
 
-    <!-- Main Content -->
+     
     <main style="margin-left: 256px;">
-        <!-- Top Bar -->
+         
         <div class="bg-white border-b px-8 py-4 flex justify-between items-center">
             <div>
                 <h2 class="text-2xl font-bold text-gray-800">Konfigurasi Sistem</h2>
@@ -28,7 +28,7 @@
             </div>
         </div>
 
-        <!-- Content -->
+         
         <div class="p-8">
             @if(session('success'))
             <div class="mb-6 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg">
@@ -42,7 +42,7 @@
             </div>
             @endif
 
-            <!-- Konfigurasi WhatsApp API Section -->
+             
             <div class="mb-8">
                 <h3 class="text-lg font-semibold mb-4">Konfigurasi WhatsApp API (Fonnte.com)</h3>
                 <div class="bg-white rounded-lg shadow-sm border p-6">
@@ -73,7 +73,7 @@
                 </div>
             </div>
 
-            <!-- Template Notifikasi Section -->
+             
             <div class="mb-8">
                 <div class="flex justify-between items-center mb-4">
                     <div>
@@ -85,7 +85,7 @@
                     </button>
                 </div>
 
-                <!-- Available Placeholders Info -->
+                 
                 <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
                     <h4 class="font-semibold text-blue-900 mb-2">Placeholder Yang Tersedia:</h4>
                     <div class="grid grid-cols-3 gap-2 text-sm text-blue-800">
@@ -101,7 +101,7 @@
                     </div>
                 </div>
 
-                <!-- Templates Table -->
+                 
                 <div class="bg-white rounded-lg shadow-sm border">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
@@ -152,7 +152,7 @@
         </div>
     </main>
 
-    <!-- Modal Template -->
+     
     <div id="templateModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
         <div class="relative top-10 mx-auto p-5 border w-3/4 max-w-3xl shadow-lg rounded-md bg-white">
             <h3 class="text-lg font-bold mb-4" id="modalTitle">Tambah Template Notifikasi</h3>
@@ -220,7 +220,6 @@
             document.getElementById('templateEvent').value = template.event;
             document.getElementById('templateBody').value = template.body;
             document.getElementById('modalTitle').textContent = 'Edit Template Notifikasi';
-            // Set subject if the field exists
             var subjectField = document.querySelector('[name="subject"]');
             if (subjectField) {
                 subjectField.value = template.subject || '';

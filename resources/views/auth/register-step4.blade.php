@@ -25,7 +25,7 @@
                     <p class="text-gray-600 mt-2">Step 4 dari 5 - Informasi tambahan untuk meningkatkan peluang Anda</p>
                 </div>
 
-                <!-- Progress -->
+                 
                 <div class="flex items-center justify-center mb-8">
                     <div class="flex items-center gap-2">
                         <div class="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center text-sm"><i class="fas fa-check"></i></div>

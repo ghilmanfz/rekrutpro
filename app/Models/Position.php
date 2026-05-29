@@ -21,7 +21,7 @@ class Position extends Model
         ];
     }
 
-    // Relationships
+     
     public function division()
     {
         return $this->belongsTo(Division::class);

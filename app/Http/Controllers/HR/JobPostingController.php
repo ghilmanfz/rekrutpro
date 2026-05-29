@@ -13,25 +13,25 @@ use Illuminate\Support\Str;
 
 class JobPostingController extends Controller
 {
-    /**
-     * Display a listing of job postings
-     */
+    
+
+
     public function index(Request $request)
     {
         $query = JobPosting::with(['position', 'division', 'location', 'creator'])
             ->withCount('applications');
 
-        // Filter by status
+         
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
 
-        // Filter by division
+         
         if ($request->filled('division_id')) {
             $query->where('division_id', $request->division_id);
         }
 
-        // Search
+         
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
                 $q->where('title', 'like', '%' . $request->search . '%')
@@ -45,9 +45,9 @@ class JobPostingController extends Controller
         return view('hr.job-postings.index', compact('jobPostings', 'divisions'));
     }
 
-    /**
-     * Show the form for creating a new job posting
-     */
+    
+
+
     public function create()
     {
         $divisions = Division::where('is_active', true)->get();
@@ -57,9 +57,9 @@ class JobPostingController extends Controller
         return view('hr.job-postings.create', compact('divisions', 'positions', 'locations'));
     }
 
-    /**
-     * Store a newly created job posting
-     */
+    
+
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -79,11 +79,22 @@ class JobPostingController extends Controller
             'expected_start_date' => 'nullable|date',
         ]);
 
-        // Generate unique code
+        $validated['quota'] = $validated['vacancies'];
+        $validated['experience_level'] = $validated['level'];
+        $validated['closed_at'] = $validated['application_deadline'];
+
+        unset(
+            $validated['vacancies'],
+            $validated['level'],
+            $validated['application_deadline'],
+            $validated['expected_start_date'],
+        );
+
+         
         $validated['code'] = $this->generateJobCode($request->position_id);
         $validated['created_by'] = auth()->id();
         
-        // Handle action button (draft or publish)
+         
         if ($request->action === 'publish') {
             $validated['status'] = 'active';
             $validated['published_at'] = now();
@@ -99,9 +110,9 @@ class JobPostingController extends Controller
             ->with('success', 'Lowongan berhasil dibuat dengan kode: ' . $jobPosting->code);
     }
 
-    /**
-     * Display the specified job posting
-     */
+    
+
+
     public function show(JobPosting $jobPosting)
     {
         $jobPosting->load(['position', 'division', 'location', 'creator', 'applications.candidate']);
@@ -109,24 +120,24 @@ class JobPostingController extends Controller
         return view('hr.job-postings.show', compact('jobPosting'));
     }
 
-    /**
-     * Show the form for editing the job posting
-     */
+    
+
+
     public function edit(JobPosting $jobPosting)
     {
         $divisions = Division::where('is_active', true)->get();
         $positions = Position::where('is_active', true)->get();
         $locations = Location::where('is_active', true)->get();
 
-        // Alias for view compatibility
+         
         $job = $jobPosting;
 
         return view('hr.job-postings.edit', compact('jobPosting', 'job', 'divisions', 'positions', 'locations'));
     }
 
-    /**
-     * Update the job posting
-     */
+    
+
+
     public function update(Request $request, JobPosting $jobPosting)
     {
         $validated = $request->validate([
@@ -149,7 +160,7 @@ class JobPostingController extends Controller
 
         $oldData = $jobPosting->toArray();
         
-        // Handle status and published_at
+         
         if (!isset($validated['status'])) {
             $validated['status'] = 'draft';
         }
@@ -166,12 +177,12 @@ class JobPostingController extends Controller
             ->with('success', 'Lowongan berhasil diperbarui.');
     }
 
-    /**
-     * Remove the job posting
-     */
+    
+
+
     public function destroy(JobPosting $jobPosting)
     {
-        // Only allow deletion if no applications
+         
         if ($jobPosting->applications()->count() > 0) {
             return back()->with('error', 'Tidak dapat menghapus lowongan yang sudah memiliki pelamar.');
         }
@@ -185,27 +196,27 @@ class JobPostingController extends Controller
             ->with('success', 'Lowongan berhasil dihapus.');
     }
 
-    /**
-     * Generate unique job code
-     * 
-     * IMPORTANT: Uses withTrashed() to include soft-deleted records
-     * This prevents generating duplicate codes when old job postings are soft-deleted
-     */
+    
+
+
+
+
+
     protected function generateJobCode($positionId)
     {
         $position = Position::find($positionId);
         
-        // Use full position code as prefix (already unique per position)
+         
         $prefix = strtoupper($position->code);
         
-        // Get all job codes with this prefix and extract numbers
-        // CRITICAL: Include soft-deleted records to prevent duplicate codes
+         
+         
         $existingCodes = JobPosting::withTrashed()
             ->where('code', 'like', $prefix . '-%')
             ->pluck('code')
             ->toArray();
         
-        // Extract all numbers from existing codes
+         
         $existingNumbers = [];
         foreach ($existingCodes as $code) {
             $parts = explode('-', $code);
@@ -215,7 +226,7 @@ class JobPostingController extends Controller
             }
         }
         
-        // Find the next available number
+         
         if (empty($existingNumbers)) {
             $newNumber = 1;
         } else {
@@ -225,8 +236,8 @@ class JobPostingController extends Controller
         
         $newCode = $prefix . '-' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
         
-        // Extra safety: ensure uniqueness with retry logic
-        // CRITICAL: Also check soft-deleted records here
+         
+         
         $attempts = 0;
         while (JobPosting::withTrashed()->where('code', $newCode)->exists() && $attempts < 100) {
             $newNumber++;

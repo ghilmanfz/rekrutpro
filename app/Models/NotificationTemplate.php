@@ -26,14 +26,14 @@ class NotificationTemplate extends Model
         ];
     }
 
-    /**
-     * Replace placeholders with actual data
-     */
+    
+
+
     public function replacePlaceholders(array $data): string
     {
         $body = $this->body;
         foreach ($data as $key => $value) {
-            // Replace both {{key}} and {{ key }} (with optional spaces)
+             
             $body = preg_replace('/\{\{\s*' . preg_quote($key, '/') . '\s*\}\}/', $value ?? '', $body);
         }
         return $body;

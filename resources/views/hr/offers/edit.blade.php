@@ -31,7 +31,7 @@
                 @method('PUT')
 
                 <div class="space-y-6">
-                    <!-- Posisi -->
+                     
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             Posisi yang Ditawarkan <span class="text-red-500">*</span>
@@ -43,7 +43,7 @@
                                required>
                     </div>
 
-                    <!-- Gaji -->
+                     
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             Gaji yang Ditawarkan (Rp) <span class="text-red-500">*</span>
@@ -58,7 +58,7 @@
                         <p class="mt-1 text-sm text-gray-500">Contoh: 12000000 untuk Rp 12.000.000</p>
                     </div>
 
-                    <!-- Benefits -->
+                     
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             Benefits & Fasilitas
@@ -69,7 +69,7 @@
                                   placeholder="Contoh: BPJS Kesehatan & Ketenagakerjaan, Tunjangan Makan, Laptop">{{ old('benefits', $offer->benefits) }}</textarea>
                     </div>
 
-                    <!-- Tipe Kontrak -->
+                     
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             Tipe Kontrak <span class="text-red-500">*</span>
@@ -85,7 +85,7 @@
                         </select>
                     </div>
 
-                    <!-- Tanggal Mulai -->
+                     
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             Tanggal Mulai Kerja <span class="text-red-500">*</span>
@@ -97,7 +97,7 @@
                                required>
                     </div>
 
-                    <!-- Berlaku Hingga -->
+                     
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             Penawaran Berlaku Hingga <span class="text-red-500">*</span>
@@ -109,7 +109,7 @@
                                required>
                     </div>
 
-                    <!-- Catatan Internal -->
+                     
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             Catatan Internal (tidak terlihat oleh kandidat)

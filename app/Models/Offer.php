@@ -37,7 +37,7 @@ class Offer extends Model
         ];
     }
 
-    // Relationships
+     
     public function application()
     {
         return $this->belongsTo(Application::class);
@@ -58,7 +58,7 @@ class Offer extends Model
         return $this->hasOne(OfferNegotiation::class)->latestOfMany();
     }
 
-    // Scopes
+     
     public function scopePending($query)
     {
         return $query->where('status', 'pending');

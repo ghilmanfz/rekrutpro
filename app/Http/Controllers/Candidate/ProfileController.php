@@ -7,14 +7,14 @@ use Illuminate\Http\Request;
 
 class ProfileController extends Controller
 {
-    /**
-     * Show the profile edit form
-     */
+    
+
+
     public function edit()
     {
         $user = auth()->user();
         
-        // Calculate profile completion
+         
         $profileFields = [
             'name', 'email', 'phone', 'address', 
             'education', 'experience', 'skills'
@@ -28,7 +28,7 @@ class ProfileController extends Controller
         }
         $profileCompletion = round(($completedFields / count($profileFields)) * 100);
 
-        // Get application stats
+         
         $totalApplications = \App\Models\Application::where('candidate_id', auth()->id())->count();
         $acceptedApplications = \App\Models\Application::where('candidate_id', auth()->id())
             ->whereIn('status', ['offered', 'hired'])
@@ -37,9 +37,9 @@ class ProfileController extends Controller
         return view('candidate.profile', compact('user', 'profileCompletion', 'totalApplications', 'acceptedApplications'));
     }
 
-    /**
-     * Update candidate profile
-     */
+    
+
+
     public function update(Request $request)
     {
         $user = auth()->user();

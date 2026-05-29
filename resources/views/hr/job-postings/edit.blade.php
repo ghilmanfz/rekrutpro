@@ -7,23 +7,23 @@
 
 <div class="py-6">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Header -->
+         
         <div class="mb-6">
             <h1 class="text-2xl font-bold text-gray-900">Edit Lowongan Pekerjaan</h1>
             <p class="text-gray-600 mt-1">Perbarui informasi lowongan pekerjaan</p>
         </div>
 
-        <!-- Form -->
+         
         <form action="{{ route('hr.job-postings.update', $job->id) }}" method="POST" class="space-y-6">
             @csrf
             @method('PUT')
 
-            <!-- Basic Information -->
+             
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <h2 class="text-lg font-semibold text-gray-900 mb-4">Informasi Dasar</h2>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Title -->
+                     
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             Judul Lowongan <span class="text-red-500">*</span>
@@ -40,7 +40,7 @@
                         @enderror
                     </div>
 
-                    <!-- Position -->
+                     
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             Posisi <span class="text-red-500">*</span>
@@ -62,7 +62,7 @@
                         @enderror
                     </div>
 
-                    <!-- Division -->
+                     
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             Divisi <span class="text-red-500">*</span>
@@ -84,7 +84,7 @@
                         @enderror
                     </div>
 
-                    <!-- Location -->
+                     
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             Lokasi <span class="text-red-500">*</span>
@@ -106,7 +106,7 @@
                         @enderror
                     </div>
 
-                    <!-- Employment Type -->
+                     
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             Tipe Pekerjaan <span class="text-red-500">*</span>
@@ -123,7 +123,7 @@
                         </select>
                     </div>
 
-                    <!-- Level -->
+                     
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             Level Pengalaman <span class="text-red-500">*</span>
@@ -142,7 +142,7 @@
                         </select>
                     </div>
 
-                    <!-- Quota -->
+                     
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             Jumlah Lowongan <span class="text-red-500">*</span>
@@ -159,7 +159,7 @@
                 </div>
             </div>
 
-            <!-- Salary Range -->
+             
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <h2 class="text-lg font-semibold text-gray-900 mb-4">Rentang Gaji</h2>
                 
@@ -190,12 +190,12 @@
                 </div>
             </div>
 
-            <!-- Job Details -->
+             
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <h2 class="text-lg font-semibold text-gray-900 mb-4">Detail Pekerjaan</h2>
                 
                 <div class="space-y-6">
-                    <!-- Description -->
+                     
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             Deskripsi Pekerjaan <span class="text-red-500">*</span>
@@ -208,7 +208,7 @@
                         >{{ old('description', $job->description) }}</textarea>
                     </div>
 
-                    <!-- Requirements -->
+                     
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             Kualifikasi & Persyaratan <span class="text-red-500">*</span>
@@ -221,7 +221,7 @@
                         >{{ old('requirements', $job->requirements) }}</textarea>
                     </div>
 
-                    <!-- Benefits -->
+                     
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             Benefit & Fasilitas
@@ -235,7 +235,7 @@
                 </div>
             </div>
 
-            <!-- Timeline -->
+             
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <h2 class="text-lg font-semibold text-gray-900 mb-4">Timeline</h2>
                 
@@ -269,7 +269,7 @@
                 </div>
             </div>
 
-            <!-- Action Buttons -->
+             
             <div class="flex items-center justify-between bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <a href="{{ route('hr.job-postings.index') }}" class="text-gray-600 hover:text-gray-900">
                     ← Kembali

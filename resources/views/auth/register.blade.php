@@ -11,7 +11,7 @@
 </head>
 <body class="font-sans antialiased bg-gray-50">
     <div class="min-h-screen flex flex-col">
-        <!-- Header -->
+         
         <header class="bg-white border-b border-gray-100">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between items-center h-16">
@@ -26,21 +26,21 @@
             </div>
         </header>
 
-        <!-- Main Content -->
+         
         <div class="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
             <div class="max-w-2xl w-full">
-                <!-- Card -->
+                 
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-                    <!-- Title -->
+                     
                     <div class="text-center mb-8">
                         <h2 class="text-2xl font-bold text-gray-900 mb-2">Daftar Akun Baru</h2>
                         <p class="text-gray-600">Bergabunglah dengan RekrutPro untuk menemukan karir impian Anda</p>
                     </div>
 
-                    <!-- Progress Steps -->
+                     
                     <div class="mb-10">
                         <div class="flex items-center justify-between">
-                            <!-- Step 1 -->
+                             
                             <div class="flex flex-col items-center flex-1">
                                 <div class="w-10 h-10 bg-blue-500 text-white rounded-full flex items-center justify-center font-semibold mb-2">
                                     1
@@ -49,7 +49,7 @@
                             </div>
                             <div class="flex-1 h-1 bg-gray-200 mx-2 -mt-6"></div>
                             
-                            <!-- Step 2 -->
+                             
                             <div class="flex flex-col items-center flex-1">
                                 <div class="w-10 h-10 bg-gray-200 text-gray-400 rounded-full flex items-center justify-center font-semibold mb-2">
                                     2
@@ -58,7 +58,7 @@
                             </div>
                             <div class="flex-1 h-1 bg-gray-200 mx-2 -mt-6"></div>
                             
-                            <!-- Step 3 -->
+                             
                             <div class="flex flex-col items-center flex-1">
                                 <div class="w-10 h-10 bg-gray-200 text-gray-400 rounded-full flex items-center justify-center font-semibold mb-2">
                                     3
@@ -67,7 +67,7 @@
                             </div>
                             <div class="flex-1 h-1 bg-gray-200 mx-2 -mt-6"></div>
                             
-                            <!-- Step 4 -->
+                             
                             <div class="flex flex-col items-center flex-1">
                                 <div class="w-10 h-10 bg-gray-200 text-gray-400 rounded-full flex items-center justify-center font-semibold mb-2">
                                     4
@@ -76,7 +76,7 @@
                             </div>
                             <div class="flex-1 h-1 bg-gray-200 mx-2 -mt-6"></div>
                             
-                            <!-- Step 5 -->
+                             
                             <div class="flex flex-col items-center flex-1">
                                 <div class="w-10 h-10 bg-gray-200 text-gray-400 rounded-full flex items-center justify-center font-semibold mb-2">
                                     5
@@ -86,12 +86,12 @@
                         </div>
                     </div>
 
-                    <!-- Form Step 1: Detail Akun -->
+                     
                     <form method="POST" action="{{ route('register') }}" class="space-y-5" id="registerForm">
                         @csrf
-                        <input type="hidden" name="role_id" value="4"> <!-- Default: Candidate -->
+                        <input type="hidden" name="role_id" value="4">  
 
-                        <!-- Full Name -->
+                         
                         <div>
                             <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
                                 Nama Lengkap <span class="text-red-500">*</span>
@@ -112,7 +112,7 @@
                             @enderror
                         </div>
 
-                        <!-- Email -->
+                         
                         <div>
                             <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
                                 Email <span class="text-red-500">*</span>
@@ -132,7 +132,7 @@
                             @enderror
                         </div>
 
-                        <!-- Password -->
+                         
                         <div>
                             <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
                                 Kata Sandi <span class="text-red-500">*</span>
@@ -152,7 +152,7 @@
                             <p class="mt-2 text-xs text-gray-500">Password harus minimal 8 karakter</p>
                         </div>
 
-                        <!-- Confirm Password -->
+                         
                         <div>
                             <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">
                                 Konfirmasi Kata Sandi <span class="text-red-500">*</span>
@@ -168,7 +168,7 @@
                             >
                         </div>
 
-                        <!-- Terms & Conditions -->
+                         
                         <div class="flex items-start">
                             <input 
                                 id="terms" 
@@ -181,7 +181,7 @@
                             </label>
                         </div>
 
-                        <!-- Submit Button -->
+                         
                         <button 
                             type="submit" 
                             class="w-full bg-blue-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
@@ -190,7 +190,7 @@
                         </button>
                     </form>
 
-                    <!-- Login Link -->
+                     
                     <div class="mt-6 text-center">
                         <p class="text-sm text-gray-600">
                             Sudah punya akun? 
@@ -200,7 +200,7 @@
                         </p>
                     </div>
 
-                    <!-- Back to Home -->
+                     
                     <div class="mt-6 text-center">
                         <a href="{{ route('home') }}" class="text-sm text-blue-500 hover:text-blue-600 font-medium">
                             Atau kembali ke Halaman Karir
@@ -208,7 +208,7 @@
                     </div>
                 </div>
 
-                <!-- Footer -->
+                 
                 <div class="mt-8 text-center">
                     <p class="text-sm text-gray-500">© {{ date('Y') }} RekrutPro. All rights reserved.</p>
                 </div>
@@ -217,11 +217,9 @@
     </div>
 
     <script>
-        // Multi-step form wizard
         let currentStep = 1;
         const totalSteps = 5;
         
-        // Password validation
         const password = document.getElementById('password');
         const confirmPassword = document.getElementById('password_confirmation');
         
@@ -233,11 +231,7 @@
             }
         });
 
-        // Form submission - for now just submit normally
-        // In production, you would implement actual multi-step logic with AJAX
         document.getElementById('registerForm').addEventListener('submit', function(e) {
-            // Let the form submit normally to Laravel's register route
-            // Laravel will handle the validation and user creation
         });
     </script>
 </body>

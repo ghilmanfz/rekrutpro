@@ -10,9 +10,9 @@ use Carbon\Carbon;
 
 class ApplicationSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
+    
+
+
     public function run(): void
     {
         $candidateRole = \App\Models\Role::where('name', 'candidate')->first();
@@ -33,7 +33,7 @@ class ApplicationSeeder extends Seeder
         $hr = User::where('role_id', $hrRole->id)->first();
 
         $applications = [
-            // Aplikasi dari kandidat pertama - Software Engineer Position
+             
             [
                 'code' => 'AP-2025-001',
                 'job_posting_id' => $jobPostings->first()->id,
@@ -69,7 +69,7 @@ class ApplicationSeeder extends Seeder
                 'reviewed_at' => Carbon::now()->subDays(23),
             ],
             
-            // Aplikasi dari kandidat kedua - UI/UX Designer
+             
             [
                 'code' => 'AP-2025-002',
                 'job_posting_id' => $jobPostings->skip(1)->first()->id ?? $jobPostings->first()->id,
@@ -106,7 +106,7 @@ class ApplicationSeeder extends Seeder
                 'reviewed_at' => Carbon::now()->subDays(16),
             ],
 
-            // Aplikasi dari kandidat ketiga - Marketing Manager
+             
             [
                 'code' => 'AP-2025-003',
                 'job_posting_id' => $jobPostings->skip(2)->first()->id ?? $jobPostings->first()->id,
@@ -142,7 +142,7 @@ class ApplicationSeeder extends Seeder
                 'reviewed_at' => Carbon::now()->subDays(10),
             ],
 
-            // Aplikasi dari kandidat keempat - Data Analyst
+             
             [
                 'code' => 'AP-2025-004',
                 'job_posting_id' => $jobPostings->skip(3)->first()->id ?? $jobPostings->first()->id,
@@ -176,7 +176,7 @@ class ApplicationSeeder extends Seeder
                 'status' => 'submitted',
             ],
 
-            // Aplikasi dari kandidat kelima - HR Specialist  
+             
             [
                 'code' => 'AP-2025-005',
                 'job_posting_id' => $jobPostings->skip(4)->first()->id ?? $jobPostings->first()->id,
@@ -213,7 +213,7 @@ class ApplicationSeeder extends Seeder
                 'reviewed_at' => Carbon::now()->subDays(3),
             ],
 
-            // Aplikasi tambahan
+             
             [
                 'code' => 'AP-2025-006',
                 'job_posting_id' => $jobPostings->skip(3)->first()->id ?? $jobPostings->first()->id,

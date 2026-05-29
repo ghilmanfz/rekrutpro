@@ -9,16 +9,16 @@ use Illuminate\Support\Facades\Log;
 
 class NotificationService
 {
-    /**
-     * Send a WhatsApp notification for a given event.
-     *
-     * @param string $event   e.g. 'application_submitted'
-     * @param string $phone   Target phone in 628xxx format
-     * @param array  $data    Placeholder values, e.g. ['candidate_name' => 'Budi', ...]
-     */
+    
+
+
+
+
+
+
     public function sendWhatsApp(string $event, string $phone, array $data): void
     {
-        // Search by 'type' column (from seeder) OR 'channel' column (from admin UI)
+         
         $template = NotificationTemplate::where('event', $event)
             ->where(function ($query) {
                 $query->where('type', 'whatsapp')

@@ -10,9 +10,9 @@ use Illuminate\Http\Request;
 
 class MasterDataController extends Controller
 {
-    /**
-     * Display master data management page
-     */
+    
+
+
     public function index()
     {
         $divisions = Division::withCount('users')->orderBy('name')->get();
@@ -22,7 +22,7 @@ class MasterDataController extends Controller
         return view('superadmin.master-data.index', compact('divisions', 'positions', 'locations'));
     }
 
-    // ============ DIVISIONS ============
+     
 
     public function storeDivision(Request $request)
     {
@@ -59,7 +59,7 @@ class MasterDataController extends Controller
         return back()->with('success', 'Divisi berhasil dihapus');
     }
 
-    // ============ POSITIONS ============
+     
 
     public function storePosition(Request $request)
     {
@@ -96,7 +96,7 @@ class MasterDataController extends Controller
         return back()->with('success', 'Posisi berhasil dihapus');
     }
 
-    // ============ LOCATIONS ============
+     
 
     public function storeLocation(Request $request)
     {

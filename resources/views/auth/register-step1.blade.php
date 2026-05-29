@@ -10,7 +10,7 @@
 <body class="bg-gray-50">
     <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-md w-full">
-            <!-- Logo -->
+             
             <div class="text-center mb-8">
                 <div class="flex items-center justify-center gap-2 mb-4">
                     <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
@@ -20,14 +20,14 @@
                 </div>
             </div>
 
-            <!-- Card -->
+             
             <div class="bg-white rounded-xl shadow-lg p-8">
                 <div class="text-center mb-6">
                     <h2 class="text-2xl font-bold text-gray-900">Daftar Akun Baru</h2>
                     <p class="text-gray-600 mt-2">Bergabunglah dengan RekrutPro untuk menemukan karir impian Anda</p>
                 </div>
 
-                <!-- Progress Steps -->
+                 
                 <div class="flex items-center justify-center mb-8">
                     <div class="flex items-center gap-2">
                         <div class="flex flex-col items-center">
@@ -73,11 +73,11 @@
                     </div>
                 @endif
 
-                <!-- Form -->
+                 
                 <form method="POST" action="{{ route('register.step1.process') }}">
                     @csrf
 
-                    <!-- Name -->
+                     
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap *</label>
                         <input type="text" 
@@ -91,7 +91,7 @@
                         @enderror
                     </div>
 
-                    <!-- Email -->
+                     
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
                         <input type="email" 
@@ -105,7 +105,7 @@
                         @enderror
                     </div>
 
-                    <!-- Nomor WhatsApp -->
+                     
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Nomor WhatsApp *</label>
                         <input type="text" 
@@ -120,7 +120,7 @@
                         @enderror
                     </div>
 
-                    <!-- Password -->
+                     
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Kata Sandi *</label>
                         <input type="password" 
@@ -134,7 +134,7 @@
                         @enderror
                     </div>
 
-                    <!-- Confirm Password -->
+                     
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Konfirmasi Kata Sandi *</label>
                         <input type="password" 
@@ -144,7 +144,7 @@
                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     </div>
 
-                    <!-- Terms -->
+                     
                     <div class="mb-6">
                         <label class="flex items-start gap-2">
                             <input type="checkbox" 
@@ -165,14 +165,14 @@
                         @enderror
                     </div>
 
-                    <!-- Submit Button -->
+                     
                     <button type="submit" 
                             class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 font-semibold transition-colors">
                         Selanjutnya
                     </button>
                 </form>
 
-                <!-- Footer -->
+                 
                 <div class="mt-6 text-center">
                     <p class="text-sm text-gray-600">
                         Sudah punya akun? 
@@ -187,7 +187,7 @@
                 </div>
             </div>
 
-            <!-- Copyright -->
+             
             <div class="mt-8 text-center text-sm text-gray-500">
                 © 2025 RekrutPro. All rights reserved.
             </div>

@@ -9,9 +9,9 @@
     </x-slot>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Main Content -->
+         
         <div class="lg:col-span-2 space-y-6">
-            <!-- Candidate Info -->
+             
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                 <h2 class="text-lg font-semibold text-gray-900 mb-4">Informasi Kandidat</h2>
                 
@@ -48,11 +48,11 @@
                 </div>
             </div>
 
-            <!-- Assessment Scores -->
+             
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                 <h2 class="text-lg font-semibold text-gray-900 mb-6">Hasil Penilaian</h2>
                 
-                <!-- Overall Score - Highlighted -->
+                 
                 <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-6 rounded-lg mb-6 text-white">
                     <p class="text-sm font-medium opacity-90">Overall Score</p>
                     <p class="text-5xl font-bold mt-2">{{ $assessment->overall_score }}<span class="text-2xl opacity-75">/100</span></p>
@@ -61,7 +61,7 @@
                     </div>
                 </div>
 
-                <!-- Individual Scores -->
+                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="bg-gray-50 p-4 rounded-lg">
                         <p class="text-sm text-gray-600 mb-2">Technical Skills</p>
@@ -122,7 +122,7 @@
                 </div>
             </div>
 
-            <!-- Recommendation -->
+             
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                 <h2 class="text-lg font-semibold text-gray-900 mb-4">Rekomendasi</h2>
                 
@@ -158,7 +158,7 @@
                 </div>
             </div>
 
-            <!-- Notes -->
+             
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                 <h2 class="text-lg font-semibold text-gray-900 mb-4">Catatan Interview</h2>
                 <div class="bg-gray-50 p-4 rounded-lg">
@@ -167,9 +167,9 @@
             </div>
         </div>
 
-        <!-- Sidebar -->
+         
         <div class="space-y-6">
-            <!-- Timeline -->
+             
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Timeline</h3>
                 
@@ -212,7 +212,7 @@
                 </div>
             </div>
 
-            <!-- Interview Details -->
+             
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Detail Interview</h3>
                 
@@ -254,7 +254,7 @@
                 </div>
             </div>
 
-            <!-- Documents -->
+             
             @if($assessment->interview->application->cv_path || $assessment->interview->application->portfolio_path)
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Dokumen</h3>
@@ -287,7 +287,7 @@
                 </div>
             @endif
 
-            <!-- Actions -->
+             
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                 <a href="{{ route('interviewer.interviews.show', $assessment->interview->id) }}" 
                    class="block w-full text-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 mb-3">

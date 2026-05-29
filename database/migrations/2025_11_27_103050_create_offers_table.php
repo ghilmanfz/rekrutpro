@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+    
+
+
     public function up(): void
     {
         Schema::create('offers', function (Blueprint $table) {
@@ -16,25 +16,25 @@ return new class extends Migration
             $table->foreignId('application_id')->constrained('applications')->onDelete('cascade');
             $table->foreignId('offered_by')->constrained('users')->onDelete('cascade');
             
-            // Offer Details
+             
             $table->string('position_title');
             $table->decimal('salary', 12, 2);
             $table->string('salary_currency')->default('IDR');
-            $table->string('salary_period')->default('monthly'); // monthly, annual
+            $table->string('salary_period')->default('monthly');  
             
-            // Benefits
-            $table->json('benefits')->nullable(); // Health insurance, transport, etc
+             
+            $table->json('benefits')->nullable();  
             
-            // Contract
-            $table->string('contract_type'); // Permanent, Contract, Internship
+             
+            $table->string('contract_type');  
             $table->date('start_date');
             $table->date('end_date')->nullable();
             
-            // Additional
+             
             $table->text('terms_and_conditions')->nullable();
             $table->text('internal_notes')->nullable();
             
-            // Offer Status
+             
             $table->enum('status', ['pending', 'accepted', 'rejected', 'expired'])->default('pending');
             $table->date('valid_until')->nullable();
             $table->text('rejection_reason')->nullable();
@@ -44,9 +44,9 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
+    
+
+
     public function down(): void
     {
         Schema::dropIfExists('offers');

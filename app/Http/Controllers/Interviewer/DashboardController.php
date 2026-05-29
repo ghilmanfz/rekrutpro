@@ -9,14 +9,14 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    /**
-     * Display interviewer dashboard
-     */
+    
+
+
     public function index()
     {
         $interviewerId = auth()->id();
 
-        // Get upcoming interviews (scheduled for future dates)
+         
         $upcomingInterviews = Interview::with([
             'application.candidate',
             'application.jobPosting.division'
@@ -28,7 +28,7 @@ class DashboardController extends Controller
             ->limit(10)
             ->get();
 
-        // Count interviews this week (from Monday to Sunday)
+         
         $startOfWeek = now()->startOfWeek();
         $endOfWeek = now()->endOfWeek();
         $interviewsThisWeek = Interview::where('interviewer_id', $interviewerId)
@@ -36,13 +36,13 @@ class DashboardController extends Controller
             ->whereBetween('scheduled_at', [$startOfWeek, $endOfWeek])
             ->count();
 
-        // Count pending assessments (interviews completed but no assessment yet)
+         
         $pendingAssessments = Interview::where('interviewer_id', $interviewerId)
             ->where('status', 'completed')
             ->whereDoesntHave('assessment')
             ->count();
 
-        // Get statistics
+         
         $stats = [
             'total' => Interview::where('interviewer_id', $interviewerId)->count(),
             'scheduled' => $interviewsThisWeek,
@@ -52,7 +52,7 @@ class DashboardController extends Controller
             'pending_assessments' => $pendingAssessments,
         ];
 
-        // Get recent assessments
+         
         $recentAssessments = Assessment::whereHas('interview', function ($query) use ($interviewerId) {
             $query->where('interviewer_id', $interviewerId);
         })

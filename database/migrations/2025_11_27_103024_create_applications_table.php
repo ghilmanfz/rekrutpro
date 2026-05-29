@@ -6,18 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+    
+
+
     public function up(): void
     {
         Schema::create('applications', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique(); // AP-2024-001
+            $table->string('code')->unique();  
             $table->foreignId('job_posting_id')->constrained('job_postings')->onDelete('cascade');
             $table->foreignId('candidate_id')->constrained('users')->onDelete('cascade');
             
-            // Candidate Profile Data
+             
             $table->string('full_name');
             $table->string('email');
             $table->string('phone');
@@ -25,19 +25,19 @@ return new class extends Migration
             $table->date('birth_date')->nullable();
             $table->string('gender')->nullable();
             
-            // Education
-            $table->json('education')->nullable(); // [{degree, institution, major, year}]
+             
+            $table->json('education')->nullable();  
             
-            // Experience
-            $table->json('experience')->nullable(); // [{position, company, duration, description}]
+             
+            $table->json('experience')->nullable();  
             
-            // Documents
+             
             $table->string('cv_file')->nullable();
             $table->string('cover_letter')->nullable();
             $table->string('portfolio_file')->nullable();
             $table->json('other_documents')->nullable();
             
-            // Application Status
+             
             $table->enum('status', [
                 'submitted',
                 'screening_passed', 
@@ -60,9 +60,9 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
+    
+
+
     public function down(): void
     {
         Schema::dropIfExists('applications');

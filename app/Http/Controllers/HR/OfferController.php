@@ -12,19 +12,19 @@ use Illuminate\Http\Request;
 
 class OfferController extends Controller
 {
-    /**
-     * Display a listing of offers
-     */
+    
+
+
     public function index(Request $request)
     {
         $query = Offer::with(['application.candidate', 'application.jobPosting', 'offeredBy']);
 
-        // Filter by status
+         
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
 
-        // Search by candidate name
+         
         if ($request->filled('search')) {
             $query->whereHas('application.candidate', function ($q) use ($request) {
                 $q->where('name', 'like', '%' . $request->search . '%');
@@ -36,9 +36,9 @@ class OfferController extends Controller
         return view('hr.offers.index', compact('offers'));
     }
 
-    /**
-     * Store a newly created offer
-     */
+    
+
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -56,7 +56,7 @@ class OfferController extends Controller
 
         $offer = Offer::create($validated);
 
-        // Update application status
+         
         $application = Application::find($request->application_id);
         $application->update([
             'status' => 'offered',
@@ -65,7 +65,7 @@ class OfferController extends Controller
 
         AuditLog::log('create', $offer, [], $validated);
 
-        // Send WhatsApp notification to candidate
+         
         $application->load(['candidate', 'jobPosting']);
         $candidate = $application->candidate;
         if ($candidate && $candidate->phone) {
@@ -90,9 +90,9 @@ class OfferController extends Controller
         return redirect()->back()->with('success', 'Penawaran kerja berhasil dibuat.');
     }
 
-    /**
-     * Display the specified offer
-     */
+    
+
+
     public function show(Offer $offer)
     {
         $offer->load([
@@ -107,12 +107,12 @@ class OfferController extends Controller
         return view('hr.offers.show', compact('offer'));
     }
 
-    /**
-     * Show the form for editing the specified offer
-     */
+    
+
+
     public function edit(Offer $offer)
     {
-        // Only allow editing pending offers
+         
         if ($offer->status !== 'pending') {
             return redirect()->route('hr.offers.show', $offer)
                 ->with('error', 'Hanya penawaran dengan status "Menunggu" yang bisa diedit.');
@@ -126,12 +126,12 @@ class OfferController extends Controller
         return view('hr.offers.edit', compact('offer'));
     }
 
-    /**
-     * Update the specified offer
-     */
+    
+
+
     public function update(Request $request, Offer $offer)
     {
-        // Only allow updating pending offers
+         
         if ($offer->status !== 'pending') {
             return redirect()->route('hr.offers.show', $offer)
                 ->with('error', 'Hanya penawaran dengan status "Menunggu" yang bisa diedit.');
@@ -156,9 +156,9 @@ class OfferController extends Controller
             ->with('success', 'Penawaran kerja berhasil diperbarui.');
     }
 
-    /**
-     * Approve a negotiation
-     */
+    
+
+
     public function approveNegotiation(Request $request, OfferNegotiation $negotiation)
     {
         if ($negotiation->status !== 'pending') {
@@ -172,7 +172,7 @@ class OfferController extends Controller
         $oldNegotiation = $negotiation->toArray();
         $oldOffer = $negotiation->offer->toArray();
 
-        // Update negotiation status
+         
         $negotiation->update([
             'status' => 'approved',
             'hr_notes' => $validated['hr_notes'] ?? null,
@@ -180,7 +180,7 @@ class OfferController extends Controller
             'reviewed_at' => now(),
         ]);
 
-        // Update offer with new salary
+         
         $negotiation->offer->update([
             'salary' => $negotiation->proposed_salary,
         ]);
@@ -198,9 +198,9 @@ class OfferController extends Controller
         return redirect()->back()->with('success', 'Negosiasi disetujui. Gaji penawaran telah diperbarui.');
     }
 
-    /**
-     * Reject a negotiation
-     */
+    
+
+
     public function rejectNegotiation(Request $request, OfferNegotiation $negotiation)
     {
         if ($negotiation->status !== 'pending') {
@@ -213,7 +213,7 @@ class OfferController extends Controller
 
         $oldData = $negotiation->toArray();
 
-        // Update negotiation status
+         
         $negotiation->update([
             'status' => 'rejected',
             'hr_notes' => $validated['hr_notes'] ?? null,

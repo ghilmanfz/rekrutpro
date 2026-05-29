@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\Role;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,44 +12,29 @@ use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
 {
-    /**
-     * Display the login view.
-     */
+    
+
+
     public function create(): View
     {
         return view('auth.login');
     }
 
-    /**
-     * Handle an incoming authentication request.
-     */
+    
+
+
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
 
         $request->session()->regenerate();
 
-        // Check if user has completed registration
+         
         $user = auth()->user();
-        
-        // ✅ PERBAIKAN: Jika registrasi belum complete, redirect ke step yang belum selesai
-        if (!$user->registration_completed && $user->role->name === 'candidate') {
-            // Redirect ke step yang sesuai berdasarkan registration_step
-            $step = $user->registration_step ?? 2; // Default ke step 2 karena step 1 sudah selesai saat register
-            
-            // Pastikan step valid (2-5)
-            if ($step < 2) {
-                $step = 2;
-            } elseif ($step > 5) {
-                $step = 5;
-            }
-            
-            return redirect()->route("register.step{$step}")
-                ->with('info', 'Silakan lanjutkan proses registrasi Anda.');
-        }
+        $roleName = $user->role?->name;
 
-        // Check if account is suspended by admin
-        if (!$user->is_active && $user->registration_completed) {
+         
+        if (!$user->is_active) {
             Auth::guard('web')->logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
@@ -56,18 +42,26 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('login')
                 ->withErrors(['email' => 'Akun Anda telah dinonaktifkan oleh administrator. Silakan hubungi tim support.']);
         }
+        
+         
+        if (!$user->registration_completed && $roleName === Role::CANDIDATE) {
+            $step = min(max(($user->registration_step ?? 1) + 1, 2), 5);
+            
+            return redirect()->route("register.step{$step}")
+                ->with('info', 'Silakan lanjutkan proses registrasi Anda.');
+        }
 
-        // Redirect based on user role
+         
         return $this->redirectBasedOnRole($user);
     }
 
-    /**
-     * Redirect user to appropriate dashboard based on their role
-     */
+    
+
+
     protected function redirectBasedOnRole($user): RedirectResponse
     {
-        // Get user's role name
-        $roleName = $user->role->name ?? null;
+         
+        $roleName = $user->role?->name;
 
         switch ($roleName) {
             case 'super_admin':
@@ -83,14 +77,14 @@ class AuthenticatedSessionController extends Controller
                 return redirect()->route('candidate.dashboard');
                 
             default:
-                // Fallback to general dashboard if role not recognized
+                 
                 return redirect()->route('dashboard');
         }
     }
 
-    /**
-     * Destroy an authenticated session.
-     */
+    
+
+
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();

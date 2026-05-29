@@ -9,9 +9,9 @@
 <body class="bg-gray-50">
     @include('components.superadmin-sidebar')
 
-    <!-- Main Content -->
+     
     <main style="margin-left: 256px;">
-        <!-- Top Bar -->
+         
         <div class="bg-white border-b px-8 py-4 flex justify-between items-center">
             <div>
                 <h2 class="text-2xl font-bold text-gray-800">Dashboard Super Admin</h2>
@@ -28,13 +28,13 @@
             </div>
         </div>
 
-        <!-- Content -->
+         
         <div class="p-8">
-            <!-- Data Pengguna Section -->
+             
             <div class="mb-8">
                 <h3 class="text-lg font-semibold text-gray-800 mb-4">Data Pengguna</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <!-- Super Admin -->
+                     
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                         <div class="flex items-center justify-between">
                             <div>
@@ -49,7 +49,7 @@
                         </div>
                     </div>
 
-                    <!-- HR -->
+                     
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                         <div class="flex items-center justify-between">
                             <div>
@@ -64,7 +64,7 @@
                         </div>
                     </div>
 
-                    <!-- Interviewer -->
+                     
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                         <div class="flex items-center justify-between">
                             <div>
@@ -79,7 +79,7 @@
                         </div>
                     </div>
 
-                    <!-- Candidate -->
+                     
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                         <div class="flex items-center justify-between">
                             <div>
@@ -96,11 +96,11 @@
                 </div>
             </div>
 
-            <!-- Data Master Section -->
+             
             <div class="mb-8">
                 <h3 class="text-lg font-semibold text-gray-800 mb-4">Data Master</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <!-- Divisi -->
+                     
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                         <div class="flex items-center justify-between">
                             <div>
@@ -115,7 +115,7 @@
                         </div>
                     </div>
 
-                    <!-- Posisi -->
+                     
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                         <div class="flex items-center justify-between">
                             <div>
@@ -130,7 +130,7 @@
                         </div>
                     </div>
 
-                    <!-- Lokasi -->
+                     
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                         <div class="flex items-center justify-between">
                             <div>
@@ -146,7 +146,7 @@
                         </div>
                     </div>
 
-                    <!-- Template Notifikasi -->
+                     
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                         <div class="flex items-center justify-between">
                             <div>
@@ -163,11 +163,11 @@
                 </div>
             </div>
 
-            <!-- Data Rekrutmen Section -->
+             
             <div>
                 <h3 class="text-lg font-semibold text-gray-800 mb-4">Data Rekrutmen</h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- Lowongan Aktif -->
+                     
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                         <div class="flex items-center justify-between">
                             <div>
@@ -182,7 +182,7 @@
                         </div>
                     </div>
 
-                    <!-- Total Lamaran -->
+                     
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                         <div class="flex items-center justify-between">
                             <div>
@@ -197,7 +197,7 @@
                         </div>
                     </div>
 
-                    <!-- Lamaran Pending -->
+                     
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                         <div class="flex items-center justify-between">
                             <div>

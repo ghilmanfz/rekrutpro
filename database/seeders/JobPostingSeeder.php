@@ -12,9 +12,9 @@ use Carbon\Carbon;
 
 class JobPostingSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
+    
+
+
     public function run(): void
     {
         $hrRole = \App\Models\Role::where('name', 'hr')->first();

@@ -13,17 +13,17 @@ use Illuminate\Support\Str;
 
 class RegisterController extends Controller
 {
-    /**
-     * Show registration form - Step 1
-     */
+    
+
+
     public function showStep1()
     {
         return view('auth.register-step1');
     }
 
-    /**
-     * Process Step 1 - Basic Account Info
-     */
+    
+
+
     public function processStep1(Request $request)
     {
         $validated = $request->validate([
@@ -36,7 +36,7 @@ class RegisterController extends Controller
             'phone.regex' => 'Format nomor WhatsApp tidak valid. Gunakan format 628xxx (contoh: 6281234567890).',
         ]);
 
-        // Get candidate role
+         
         $candidateRole = Role::where('name', 'candidate')->first();
         
         if (!$candidateRole) {
@@ -44,7 +44,7 @@ class RegisterController extends Controller
             return back()->with('error', 'Role candidate tidak ditemukan. Hubungi administrator.');
         }
 
-        // Create user with step 1 completed
+         
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
@@ -53,32 +53,32 @@ class RegisterController extends Controller
             'role_id' => $candidateRole->id,
             'registration_step' => 1,
             'registration_completed' => false,
-            'is_active' => true, // ✅ PERBAIKAN: Set true agar bisa login lagi untuk lanjut registrasi
+            'is_active' => true,  
             'is_verified' => false,
         ]);
 
-        // Verify role was assigned
+         
         if (!$user->role_id) {
             \Log::error('Role ID was not assigned to user', ['user_id' => $user->id, 'role_id' => $candidateRole->id]);
             $user->update(['role_id' => $candidateRole->id]);
         }
 
-        // Login user untuk melanjutkan ke step berikutnya
+         
         auth()->login($user);
 
-        // Redirect to step 2
+         
         return redirect()->route('register.step2')
             ->with('success', 'Akun berhasil dibuat! Silakan lanjutkan ke tahap selanjutnya.');
     }
 
-    /**
-     * Show Step 2 - Upload CV
-     */
+    
+
+
     public function showStep2()
     {
         $user = auth()->user();
         
-        // Check if user is at correct step
+         
         if ($user->registration_step < 1) {
             return redirect()->route('register.step1');
         }
@@ -86,18 +86,18 @@ class RegisterController extends Controller
         return view('auth.register-step2');
     }
 
-    /**
-     * Process Step 2 - Upload CV
-     */
+    
+
+
     public function processStep2(Request $request)
     {
         $validated = $request->validate([
-            'cv' => 'required|file|mimes:pdf,doc,docx|max:5120', // 5MB
+            'cv' => 'required|file|mimes:pdf,doc,docx|max:5120',  
         ]);
 
         $user = auth()->user();
 
-        // Upload CV
+         
         if ($request->hasFile('cv')) {
             $cvFile = $request->file('cv');
             $cvName = 'cv_' . $user->id . '_' . time() . '.' . $cvFile->getClientOriginalExtension();
@@ -112,9 +112,9 @@ class RegisterController extends Controller
         return redirect()->route('register.step3');
     }
 
-    /**
-     * Show Step 3 - Verify OTP
-     */
+    
+
+
     public function showStep3()
     {
         $user = auth()->user();
@@ -123,22 +123,22 @@ class RegisterController extends Controller
             return redirect()->route('register.step2');
         }
 
-        // Generate OTP
+         
         $otpCode = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
         $user->update([
             'otp_code' => $otpCode,
             'otp_expires_at' => now()->addMinutes(10),
         ]);
 
-        // Send OTP via WhatsApp (Fonnte API)
+         
         $this->sendOtpWhatsApp($user->phone, $otpCode);
 
         return view('auth.register-step3');
     }
 
-    /**
-     * Process Step 3 - Verify OTP
-     */
+    
+
+
     public function processStep3(Request $request)
     {
         $validated = $request->validate([
@@ -165,9 +165,9 @@ class RegisterController extends Controller
         return redirect()->route('register.step4');
     }
 
-    /**
-     * Show Step 4 - Profile Details
-     */
+    
+
+
     public function showStep4()
     {
         $user = auth()->user();
@@ -179,9 +179,9 @@ class RegisterController extends Controller
         return view('auth.register-step4');
     }
 
-    /**
-     * Process Step 4 - Profile Details
-     */
+    
+
+
     public function processStep4(Request $request)
     {
         $validated = $request->validate([
@@ -204,9 +204,9 @@ class RegisterController extends Controller
         return redirect()->route('register.step5');
     }
 
-    /**
-     * Show Step 5 - Complete
-     */
+    
+
+
     public function showStep5()
     {
         $user = auth()->user();
@@ -215,7 +215,7 @@ class RegisterController extends Controller
             return redirect()->route('register.step4');
         }
 
-        // Mark registration as completed
+         
         $user->update([
             'registration_step' => 5,
             'registration_completed' => true,
@@ -225,9 +225,9 @@ class RegisterController extends Controller
         return view('auth.register-step5');
     }
 
-    /**
-     * Complete registration and redirect to dashboard
-     */
+    
+
+
     public function complete()
     {
         $user = auth()->user();
@@ -239,9 +239,9 @@ class RegisterController extends Controller
         return redirect()->route('candidate.dashboard')->with('success', 'Selamat datang! Akun Anda berhasil dibuat.');
     }
 
-    /**
-     * Resend OTP
-     */
+    
+
+
     public function resendOTP()
     {
         $user = auth()->user();
@@ -252,15 +252,15 @@ class RegisterController extends Controller
             'otp_expires_at' => now()->addMinutes(10),
         ]);
 
-        // Send OTP via WhatsApp (Fonnte API)
+         
         $this->sendOtpWhatsApp($user->phone, $otpCode);
 
         return back()->with('success', 'Kode OTP baru telah dikirim ke WhatsApp Anda.');
     }
 
-    /**
-     * Send OTP via WhatsApp using Fonnte API
-     */
+    
+
+
     private function sendOtpWhatsApp(string $phone, string $otpCode): void
     {
         $apiKey = SystemConfig::get('whatsapp_api_key');

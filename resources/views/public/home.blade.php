@@ -10,11 +10,11 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="font-sans antialiased bg-white">
-    <!-- Header -->
+     
     <header class="bg-white border-b border-gray-100 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <!-- Logo -->
+                 
                 <div class="flex items-center">
                     <a href="{{ route('home') }}" class="flex items-center">
                         <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
@@ -24,14 +24,14 @@
                     </a>
                 </div>
 
-                <!-- Navigation -->
+                 
                 <nav class="hidden md:flex items-center space-x-8">
                     <a href="#jobs" class="text-gray-700 hover:text-blue-500 font-medium transition-colors">Karir</a>
                     <a href="#about" class="text-gray-700 hover:text-blue-500 font-medium transition-colors">Tentang</a>
                     <a href="#faq" class="text-gray-700 hover:text-blue-500 font-medium transition-colors">FAQ</a>
                 </nav>
 
-                <!-- Auth Buttons -->
+                 
                 <div class="flex items-center gap-3">
                     @auth
                         <a href="{{ route('dashboard') }}" class="text-gray-700 hover:text-blue-500 font-medium">Dashboard</a>
@@ -44,9 +44,9 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
+     
     <div class="relative bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 text-white overflow-hidden">
-        <!-- Background Pattern -->
+         
         <div class="absolute inset-0 opacity-10">
             <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
         </div>
@@ -60,7 +60,7 @@
                     Jelajahi lowongan pekerjaan terbaru dan bangun masa depan Anda bersama kami
                 </p>
                 
-                <!-- Search Box -->
+                 
                 <div class="mt-10 max-w-2xl mx-auto">
                     <form action="{{ route('jobs.index') }}" method="GET" class="flex gap-2">
                         <input 
@@ -78,17 +78,17 @@
         </div>
     </div>
 
-    <!-- Featured Jobs Section -->
+     
     <div id="jobs" class="py-16 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col lg:flex-row gap-8">
-                <!-- Sidebar Filter -->
+                 
                 <aside class="lg:w-64 flex-shrink-0">
                     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sticky top-24">
                         <h3 class="text-lg font-bold text-gray-900 mb-6">Filter Pekerjaan</h3>
                         
                         <form action="{{ route('jobs.index') }}" method="GET" class="space-y-6">
-                            <!-- Divisi Filter -->
+                             
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Divisi</label>
                                 <select name="division" class="w-full rounded-lg border-gray-300 text-sm focus:border-blue-500 focus:ring-blue-500">
@@ -101,7 +101,7 @@
                                 </select>
                             </div>
 
-                            <!-- Posisi Filter -->
+                             
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Posisi</label>
                                 <select name="position" class="w-full rounded-lg border-gray-300 text-sm focus:border-blue-500 focus:ring-blue-500">
@@ -113,7 +113,7 @@
                                 </select>
                             </div>
 
-                            <!-- Lokasi Filter -->
+                             
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Lokasi</label>
                                 <select name="location" class="w-full rounded-lg border-gray-300 text-sm focus:border-blue-500 focus:ring-blue-500">
@@ -132,7 +132,7 @@
                     </div>
                 </aside>
 
-                <!-- Job Listings -->
+                 
                 <div class="flex-1">
                     <div class="flex items-center justify-between mb-6">
                         <h2 class="text-2xl font-bold text-gray-900">Lowongan Pekerjaan Aktif</h2>
@@ -146,7 +146,7 @@
                             @foreach($featuredJobs as $job)
                                 <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border border-gray-100">
                                     <div class="p-6">
-                                        <!-- Company Header -->
+                                         
                                         <div class="flex items-start justify-between mb-4">
                                             <div class="flex items-center gap-3">
                                                 <div class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -161,12 +161,12 @@
                                             </div>
                                         </div>
 
-                                        <!-- Job Title -->
+                                         
                                         <h3 class="text-lg font-bold text-gray-900 mb-3 line-clamp-2">
                                             {{ $job->title }}
                                         </h3>
 
-                                        <!-- Job Details -->
+                                         
                                         <div class="space-y-2 mb-4">
                                             <div class="flex items-center text-sm text-gray-600">
                                                 <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -189,7 +189,7 @@
                                             </div>
                                         </div>
 
-                                        <!-- Apply Button -->
+                                         
                                         <a href="{{ route('jobs.show', $job->id) }}" class="block w-full text-center px-4 py-2.5 bg-blue-500 text-white text-sm font-medium rounded-lg hover:bg-blue-600 transition-colors">
                                             Apply Now
                                         </a>
@@ -211,11 +211,11 @@
         </div>
     </div>
 
-    <!-- About Section -->
+     
     <div id="about" class="py-20 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <!-- Content -->
+                 
                 <div>
                     <h2 class="text-3xl font-bold text-gray-900 mb-6">Tentang RekrutPro</h2>
                     <p class="text-gray-600 mb-6 leading-relaxed">
@@ -225,7 +225,7 @@
                         Kami percaya bahwa setiap individu memiliki potensi untuk unggul, dan tugas kami adalah membantu mereka menemukannya. Dengan teknologi inovatif dan pendekatan berbasis pada manusia, kami membangun jembatan antara pencari kerja dan perusahaan impian mereka.
                     </p>
 
-                    <!-- Values -->
+                     
                     <div class="space-y-4">
                         <h3 class="text-xl font-bold text-gray-900 mb-4">Nilai-nilai kami</h3>
                         
@@ -279,14 +279,14 @@
                     </div>
                 </div>
 
-                <!-- Image -->
+                 
                 <div class="relative">
                     <div class="aspect-[4/3] bg-gradient-to-br from-blue-100 to-blue-50 rounded-2xl overflow-hidden">
                         <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=600&fit=crop" 
                              alt="Team collaboration" 
                              class="w-full h-full object-cover"
                              onerror="this.style.display='none'">
-                        <!-- Fallback if image doesn't load -->
+                         
                         <div class="w-full h-full flex items-center justify-center">
                             <svg class="w-32 h-32 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
@@ -298,7 +298,7 @@
         </div>
     </div>
 
-    <!-- FAQ Section -->
+     
     <div id="faq" class="py-20 bg-gray-50">
         <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
@@ -307,7 +307,7 @@
             </div>
 
             <div class="space-y-4">
-                <!-- FAQ Item 1 -->
+                 
                 <details class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group">
                     <summary class="px-6 py-4 cursor-pointer list-none flex items-center justify-between hover:bg-gray-50 transition-colors">
                         <span class="font-semibold text-gray-900">Bagaimana cara melamar pekerjaan di RekrutPro?</span>
@@ -320,7 +320,7 @@
                     </div>
                 </details>
 
-                <!-- FAQ Item 2 -->
+                 
                 <details class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group">
                     <summary class="px-6 py-4 cursor-pointer list-none flex items-center justify-between hover:bg-gray-50 transition-colors">
                         <span class="font-semibold text-gray-900">Apa saja kualifikasi umum untuk melamar?</span>
@@ -333,7 +333,7 @@
                     </div>
                 </details>
 
-                <!-- FAQ Item 3 -->
+                 
                 <details class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group">
                     <summary class="px-6 py-4 cursor-pointer list-none flex items-center justify-between hover:bg-gray-50 transition-colors">
                         <span class="font-semibold text-gray-900">Berapa lama proses rekrutmen berlangsung?</span>
@@ -346,7 +346,7 @@
                     </div>
                 </details>
 
-                <!-- FAQ Item 4 -->
+                 
                 <details class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group">
                     <summary class="px-6 py-4 cursor-pointer list-none flex items-center justify-between hover:bg-gray-50 transition-colors">
                         <span class="font-semibold text-gray-900">Apakah saya bisa melamar lebih dari satu posisi?</span>
@@ -362,7 +362,7 @@
         </div>
     </div>
 
-    <!-- CTA Section -->
+     
     <div class="bg-gradient-to-r from-blue-500 to-blue-600 py-16">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 class="text-3xl font-bold text-white mb-4">
@@ -382,11 +382,11 @@
         </div>
     </div>
 
-    <!-- Footer -->
+     
     <footer class="bg-white border-t border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <!-- Company Info -->
+                 
                 <div class="col-span-1">
                     <div class="flex items-center mb-4">
                         <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
@@ -410,7 +410,7 @@
                     </div>
                 </div>
 
-                <!-- Perusahaan -->
+                 
                 <div>
                     <h3 class="text-sm font-semibold text-gray-900 mb-4">Perusahaan</h3>
                     <ul class="space-y-3">
@@ -420,7 +420,7 @@
                     </ul>
                 </div>
 
-                <!-- Dukungan -->
+                 
                 <div>
                     <h3 class="text-sm font-semibold text-gray-900 mb-4">Dukungan</h3>
                     <ul class="space-y-3">
@@ -429,7 +429,7 @@
                     </ul>
                 </div>
 
-                <!-- Hukum -->
+                 
                 <div>
                     <h3 class="text-sm font-semibold text-gray-900 mb-4">Hukum</h3>
                     <ul class="space-y-3">

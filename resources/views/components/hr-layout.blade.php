@@ -7,21 +7,21 @@
 
     <title>{{ config('app.name', 'Laravel') }} - HR Dashboard</title>
 
-    <!-- Fonts -->
+     
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     
-    <!-- Tailwind CSS -->
+     
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Font Awesome -->
+     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body class="font-sans antialiased bg-gray-50">
     <div class="min-h-screen flex">
-        <!-- Sidebar -->
+         
         <aside class="fixed left-0 top-0 z-50 h-screen w-64 bg-white border-r border-gray-200">
-            <!-- Logo -->
+             
             <div class="flex items-center gap-3 px-6 py-6 border-b border-gray-200">
                 <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
                     <span class="text-white font-bold text-lg">RP</span>
@@ -29,7 +29,7 @@
                 <span class="text-xl font-bold text-gray-800">RekrutPro</span>
             </div>
 
-            <!-- Navigation -->
+             
             <nav class="px-4 py-6 space-y-1">
                 <a href="{{ route('hr.dashboard') }}" 
                    class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-all {{ request()->routeIs('hr.dashboard') ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50' }}">
@@ -72,7 +72,7 @@
                 </a>
             </nav>
 
-            <!-- Logout Button -->
+             
             <div class="absolute bottom-0 w-64 p-4 border-t border-gray-200">
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
@@ -86,9 +86,9 @@
             </div>
         </aside>
 
-        <!-- Main Content -->
+         
         <div class="flex-1 ml-64">
-            <!-- Top Navigation Bar -->
+             
             <header class="bg-white border-b border-gray-200 sticky top-0 z-40">
                 <div class="flex items-center justify-between px-6 py-4">
                     @if (isset($header))
@@ -97,7 +97,7 @@
                         <h2 class="text-xl font-semibold text-gray-800">Dashboard</h2>
                     @endif
                     
-                    <!-- User Profile -->
+                     
                     <div class="flex items-center gap-3">
                         <div class="text-right hidden md:block">
                             <p class="text-sm font-medium text-gray-900">{{ Auth::user()->name }}</p>
@@ -110,7 +110,7 @@
                 </div>
             </header>
 
-            <!-- Page Content -->
+             
             <main class="p-6">
                 {{ $slot }}
             </main>

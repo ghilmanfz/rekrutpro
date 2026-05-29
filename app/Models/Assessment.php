@@ -31,7 +31,7 @@ class Assessment extends Model
         ];
     }
 
-    // Relationships
+     
     public function interview()
     {
         return $this->belongsTo(Interview::class);

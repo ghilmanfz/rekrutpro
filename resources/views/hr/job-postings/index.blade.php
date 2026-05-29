@@ -13,7 +13,7 @@
         </div>
     </x-slot>
 
-    <!-- Filters -->
+     
     <div class="bg-white rounded-lg shadow p-4 mb-6">
         <form action="{{ route('hr.job-postings.index') }}" method="GET" class="flex gap-4">
             <div class="flex-1">
@@ -45,7 +45,7 @@
         </form>
     </div>
 
-    <!-- Jobs Table -->
+     
     <div class="bg-white shadow rounded-lg overflow-hidden">
         @if($jobPostings->count() > 0)
             <table class="min-w-full divide-y divide-gray-200">
@@ -148,7 +148,7 @@
                 </tbody>
             </table>
 
-            <!-- Pagination -->
+             
             <div class="bg-white px-4 py-3 border-t border-gray-200">
                 {{ $jobPostings->links() }}
             </div>

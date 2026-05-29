@@ -9,14 +9,14 @@ use Illuminate\Http\Request;
 
 class ConfigurationController extends Controller
 {
-    /**
-     * Display configuration page
-     */
+    
+
+
     public function index()
     {
         $templates = NotificationTemplate::orderBy('event')->get();
 
-        // Get system configurations
+         
         $whatsappPhone = SystemConfig::get('whatsapp_phone');
         $whatsappApiKey = SystemConfig::get('whatsapp_api_key');
 
@@ -27,9 +27,9 @@ class ConfigurationController extends Controller
         ));
     }
 
-    /**
-     * Store new notification template
-     */
+    
+
+
     public function storeTemplate(Request $request)
     {
         $validated = $request->validate([
@@ -39,7 +39,7 @@ class ConfigurationController extends Controller
             'body' => 'required|string',
         ]);
 
-        // Check if template with same event + channel already exists
+         
         $exists = NotificationTemplate::where('event', $validated['event'])
             ->where(function ($q) use ($validated) {
                 $q->where('type', $validated['channel'])
@@ -51,15 +51,15 @@ class ConfigurationController extends Controller
             return back()->with('error', 'Template untuk event ini dengan channel yang sama sudah ada.');
         }
 
-        // Generate name and slug from event
+         
         $name = ucwords(str_replace('_', ' ', $validated['event'])) . ' - ' . ucfirst($validated['channel']);
         $slug = $validated['event'] . '-' . $validated['channel'];
 
         NotificationTemplate::create([
             'name' => $name,
             'slug' => $slug,
-            'type' => $validated['channel'],     // For seeder-based lookup
-            'channel' => $validated['channel'],  // For admin UI-based lookup
+            'type' => $validated['channel'],      
+            'channel' => $validated['channel'],   
             'event' => $validated['event'],
             'subject' => $validated['subject'],
             'body' => $validated['body'],
@@ -69,9 +69,9 @@ class ConfigurationController extends Controller
         return back()->with('success', 'Template notifikasi berhasil ditambahkan');
     }
 
-    /**
-     * Update notification template
-     */
+    
+
+
     public function updateTemplate(Request $request, NotificationTemplate $template)
     {
         $validated = $request->validate([
@@ -83,7 +83,7 @@ class ConfigurationController extends Controller
 
         $template->update([
             'event' => $validated['event'],
-            'type' => $validated['channel'],     // Sync both fields
+            'type' => $validated['channel'],      
             'channel' => $validated['channel'],
             'subject' => $validated['subject'],
             'body' => $validated['body'],
@@ -92,9 +92,9 @@ class ConfigurationController extends Controller
         return back()->with('success', 'Template notifikasi berhasil diperbarui');
     }
 
-    /**
-     * Delete notification template
-     */
+    
+
+
     public function destroyTemplate(NotificationTemplate $template)
     {
         $template->delete();
@@ -102,9 +102,9 @@ class ConfigurationController extends Controller
         return back()->with('success', 'Template notifikasi berhasil dihapus');
     }
 
-    /**
-     * Update WhatsApp configuration
-     */
+    
+
+
     public function updateWhatsAppConfig(Request $request)
     {
         $validated = $request->validate([

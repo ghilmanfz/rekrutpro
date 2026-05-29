@@ -11,17 +11,17 @@ use App\Models\User;
 
 class LoginController extends Controller
 {
-    /**
-     * Show login form
-     */
+    
+
+
     public function showLoginForm()
     {
         return view('auth.login');
     }
 
-    /**
-     * Handle login request
-     */
+    
+
+
     public function login(Request $request)
     {
         $request->validate([
@@ -31,38 +31,38 @@ class LoginController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        // Check if user exists
+         
         if (!$user) {
             return back()->withErrors([
                 'email' => 'Email tidak ditemukan.',
             ])->withInput();
         }
 
-        // Check if user is active
+         
         if (!$user->is_active) {
             return back()->withErrors([
                 'email' => 'Akun Anda tidak aktif. Hubungi administrator.',
             ])->withInput();
         }
 
-        // Check if email is verified (for candidates)
+         
         if ($user->isCandidate() && !$user->is_verified) {
             return back()->withErrors([
                 'email' => 'Email belum diverifikasi. Silakan cek email Anda.',
             ])->withInput();
         }
 
-        // Attempt login
+         
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->filled('remember'))) {
             $request->session()->regenerate();
 
-            // Update last login
+             
             $user->update(['last_login_at' => now()]);
 
-            // Log activity
+             
             AuditLog::log('login', $user);
 
-            // Redirect based on role
+             
             return $this->redirectBasedOnRole($user);
         }
 
@@ -71,9 +71,9 @@ class LoginController extends Controller
         ])->withInput();
     }
 
-    /**
-     * Redirect user based on their role
-     */
+    
+
+
     protected function redirectBasedOnRole($user)
     {
         if ($user->isSuperAdmin()) {
@@ -96,13 +96,13 @@ class LoginController extends Controller
                 ->with('success', 'Selamat datang kembali, ' . $user->name . '!');
         }
 
-        // Default redirect
+         
         return redirect('/');
     }
 
-    /**
-     * Logout user
-     */
+    
+
+
     public function logout(Request $request)
     {
         AuditLog::log('logout', auth()->user());

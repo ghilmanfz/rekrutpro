@@ -6,20 +6,20 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Lowongan Pekerjaan - RekrutPro</title>
     
-    <!-- Fonts -->
+     
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     
-    <!-- Scripts -->
+     
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-gray-50">
-        <!-- Header -->
+         
         <header class="bg-white border-b border-gray-200">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between items-center h-16">
-                    <!-- Logo/Brand -->
+                     
                     <div class="flex items-center">
                         <svg class="w-8 h-8 text-blue-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clip-rule="evenodd" />
@@ -28,7 +28,7 @@
                         <span class="text-xl font-bold text-gray-900">RekrutPro</span>
                     </div>
 
-                    <!-- Auth Buttons -->
+                     
                     <div class="flex items-center gap-3">
                         @guest
                             <a href="{{ route('login') }}" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900">
@@ -48,7 +48,7 @@
         </header>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <!-- Back to Home Button -->
+             
             <div class="mb-6">
                 <a href="{{ route('home') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -59,13 +59,13 @@
             </div>
 
             <div class="flex flex-col lg:flex-row gap-6">
-                <!-- Sidebar - Filter -->
+                 
                 <aside class="lg:w-64 flex-shrink-0">
                     <div class="bg-white rounded-lg shadow-sm p-6 sticky top-4">
                         <h2 class="text-lg font-bold text-gray-900 mb-4">Filter Pekerjaan</h2>
                         
                         <form action="{{ route('jobs.index') }}" method="GET" class="space-y-4">
-                            <!-- Search -->
+                             
                             <div>
                                 <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Cari</label>
                                 <input 
@@ -78,7 +78,7 @@
                                 >
                             </div>
 
-                            <!-- Division Filter -->
+                             
                             <div>
                                 <label for="division" class="block text-sm font-medium text-gray-700 mb-2">Divisi</label>
                                 <select 
@@ -95,7 +95,7 @@
                                 </select>
                             </div>
 
-                            <!-- Location Filter -->
+                             
                             <div>
                                 <label for="location" class="block text-sm font-medium text-gray-700 mb-2">Lokasi</label>
                                 <select 
@@ -112,7 +112,7 @@
                                 </select>
                             </div>
 
-                            <!-- Employment Type Filter -->
+                             
                             <div>
                                 <label for="type" class="block text-sm font-medium text-gray-700 mb-2">Tipe Pekerjaan</label>
                                 <select 
@@ -140,27 +140,27 @@
                     </div>
                 </aside>
 
-                <!-- Main Content -->
+                 
                 <main class="flex-1">
-                    <!-- Page Header -->
+                     
                     <div class="mb-6">
                         <h1 class="text-2xl font-bold text-gray-900 mb-2">Semua Lowongan Pekerjaan</h1>
                         <p class="text-sm text-gray-600">Temukan pekerjaan impian Anda yang sesuai dengan keahlian dan minat Anda</p>
                     </div>
 
-                    <!-- Results Count -->
+                     
                     <div class="mb-4 text-sm text-gray-600">
                         Menampilkan {{ $jobs->count() }} dari {{ $jobs->total() }} lowongan
                     </div>
 
-                    <!-- Jobs List -->
+                     
                     @if($jobs->count() > 0)
                         <div class="space-y-4">
                             @foreach($jobs as $job)
                                 <div class="bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all duration-200">
                                     <div class="p-6">
                                         <div class="flex gap-4">
-                                            <!-- Company Icon -->
+                                             
                                             <div class="flex-shrink-0">
                                                 <div class="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center">
                                                     <svg class="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
@@ -170,9 +170,9 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Job Details -->
+                                             
                                             <div class="flex-1 min-w-0">
-                                                <!-- Title & Company -->
+                                                 
                                                 <div class="mb-3">
                                                     <h3 class="text-lg font-semibold text-gray-900 mb-1">
                                                         {{ $job->title }}
@@ -180,7 +180,7 @@
                                                     <p class="text-sm text-gray-600">{{ $job->division->name }}</p>
                                                 </div>
 
-                                                <!-- Job Meta -->
+                                                 
                                                 <div class="flex flex-wrap gap-3 text-sm text-gray-600 mb-3">
                                                     <div class="flex items-center">
                                                         <svg class="w-4 h-4 mr-1.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -205,18 +205,18 @@
                                                     </div>
                                                 </div>
 
-                                                <!-- Description Preview -->
+                                                 
                                                 <p class="text-sm text-gray-600 line-clamp-2 mb-4">
                                                     {{ Str::limit(strip_tags($job->description), 200) }}
                                                 </p>
 
-                                                <!-- Footer Meta -->
+                                                 
                                                 <div class="text-xs text-gray-500">
                                                     Dibutuhkan {{ \Carbon\Carbon::parse($job->published_at)->diffForHumans() }}
                                                 </div>
                                             </div>
 
-                                            <!-- Action Button -->
+                                             
                                             <div class="flex-shrink-0 flex items-start">
                                                 <a href="{{ route('jobs.show', $job->id) }}" class="px-6 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
                                                     Lihat Detail
@@ -228,7 +228,7 @@
                             @endforeach
                         </div>
 
-                        <!-- Pagination -->
+                         
                         <div class="mt-8">
                             {{ $jobs->links() }}
                         </div>
@@ -250,11 +250,11 @@
             </div>
         </div>
 
-        <!-- Footer -->
+         
         <footer class="bg-white border-t border-gray-200 mt-16">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                    <!-- Brand -->
+                     
                     <div class="col-span-1 md:col-span-1">
                         <div class="flex items-center mb-4">
                             <svg class="w-8 h-8 text-blue-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -266,7 +266,7 @@
                         <p class="text-sm text-gray-600">Find your dream job with RekrutPro, your trusted partner in career advancement.</p>
                     </div>
 
-                    <!-- Tentang Kami -->
+                     
                     <div>
                         <h3 class="text-sm font-semibold text-gray-900 mb-4">Tentang Kami</h3>
                         <ul class="space-y-2 text-sm text-gray-600">
@@ -276,7 +276,7 @@
                         </ul>
                     </div>
 
-                    <!-- Pencari Kerja -->
+                     
                     <div>
                         <h3 class="text-sm font-semibold text-gray-900 mb-4">Pencari Kerja</h3>
                         <ul class="space-y-2 text-sm text-gray-600">
@@ -286,7 +286,7 @@
                         </ul>
                     </div>
 
-                    <!-- Perusahaan -->
+                     
                     <div>
                         <h3 class="text-sm font-semibold text-gray-900 mb-4">Perusahaan</h3>
                         <ul class="space-y-2 text-sm text-gray-600">
@@ -296,12 +296,12 @@
                     </div>
                 </div>
 
-                <!-- Bottom Footer -->
+                 
                 <div class="mt-8 pt-8 border-t border-gray-200">
                     <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                         <p class="text-sm text-gray-500">© {{ date('Y') }} RekrutPro. All rights reserved.</p>
                         
-                        <!-- Social Links -->
+                         
                         <div class="flex gap-4">
                             <a href="#" class="text-gray-400 hover:text-gray-600">
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>

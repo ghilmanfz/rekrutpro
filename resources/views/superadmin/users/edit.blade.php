@@ -9,9 +9,9 @@
 <body class="bg-gray-50">
     @include('components.superadmin-sidebar')
 
-    <!-- Main Content -->
+     
     <main style="margin-left: 256px;">
-        <!-- Top Bar -->
+         
         <div class="bg-white border-b px-8 py-4 flex justify-between items-center">
             <div>
                 <h2 class="text-2xl font-bold text-gray-800">Edit Pengguna</h2>
@@ -28,7 +28,7 @@
             </div>
         </div>
 
-        <!-- Form Content -->
+         
         <div class="p-8">
             <div class="max-w-3xl mx-auto">
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
@@ -36,7 +36,7 @@
                         @csrf
                         @method('PUT')
 
-                        <!-- Nama -->
+                         
                         <div class="mb-6">
                             <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap *</label>
                             <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}" required
@@ -46,7 +46,7 @@
                             @enderror
                         </div>
 
-                        <!-- Email -->
+                         
                         <div class="mb-6">
                             <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
                             <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}" required
@@ -56,7 +56,7 @@
                             @enderror
                         </div>
 
-                        <!-- Role -->
+                         
                         <div class="mb-6">
                             <label for="role_id" class="block text-sm font-medium text-gray-700 mb-2">Role *</label>
                             <select name="role_id" id="role_id" required
@@ -73,7 +73,7 @@
                             @enderror
                         </div>
 
-                        <!-- Divisi -->
+                         
                         <div class="mb-6">
                             <label for="division_id" class="block text-sm font-medium text-gray-700 mb-2">Divisi</label>
                             <select name="division_id" id="division_id"
@@ -90,7 +90,7 @@
                             @enderror
                         </div>
 
-                        <!-- Telepon -->
+                         
                         <div class="mb-6">
                             <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Nomor Telepon</label>
                             <input type="text" name="phone" id="phone" value="{{ old('phone', $user->phone) }}"
@@ -101,7 +101,7 @@
                             @enderror
                         </div>
 
-                        <!-- Status -->
+                         
                         <div class="mb-6">
                             <label class="flex items-center">
                                 <input type="checkbox" name="is_active" value="1" {{ old('is_active', $user->is_active) ? 'checked' : '' }}
@@ -110,7 +110,7 @@
                             </label>
                         </div>
 
-                        <!-- Actions -->
+                         
                         <div class="flex justify-end gap-3 pt-6 border-t">
                             <a href="{{ route('superadmin.users.index') }}" class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
                                 Batal
@@ -121,7 +121,7 @@
                         </div>
                     </form>
 
-                    <!-- Reset Password Section -->
+                     
                     <div class="mt-8 pt-6 border-t">
                         <h3 class="text-lg font-semibold text-gray-800 mb-4">Reset Password</h3>
                         <form action="{{ route('superadmin.users.reset-password', $user) }}" method="POST">

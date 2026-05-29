@@ -14,7 +14,7 @@ class Application extends Model
         'application_code',
         'job_posting_id',
         'candidate_id',
-        'candidate_snapshot', // Snapshot data kandidat saat apply
+        'candidate_snapshot',  
         'cv_file',
         'cover_letter',
         'portfolio_file',
@@ -34,7 +34,7 @@ class Application extends Model
     protected function casts(): array
     {
         return [
-            'candidate_snapshot' => 'array', // Cast JSON ke array
+            'candidate_snapshot' => 'array',  
             'other_documents' => 'array',
             'reviewed_at' => 'datetime',
             'screening_passed_at' => 'datetime',
@@ -45,7 +45,7 @@ class Application extends Model
         ];
     }
 
-    // Relationships
+     
     public function jobPosting()
     {
         return $this->belongsTo(JobPosting::class);
@@ -71,26 +71,35 @@ class Application extends Model
         return $this->hasOne(Offer::class);
     }
 
-    // Scopes
+     
     public function scopeSubmitted($query)
     {
         return $query->where('status', 'submitted');
     }
 
-    // Accessor methods untuk kemudahan akses data snapshot
+     
     protected function getSnapshotData()
     {
         if (!$this->candidate_snapshot) {
             return [];
         }
         
-        // Jika masih string, decode manual
+         
         if (is_string($this->candidate_snapshot)) {
             return json_decode($this->candidate_snapshot, true) ?? [];
         }
         
-        // Jika sudah array, return langsung
+         
         return is_array($this->candidate_snapshot) ? $this->candidate_snapshot : [];
+    }
+
+    protected function decodeProfileEntries($value): array
+    {
+        if (is_string($value)) {
+            $value = json_decode($value, true) ?? [];
+        }
+
+        return is_array($value) ? $value : [];
     }
     
     public function getCandidateNameAttribute()
@@ -147,9 +156,66 @@ class Application extends Model
         return $snapshot['profile_photo'] ?? $this->candidate->profile_photo ?? null;
     }
 
-    /**
-     * Check apakah kandidat telah mengupdate profil setelah apply
-     */
+    public function getCurrentCandidateAddressAttribute()
+    {
+        $currentAddress = $this->candidate->address ?? null;
+
+        return filled($currentAddress) ? $currentAddress : $this->candidate_address;
+    }
+
+    public function getCurrentCandidateAddressChangedAttribute(): bool
+    {
+        $currentAddress = $this->candidate->address ?? null;
+
+        return filled($currentAddress) && $this->candidate_address !== $currentAddress;
+    }
+
+    public function getCurrentCandidateBirthDateAttribute()
+    {
+        return $this->candidate->date_of_birth?->toDateString() ?: $this->candidate_birth_date;
+    }
+
+    public function getCurrentCandidateBirthDateChangedAttribute(): bool
+    {
+        return $this->candidate->date_of_birth !== null
+            && $this->candidate_birth_date !== $this->candidate->date_of_birth?->toDateString();
+    }
+
+    public function getCurrentCandidateGenderAttribute()
+    {
+        $currentGender = $this->candidate->gender ?? null;
+
+        return filled($currentGender) ? $currentGender : $this->candidate_gender;
+    }
+
+    public function getCurrentCandidateGenderChangedAttribute(): bool
+    {
+        $currentGender = $this->candidate->gender ?? null;
+
+        return filled($currentGender) && $this->candidate_gender !== $currentGender;
+    }
+
+    public function getCurrentCandidateEducationAttribute(): array
+    {
+        $currentEducation = $this->decodeProfileEntries($this->candidate->education ?? []);
+
+        return count($currentEducation) > 0
+            ? $currentEducation
+            : $this->decodeProfileEntries($this->candidate_education);
+    }
+
+    public function getCurrentCandidateExperienceAttribute(): array
+    {
+        $currentExperience = $this->decodeProfileEntries($this->candidate->experience ?? []);
+
+        return count($currentExperience) > 0
+            ? $currentExperience
+            : $this->decodeProfileEntries($this->candidate_experience);
+    }
+
+    
+
+
     public function hasProfileChangedSinceApply()
     {
         if (!$this->candidate_snapshot) {
@@ -158,7 +224,7 @@ class Application extends Model
 
         $snapshot = $this->candidate_snapshot;
         
-        // Pastikan snapshot adalah array
+         
         if (!is_array($snapshot)) {
             return false;
         }
@@ -190,7 +256,7 @@ class Application extends Model
         return $query->where('status', 'hired');
     }
 
-    // Status constants
+     
     const STATUS_SUBMITTED = 'submitted';
     const STATUS_SCREENING_PASSED = 'screening_passed';
     const STATUS_REJECTED_ADMIN = 'rejected_admin';

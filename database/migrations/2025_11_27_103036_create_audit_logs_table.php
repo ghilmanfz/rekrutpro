@@ -6,17 +6,17 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+    
+
+
     public function up(): void
     {
         Schema::create('audit_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');
             
-            $table->string('action'); // create, update, delete, login, etc
-            $table->string('model_type')->nullable(); // Application, User, etc
+            $table->string('action');  
+            $table->string('model_type')->nullable();  
             $table->unsignedBigInteger('model_id')->nullable();
             
             $table->json('old_values')->nullable();
@@ -31,9 +31,9 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
+    
+
+
     public function down(): void
     {
         Schema::dropIfExists('audit_logs');

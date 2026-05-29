@@ -26,7 +26,7 @@ class Interview extends Model
         ];
     }
 
-    // Relationships
+     
     public function application()
     {
         return $this->belongsTo(Application::class);
@@ -52,7 +52,7 @@ class Interview extends Model
         return $this->hasOne(Assessment::class);
     }
 
-    // Scopes
+     
     public function scopeUpcoming($query)
     {
         return $query->where('status', 'scheduled')
