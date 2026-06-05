@@ -156,6 +156,27 @@ class Application extends Model
         return $snapshot['profile_photo'] ?? $this->candidate->profile_photo ?? null;
     }
 
+
+    public function getEducationLevelAttribute()
+    {
+        return $this->getSnapshotData()['education_level'] ?? null;
+    }
+
+    public function getExperienceLevelAttribute()
+    {
+        return $this->getSnapshotData()['experience_level'] ?? null;
+    }
+
+    public function getExpectedSalaryAttribute()
+    {
+        return $this->getSnapshotData()['expected_salary'] ?? null;
+    }
+
+    public function getAvailabilityAttribute()
+    {
+        return $this->getSnapshotData()['availability'] ?? null;
+    }
+
     public function getCurrentCandidateAddressAttribute()
     {
         $currentAddress = $this->candidate->address ?? null;

@@ -70,6 +70,10 @@ class ApplicationController extends Controller
             'cv' => 'required|file|mimes:pdf,doc,docx|max:5120',
             'portfolio' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
             'cover_letter' => 'nullable|string',
+            'education' => 'required|string|max:50',
+            'experience' => 'required|string|max:50',
+            'expected_salary' => 'required|numeric|min:0',
+            'availability' => 'required|string|max:50',
             'agree_terms' => 'required|accepted',
         ]);
 
@@ -122,10 +126,15 @@ class ApplicationController extends Controller
             'address' => $user->address ?? '-',
             'birth_date' => $user->date_of_birth?->toDateString(),
             'gender' => $user->gender ?? '-',
-            'education' => $user->education ?? [],  
-            'experience' => $user->experience ?? [],  
+            'education' => $user->education ?? [],
+            'experience' => $user->experience ?? [],
             'profile_photo' => $user->profile_photo ?? null,
-            'snapshot_at' => now()->toDateTimeString(),  
+
+            'education_level' => $validated['education'],
+            'experience_level' => $validated['experience'],
+            'expected_salary' => $validated['expected_salary'],
+            'availability' => $validated['availability'],
+            'snapshot_at' => now()->toDateTimeString(),
         ];
 
         try {

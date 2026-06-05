@@ -123,15 +123,21 @@ class RegisterController extends Controller
             return redirect()->route('register.step2');
         }
 
-         
-        $otpCode = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
-        $user->update([
-            'otp_code' => $otpCode,
-            'otp_expires_at' => now()->addMinutes(10),
-        ]);
+        // Hanya kirim OTP baru bila belum ada OTP yang masih aktif, agar refresh
+        // atau request ganda dari browser tidak memicu pengiriman OTP berulang.
+        $hasActiveOtp = ! empty($user->otp_code)
+            && $user->otp_expires_at !== null
+            && $user->otp_expires_at->isFuture();
 
-         
-        $this->sendOtpWhatsApp($user->phone, $otpCode);
+        if (! $hasActiveOtp) {
+            $otpCode = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
+            $user->update([
+                'otp_code' => $otpCode,
+                'otp_expires_at' => now()->addMinutes(10),
+            ]);
+
+            $this->sendOtpWhatsApp($user->phone, $otpCode);
+        }
 
         return view('auth.register-step3');
     }

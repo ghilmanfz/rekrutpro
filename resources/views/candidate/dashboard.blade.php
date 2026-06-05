@@ -155,14 +155,9 @@
                         </div>
                     </div>
 
-                    <a href="{{ route('candidate.profile') }}" 
-                       class="block w-full py-2 px-4 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium text-sm mb-2">
+                    <a href="{{ route('candidate.profile') }}"
+                       class="block w-full py-2 px-4 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium text-sm">
                         Edit Profil →
-                    </a>
-                    
-                    <a href="#" 
-                       class="block w-full py-2 px-4 text-gray-600 rounded-lg hover:bg-gray-50 font-medium text-sm">
-                        Pengaturan Notifikasi →
                     </a>
                 </div>
             </div>

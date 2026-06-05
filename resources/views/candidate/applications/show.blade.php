@@ -82,19 +82,19 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <p class="text-sm text-gray-600">Pendidikan</p>
-                            <p class="font-medium text-gray-900 mt-1">{{ $application->education }}</p>
+                            <p class="font-medium text-gray-900 mt-1">{{ $application->education_level ?? '-' }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-600">Pengalaman</p>
-                            <p class="font-medium text-gray-900 mt-1">{{ $application->experience }}</p>
+                            <p class="font-medium text-gray-900 mt-1">{{ $application->experience_level ?? '-' }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-600">Ekspektasi Gaji</p>
-                            <p class="font-medium text-gray-900 mt-1">Rp {{ number_format($application->expected_salary, 0, ',', '.') }}</p>
+                            <p class="font-medium text-gray-900 mt-1">Rp {{ number_format($application->expected_salary ?? 0, 0, ',', '.') }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-600">Ketersediaan</p>
-                            <p class="font-medium text-gray-900 mt-1">{{ $application->availability }}</p>
+                            <p class="font-medium text-gray-900 mt-1">{{ $application->availability ?? '-' }}</p>
                         </div>
                     </div>
                 </div>
