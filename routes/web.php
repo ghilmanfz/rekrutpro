@@ -97,7 +97,7 @@ Route::middleware(['auth', 'hr', 'ensure.registration.completed'])->prefix('hr')
     Route::get('/dashboard', [HRDashboardController::class, 'index'])->name('dashboard');
     
      
-    Route::resource('job-postings', JobPostingController::class);
+    Route::resource('job-postings', JobPostingController::class)->except(['show']);
     
      
     Route::get('/applications', [ApplicationController::class, 'index'])->name('applications.index');

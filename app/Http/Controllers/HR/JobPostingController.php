@@ -113,16 +113,6 @@ class JobPostingController extends Controller
     
 
 
-    public function show(JobPosting $jobPosting)
-    {
-        $jobPosting->load(['position', 'division', 'location', 'creator', 'applications.candidate']);
-        
-        return view('hr.job-postings.show', compact('jobPosting'));
-    }
-
-    
-
-
     public function edit(JobPosting $jobPosting)
     {
         $divisions = Division::where('is_active', true)->get();
