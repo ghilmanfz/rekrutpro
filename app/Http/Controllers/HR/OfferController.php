@@ -21,7 +21,14 @@ class OfferController extends Controller
 
         $offers = $query->latest()->paginate(15);
 
-        return view('hr.offers.index', compact('offers'));
+        $stats = [
+            'total'    => Offer::count(),
+            'pending'  => Offer::where('status', 'pending')->count(),
+            'accepted' => Offer::where('status', 'accepted')->count(),
+            'rejected' => Offer::where('status', 'rejected')->count(),
+        ];
+
+        return view('hr.offers.index', compact('offers', 'stats'));
     }
 
     
