@@ -153,8 +153,15 @@
                                 </div>
                             @endif
 
+                            @if($negotiation->counter_offer_salary)
+                                <div class="mb-3 p-3 bg-indigo-50 rounded border border-indigo-200">
+                                    <p class="text-xs text-indigo-700 mb-1">Counter Offer HR:</p>
+                                    <p class="text-sm font-semibold text-indigo-900">Rp {{ number_format($negotiation->counter_offer_salary, 0, ',', '.') }}</p>
+                                </div>
+                            @endif
+
                             @if($negotiation->status === 'pending')
-                                 
+                                  
                                 <div class="flex gap-2 mt-3">
                                     <form action="{{ route('hr.negotiations.approve', $negotiation) }}" method="POST" class="inline">
                                         @csrf
@@ -165,9 +172,9 @@
                                         </button>
                                     </form>
                                     <button type="button" 
-                                            onclick="showRejectModal({{ $negotiation->id }})"
+                                            onclick="showRejectModal({{ $negotiation->id }}, {{ (float) $offer->salary }})"
                                             class="px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700">
-                                        <i class="fas fa-times mr-1"></i>Tolak
+                                        <i class="fas fa-times mr-1"></i>Tolak & Counter
                                     </button>
                                 </div>
                             @else
@@ -207,17 +214,34 @@
             @endif
 
             <div class="flex justify-between items-center gap-3 pt-6 border-t bg-gray-50 -mx-6 -mb-6 px-6 py-4 rounded-b-lg">
-                <a href="{{ route('hr.applications.show', $offer->application_id) }}" 
+                <a href="{{ route('hr.applications.show', $offer->application_id) }}"
                    class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-white">
                     <i class="fas fa-arrow-left mr-2"></i>Lihat Aplikasi
                 </a>
-                
+
                 <div class="flex gap-3">
                     @if($offer->status === 'pending')
-                    <a href="{{ route('hr.offers.edit', $offer) }}" 
+                    <a href="{{ route('hr.offers.edit', $offer) }}"
                        class="px-6 py-3 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 font-semibold shadow-lg">
                         <i class="fas fa-edit mr-2"></i>Edit Penawaran
                     </a>
+                    @elseif($offer->status === 'accepted')
+                        @if($offer->application->status !== 'hired')
+                        <form action="{{ route('hr.applications.update-status', $offer->application_id) }}" method="POST" class="inline">
+                            @csrf
+                            @method('PUT')
+                            <input type="hidden" name="status" value="hired">
+                            <button type="submit"
+                                    onclick="return confirm('Tandai {{ $offer->application->candidate->name }} sebagai Diterima Kerja?')"
+                                    class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold shadow-lg">
+                                <i class="fas fa-user-check mr-2"></i>Tandai Diterima Kerja
+                            </button>
+                        </form>
+                        @else
+                        <span class="px-6 py-3 bg-green-100 text-green-800 rounded-lg font-semibold">
+                            <i class="fas fa-check-circle mr-2"></i>Sudah Diterima Kerja
+                        </span>
+                        @endif
                     @endif
                 </div>
             </div>
@@ -288,13 +312,29 @@
                     <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                         <p class="text-sm text-yellow-800">
                             <i class="fas fa-exclamation-triangle mr-2"></i>
-                            Kandidat akan menerima notifikasi bahwa negosiasi ditolak.
+                            Kandidat akan menerima counter offer baru dan bisa menerima atau mengajukan negosiasi lagi.
                         </p>
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Alasan Penolakan (Opsional)
+                            Nominal Counter Offer (Rp) <span class="text-red-500">*</span>
+                        </label>
+                        <input type="number"
+                               id="counterOfferSalary"
+                               name="counter_offer_salary"
+                               min="0"
+                               max="{{ \App\Models\Offer::MAX_SALARY }}"
+                               step="100000"
+                               required
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                               placeholder="Contoh: 11000000">
+                        <p class="text-xs text-gray-500 mt-1">Maksimal Rp {{ number_format(\App\Models\Offer::MAX_SALARY, 0, ',', '.') }}</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Catatan untuk Kandidat (Opsional)
                         </label>
                         <textarea name="hr_notes" 
                                   rows="4"
@@ -311,7 +351,7 @@
                     </button>
                     <button type="submit" 
                             class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
-                        Ya, Tolak Negosiasi
+                        Tolak & Kirim Counter Offer
                     </button>
                 </div>
             </form>
@@ -330,12 +370,14 @@
             modal.classList.remove('hidden');
         }
 
-        function showRejectModal(negotiationId) {
+        function showRejectModal(negotiationId, currentSalary) {
             const modal = document.getElementById('rejectNegotiationModal');
             const form = document.getElementById('rejectForm');
-            
+            const counterInput = document.getElementById('counterOfferSalary');
+             
             form.action = `/hr/negotiations/${negotiationId}/reject`;
-            
+            counterInput.value = Math.round(currentSalary || 0);
+             
             modal.classList.remove('hidden');
         }
     </script>

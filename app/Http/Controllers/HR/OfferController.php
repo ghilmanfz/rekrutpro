@@ -202,12 +202,17 @@ class OfferController extends Controller
         $validated = $request->validate([
             'application_id' => 'required|exists:applications,id',
             'position_title' => 'required|string|max:255',
-            'salary' => 'required|numeric|min:0',
+            'salary' => 'required|numeric|min:0|max:'.Offer::MAX_SALARY,
             'start_date' => 'required|date|after:today',
+            'contract_type' => 'required|in:full_time,part_time,contract,internship',
             'benefits' => 'nullable|string',
             'internal_notes' => 'nullable|string',
-            'valid_until' => 'required|date|after:start_date',
-        ]);
+            'valid_until' => 'required|date|after_or_equal:today',
+        ], $this->salaryValidationMessages());
+
+        if (Offer::where('application_id', $validated['application_id'])->exists()) {
+            return redirect()->back()->with('error', 'Penawaran kerja untuk lamaran ini sudah dibuat.');
+        }
 
         $validated['status'] = 'pending';
         $validated['offered_by'] = auth()->id();
@@ -219,6 +224,7 @@ class OfferController extends Controller
         $application->update([
             'status' => 'offered',
             'offered_at' => now(),
+            'hired_at' => null,
         ]);
 
         AuditLog::log('create', $offer, [], $validated);
@@ -230,18 +236,11 @@ class OfferController extends Controller
             app(NotificationService::class)->sendWhatsApp(
                 'offer_sent',
                 $candidate->phone,
-                [
-                    'nama'               => $candidate->full_name ?? $candidate->name,
-                    'candidate_name'     => $candidate->full_name ?? $candidate->name,
-                    'kode_lamaran'       => $application->application_code ?? $application->code,
-                    'application_number' => $application->application_code ?? $application->code,
-                    'posisi'             => $application->jobPosting->title ?? '',
-                    'job_title'          => $application->jobPosting->title ?? '',
-                    'gaji'               => number_format((float) $request->salary, 0, ',', '.'),
-                    'salary_range'       => 'Rp ' . number_format((float) $request->salary, 0, ',', '.'),
-                    'start_date'         => $request->start_date,
-                    'company_name'       => config('app.name', 'RekrutPro'),
-                ]
+                $this->whatsAppOfferPayload($offer, [
+                    'gaji' => number_format((float) $request->salary, 0, ',', '.'),
+                    'salary_range' => $this->formatRupiah($request->salary),
+                    'start_date' => $request->start_date,
+                ])
             );
         }
 
@@ -297,13 +296,13 @@ class OfferController extends Controller
 
         $validated = $request->validate([
             'position_title' => 'required|string|max:255',
-            'salary' => 'required|numeric|min:0',
+            'salary' => 'required|numeric|min:0|max:'.Offer::MAX_SALARY,
             'start_date' => 'required|date',
             'contract_type' => 'required|in:full_time,part_time,contract,internship',
             'benefits' => 'nullable|string',
             'internal_notes' => 'nullable|string',
-            'valid_until' => 'required|date|after:start_date',
-        ]);
+            'valid_until' => 'required|date|after_or_equal:today',
+        ], $this->salaryValidationMessages());
 
         $oldData = $offer->toArray();
         $offer->update($validated);
@@ -330,7 +329,11 @@ class OfferController extends Controller
         $oldNegotiation = $negotiation->toArray();
         $oldOffer = $negotiation->offer->toArray();
 
-         
+        if ((float) $negotiation->proposed_salary > Offer::MAX_SALARY) {
+            return redirect()->back()->with('error', $this->maxSalaryMessage('Nominal negosiasi'));
+        }
+
+          
         $negotiation->update([
             'status' => 'approved',
             'hr_notes' => $validated['hr_notes'] ?? null,
@@ -353,6 +356,19 @@ class OfferController extends Controller
             'action' => 'Update gaji berdasarkan negosiasi yang disetujui'
         ]);
 
+        $negotiation->load(['offer.application.candidate', 'offer.application.jobPosting']);
+        $candidate = $negotiation->offer->application->candidate;
+        if ($candidate && $candidate->phone) {
+            app(NotificationService::class)->sendWhatsApp(
+                'offer_negotiation_approved',
+                $candidate->phone,
+                $this->whatsAppOfferPayload($negotiation->offer, [
+                    'gaji_negosiasi' => $this->formatRupiah($negotiation->proposed_salary),
+                    'gaji_baru' => $this->formatRupiah($negotiation->proposed_salary),
+                ])
+            );
+        }
+
         return redirect()->back()->with('success', 'Negosiasi disetujui. Gaji penawaran telah diperbarui.');
     }
 
@@ -367,23 +383,92 @@ class OfferController extends Controller
 
         $validated = $request->validate([
             'hr_notes' => 'nullable|string|max:1000',
+            'counter_offer_salary' => 'required|numeric|min:0|max:'.Offer::MAX_SALARY,
+        ], [
+            'counter_offer_salary.required' => 'Nominal counter offer wajib diisi.',
+            'counter_offer_salary.max' => $this->maxSalaryMessage('Nominal counter offer'),
         ]);
 
         $oldData = $negotiation->toArray();
+        $oldOffer = $negotiation->offer->toArray();
+        $counterOfferSalary = $validated['counter_offer_salary'];
 
-         
+          
         $negotiation->update([
             'status' => 'rejected',
             'hr_notes' => $validated['hr_notes'] ?? null,
+            'counter_offer_salary' => $counterOfferSalary,
             'reviewed_by' => auth()->id(),
             'reviewed_at' => now(),
         ]);
 
-        AuditLog::log('update', $negotiation, $oldData, [
-            'status' => 'rejected',
-            'action' => 'HR menolak negosiasi gaji'
+        $negotiation->offer->update([
+            'salary' => $counterOfferSalary,
         ]);
 
-        return redirect()->back()->with('success', 'Negosiasi ditolak.');
+        AuditLog::log('update', $negotiation, $oldData, [
+            'status' => 'rejected',
+            'counter_offer_salary' => $counterOfferSalary,
+            'action' => 'HR menolak negosiasi gaji dan mengirim counter offer'
+        ]);
+
+        AuditLog::log('update', $negotiation->offer, $oldOffer, [
+            'salary' => $counterOfferSalary,
+            'action' => 'Update gaji berdasarkan counter offer HR'
+        ]);
+
+        $negotiation->load(['offer.application.candidate', 'offer.application.jobPosting']);
+        $candidate = $negotiation->offer->application->candidate;
+        if ($candidate && $candidate->phone) {
+            app(NotificationService::class)->sendWhatsApp(
+                'offer_negotiation_countered',
+                $candidate->phone,
+                $this->whatsAppOfferPayload($negotiation->offer, [
+                    'gaji_negosiasi' => $this->formatRupiah($negotiation->proposed_salary),
+                    'gaji_counter' => $this->formatRupiah($counterOfferSalary),
+                    'salary_range' => $this->formatRupiah($counterOfferSalary),
+                ])
+            );
+        }
+
+        return redirect()->back()->with('success', 'Negosiasi ditolak. Counter offer telah dikirim ke kandidat.');
+    }
+
+    private function salaryValidationMessages(): array
+    {
+        return [
+            'salary.max' => $this->maxSalaryMessage('Gaji yang ditawarkan'),
+        ];
+    }
+
+    private function maxSalaryMessage(string $field): string
+    {
+        return $field.' maksimal Rp '.number_format(Offer::MAX_SALARY, 0, ',', '.').'.';
+    }
+
+    private function whatsAppOfferPayload(Offer $offer, array $extra = []): array
+    {
+        $offer->loadMissing(['application.candidate', 'application.jobPosting']);
+        $application = $offer->application;
+        $candidate = $application->candidate;
+
+        return array_merge([
+            'nama'               => $candidate->full_name ?? $candidate->name,
+            'candidate_name'     => $candidate->full_name ?? $candidate->name,
+            'kode_lamaran'       => $application->application_code ?? $application->code,
+            'application_number' => $application->application_code ?? $application->code,
+            'posisi'             => $application->jobPosting->title ?? '',
+            'job_title'          => $application->jobPosting->title ?? '',
+            'gaji'               => number_format((float) $offer->salary, 0, ',', '.'),
+            'gaji_awal'          => $this->formatRupiah($offer->salary),
+            'salary_range'       => $this->formatRupiah($offer->salary),
+            'start_date'         => $offer->start_date?->format('d/m/Y') ?? '',
+            'company_name'       => config('app.name', 'RekrutPro'),
+        ], $extra);
+    }
+
+    private function formatRupiah($amount): string
+    {
+        return 'Rp '.number_format((float) $amount, 0, ',', '.');
     }
 }

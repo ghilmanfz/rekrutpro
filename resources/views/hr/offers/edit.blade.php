@@ -53,9 +53,10 @@
                                value="{{ old('salary', $offer->salary) }}"
                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                min="0"
+                               max="{{ \App\Models\Offer::MAX_SALARY }}"
                                step="1000"
                                required>
-                        <p class="mt-1 text-sm text-gray-500">Contoh: 12000000 untuk Rp 12.000.000</p>
+                        <p class="mt-1 text-sm text-gray-500">Contoh: 12000000 untuk Rp 12.000.000. Maksimal Rp {{ number_format(\App\Models\Offer::MAX_SALARY, 0, ',', '.') }}</p>
                     </div>
 
                      

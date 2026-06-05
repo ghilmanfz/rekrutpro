@@ -168,11 +168,16 @@
                             <option value="application_submitted">Lamaran Diterima</option>
                             <option value="screening_passed">Lolos Screening</option>
                             <option value="screening_rejected">Tidak Lolos Screening</option>
+                            <option value="application_interview_scheduled">Status Terjadwal Interview</option>
                             <option value="interview_scheduled">Undangan Interview</option>
                             <option value="interview_reminder">Reminder Interview</option>
                             <option value="interview_passed">Lolos Interview</option>
                             <option value="interview_rejected">Tidak Lolos Interview</option>
+                            <option value="application_offered">Status Ditawarkan</option>
                             <option value="offer_sent">Penawaran Kerja</option>
+                            <option value="offer_negotiation_submitted">Negosiasi Diajukan</option>
+                            <option value="offer_negotiation_countered">Counter Offer Negosiasi</option>
+                            <option value="application_hired">Status Diterima Kerja</option>
                             <option value="offer_accepted">Offer Diterima</option>
                             <option value="offer_rejected">Offer Ditolak</option>
                         </select>

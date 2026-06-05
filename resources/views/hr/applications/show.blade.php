@@ -623,10 +623,84 @@
                             @endif
                         </div>
                     </div>
+                    @elseif(in_array($application->status, ['interview_passed', 'offered']))
+                    <div class="bg-white rounded-lg shadow-sm p-6 border-2 border-indigo-100">
+                        <h2 class="text-lg font-bold text-indigo-900 mb-4 flex items-center gap-2">
+                            <i class="fas fa-gift text-indigo-600"></i>
+                            Buat Penawaran Kerja
+                        </h2>
+
+                        <form action="{{ route('hr.offers.store') }}" method="POST" class="space-y-4">
+                            @csrf
+                            <input type="hidden" name="application_id" value="{{ $application->id }}">
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Posisi Penawaran</label>
+                                <input type="text" name="position_title" value="{{ old('position_title', $application->jobPosting->title) }}"
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                       required>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Gaji Ditawarkan</label>
+                                <input type="number" name="salary" value="{{ old('salary') }}"
+                                       min="0" step="100000"
+                                       max="{{ \App\Models\Offer::MAX_SALARY }}"
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                       placeholder="Contoh: 10000000"
+                                       required>
+                                <p class="mt-1 text-xs text-gray-500">Maksimal Rp {{ number_format(\App\Models\Offer::MAX_SALARY, 0, ',', '.') }}</p>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Tipe Kontrak</label>
+                                <select name="contract_type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" required>
+                                    <option value="full_time" {{ old('contract_type') === 'full_time' ? 'selected' : '' }}>Full Time</option>
+                                    <option value="part_time" {{ old('contract_type') === 'part_time' ? 'selected' : '' }}>Part Time</option>
+                                    <option value="contract" {{ old('contract_type') === 'contract' ? 'selected' : '' }}>Kontrak</option>
+                                    <option value="internship" {{ old('contract_type') === 'internship' ? 'selected' : '' }}>Magang</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Mulai</label>
+                                <input type="date" name="start_date" value="{{ old('start_date', now()->addDays(30)->format('Y-m-d')) }}"
+                                       min="{{ now()->addDay()->format('Y-m-d') }}"
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                       required>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Berlaku Hingga</label>
+                                <input type="date" name="valid_until" value="{{ old('valid_until', now()->addDays(14)->format('Y-m-d')) }}"
+                                       min="{{ now()->format('Y-m-d') }}"
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                       required>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Benefit</label>
+                                <textarea name="benefits" rows="3"
+                                          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                          placeholder="Tunjangan kesehatan, laptop, cuti tahunan...">{{ old('benefits') }}</textarea>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Catatan Internal</label>
+                                <textarea name="internal_notes" rows="3"
+                                          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                          placeholder="Catatan untuk HR...">{{ old('internal_notes') }}</textarea>
+                            </div>
+
+                            <button type="submit" class="w-full px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-semibold shadow-md transition">
+                                Kirim Penawaran
+                            </button>
+                        </form>
+                    </div>
                     @endif
 
                      
-                    @if(in_array($application->status, ['screening_passed', 'submitted']))
+                    @if($application->status === 'interview_scheduled')
                     <div class="bg-white rounded-lg shadow-sm p-6">
                         <button onclick="openInterviewModal()" 
                                 style="background-color: #7c3aed; color: white;" 

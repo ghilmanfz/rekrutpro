@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Offer extends Model
 {
+    public const MAX_SALARY = 9999999999;
+
     protected $fillable = [
         'application_id',
         'offered_by',

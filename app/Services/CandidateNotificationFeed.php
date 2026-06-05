@@ -28,7 +28,7 @@ class CandidateNotificationFeed
 
     private function applicationItems(User $user): Collection
     {
-        return Application::with('jobPosting')
+        return Application::with(['jobPosting', 'offer'])
             ->where('candidate_id', $user->id)
             ->latest('updated_at')
             ->get()
@@ -76,7 +76,9 @@ class CandidateNotificationFeed
             Application::STATUS_SCREENING_PASSED => "Lamaran Anda untuk posisi {$jobTitle} lolos screening",
             Application::STATUS_INTERVIEW_SCHEDULED => "Interview untuk posisi {$jobTitle} telah dijadwalkan",
             Application::STATUS_INTERVIEW_PASSED => "Anda lolos interview untuk posisi {$jobTitle}",
-            Application::STATUS_OFFERED => "Anda menerima penawaran untuk posisi {$jobTitle}",
+            Application::STATUS_OFFERED => $application->offer
+                ? "Penawaran kerja untuk posisi {$jobTitle} telah dikirim"
+                : "Status lamaran Anda untuk posisi {$jobTitle} diperbarui menjadi Ditawarkan",
             Application::STATUS_HIRED => "Anda diterima untuk posisi {$jobTitle}",
             Application::STATUS_REJECTED_ADMIN,
             Application::STATUS_REJECTED_INTERVIEW,

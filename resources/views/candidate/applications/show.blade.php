@@ -28,8 +28,21 @@
                         'hired' => ['label' => 'Diterima', 'color' => 'green'],
                         'rejected_admin' => ['label' => 'Tidak Lolos Screening', 'color' => 'red'],
                         'rejected_interview' => ['label' => 'Tidak Lolos Interview', 'color' => 'red'],
+                        'rejected_offer' => ['label' => 'Penawaran Ditolak', 'color' => 'red'],
                     ];
                     $config = $statusConfig[$application->status] ?? ['label' => $application->status, 'color' => 'gray'];
+                    $timelineOrder = [
+                        'submitted' => 0,
+                        'screening_passed' => 1,
+                        'rejected_admin' => 1,
+                        'interview_scheduled' => 2,
+                        'interview_passed' => 3,
+                        'rejected_interview' => 3,
+                        'offered' => 4,
+                        'rejected_offer' => 4,
+                        'hired' => 5,
+                    ];
+                    $currentTimelineStep = $timelineOrder[$application->status] ?? 0;
                 @endphp
                 <span class="px-4 py-2 text-sm font-medium rounded-full bg-{{ $config['color'] }}-100 text-{{ $config['color'] }}-800">
                     {{ $config['label'] }}
@@ -161,7 +174,7 @@
                             </div>
                         </div>
 
-                        @if($application->screening_passed_at)
+                        @if($application->screening_passed_at && $currentTimelineStep >= 1)
                             <div class="flex items-start">
                                 <div class="flex-shrink-0 w-2 h-2 rounded-full bg-blue-500 mt-2 mr-3"></div>
                                 <div>
@@ -171,7 +184,7 @@
                             </div>
                         @endif
 
-                        @if($application->interview_scheduled_at)
+                        @if($application->interview_scheduled_at && $currentTimelineStep >= 2)
                             <div class="flex items-start">
                                 <div class="flex-shrink-0 w-2 h-2 rounded-full bg-purple-500 mt-2 mr-3"></div>
                                 <div>
@@ -181,7 +194,7 @@
                             </div>
                         @endif
 
-                        @if($application->interview_passed_at)
+                        @if($application->interview_passed_at && $currentTimelineStep >= 3)
                             <div class="flex items-start">
                                 <div class="flex-shrink-0 w-2 h-2 rounded-full bg-green-500 mt-2 mr-3"></div>
                                 <div>
@@ -191,7 +204,7 @@
                             </div>
                         @endif
 
-                        @if($application->offered_at)
+                        @if($application->offered_at && $currentTimelineStep >= 4)
                             <div class="flex items-start">
                                 <div class="flex-shrink-0 w-2 h-2 rounded-full bg-indigo-500 mt-2 mr-3"></div>
                                 <div>
@@ -201,7 +214,7 @@
                             </div>
                         @endif
 
-                        @if($application->hired_at)
+                        @if($application->hired_at && $currentTimelineStep >= 5)
                             <div class="flex items-start">
                                 <div class="flex-shrink-0 w-2 h-2 rounded-full bg-green-500 mt-2 mr-3"></div>
                                 <div>
@@ -242,7 +255,11 @@
 
                  
                 @if($application->offer)
-                    @php $offer = $application->offer; @endphp
+                    @php
+                        $offer = $application->offer;
+                        $latestNegotiation = $offer->latestNegotiation;
+                        $hasPendingNegotiation = $latestNegotiation && $latestNegotiation->status === 'pending';
+                    @endphp
                     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                         <div class="flex items-center justify-between mb-4">
                             <h2 class="text-lg font-semibold text-gray-900">Penawaran Kerja</h2>
@@ -282,14 +299,29 @@
                                 <p class="font-medium text-gray-900">{{ \Carbon\Carbon::parse($offer->valid_until)->format('d M Y') }}</p>
                             </div>
                             @if($offer->benefits)
+                                @php
+                                    $benefits = is_array($offer->benefits) ? implode(', ', $offer->benefits) : $offer->benefits;
+                                @endphp
                                 <div>
                                     <p class="text-sm text-gray-600">Benefits & Fasilitas</p>
-                                    <p class="text-gray-900">{{ $offer->benefits }}</p>
+                                    <p class="text-gray-900">{{ $benefits }}</p>
                                 </div>
                             @endif
                         </div>
 
-                        @if($offer->status === 'pending')
+                        @if($offer->status === 'pending' && $hasPendingNegotiation)
+                            <div class="border-t-4 border-blue-300 pt-6 mt-6 bg-blue-50 -mx-6 -mb-6 px-6 pb-8 rounded-b-xl">
+                                <div class="flex items-start gap-3">
+                                    <i class="fas fa-clock text-blue-600 text-xl mt-1"></i>
+                                    <div>
+                                        <h3 class="text-lg font-bold text-blue-900 mb-1">Negosiasi Sedang Diproses</h3>
+                                        <p class="text-sm text-blue-800">
+                                            HR sedang meninjau nominal yang Anda ajukan. Pilihan menerima, menolak, atau negosiasi lagi akan tersedia setelah HR memberi respons.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        @elseif($offer->status === 'pending')
                              
                             <div class="border-t-4 border-blue-300 pt-6 mt-6 bg-gradient-to-br from-blue-100 to-indigo-100 -mx-6 -mb-6 px-6 pb-8 rounded-b-xl shadow-lg">
                                 <div class="text-center mb-6">
@@ -305,7 +337,7 @@
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                      
                                     <form action="{{ route('candidate.offers.accept', $offer) }}" method="POST" 
-                                          onsubmit="return confirm('Apakah Anda yakin ingin MENERIMA penawaran ini? Anda akan menjadi karyawan tetap.')">
+                                          onsubmit="return confirm('Apakah Anda yakin ingin MENERIMA penawaran ini? HR akan memproses status Diterima Kerja.')">
                                         @csrf
                                         <button type="submit" 
                                                 class="w-full px-6 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:from-green-600 hover:to-green-700 font-bold text-lg shadow-2xl hover:shadow-green-500/50 transition-all transform hover:scale-105 border-2 border-green-400">
@@ -338,6 +370,7 @@
                                     <div>
                                         <p class="font-semibold">Selamat! Anda telah menerima penawaran ini</p>
                                         <p class="text-sm">Diterima pada: {{ $offer->responded_at->format('d M Y, H:i') }}</p>
+                                        <p class="text-sm mt-1">HR akan memproses status lamaran menjadi Diterima Kerja.</p>
                                     </div>
                                 </div>
                             </div>
@@ -357,23 +390,23 @@
                         @endif
 
                          
-                        @if($offer->latestNegotiation && $offer->latestNegotiation->status === 'pending')
+                        @if($latestNegotiation && $latestNegotiation->status === 'pending')
                             <div class="border-t pt-4 mt-4 bg-blue-50 -m-6 mt-0 p-6">
                                 <div class="flex items-start">
                                     <i class="fas fa-info-circle text-blue-600 text-xl mr-3 mt-1"></i>
                                     <div class="flex-1">
                                         <p class="font-semibold text-blue-900 mb-2">Negosiasi Sedang Diproses</p>
                                         <div class="text-sm text-blue-800 space-y-1">
-                                            <p>Gaji yang Anda ajukan: <span class="font-semibold">Rp {{ number_format($offer->latestNegotiation->proposed_salary, 0, ',', '.') }}</span></p>
-                                            @if($offer->latestNegotiation->candidate_notes)
-                                                <p>Catatan: {{ $offer->latestNegotiation->candidate_notes }}</p>
+                                            <p>Gaji yang Anda ajukan: <span class="font-semibold">Rp {{ number_format($latestNegotiation->proposed_salary, 0, ',', '.') }}</span></p>
+                                            @if($latestNegotiation->candidate_notes)
+                                                <p>Catatan: {{ $latestNegotiation->candidate_notes }}</p>
                                             @endif
-                                            <p class="text-xs text-blue-600 mt-2">Diajukan pada: {{ $offer->latestNegotiation->created_at->format('d M Y, H:i') }}</p>
+                                            <p class="text-xs text-blue-600 mt-2">Diajukan pada: {{ $latestNegotiation->created_at->format('d M Y, H:i') }}</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        @elseif($offer->latestNegotiation && $offer->latestNegotiation->status === 'approved')
+                        @elseif($latestNegotiation && $latestNegotiation->status === 'approved')
                             <div class="border-t pt-4 mt-4 bg-green-50 -m-6 mt-0 p-6">
                                 <div class="flex items-start">
                                     <i class="fas fa-check-circle text-green-600 text-xl mr-3 mt-1"></i>
@@ -381,14 +414,14 @@
                                         <p class="font-semibold text-green-900 mb-2">Negosiasi Disetujui!</p>
                                         <div class="text-sm text-green-800 space-y-1">
                                             <p>HR telah menyetujui negosiasi Anda. Penawaran telah diperbarui dengan gaji baru.</p>
-                                            @if($offer->latestNegotiation->hr_notes)
-                                                <p>Catatan HR: {{ $offer->latestNegotiation->hr_notes }}</p>
+                                            @if($latestNegotiation->hr_notes)
+                                                <p>Catatan HR: {{ $latestNegotiation->hr_notes }}</p>
                                             @endif
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        @elseif($offer->latestNegotiation && $offer->latestNegotiation->status === 'rejected')
+                        @elseif($latestNegotiation && $latestNegotiation->status === 'rejected')
                             <div class="border-t pt-4 mt-4 bg-red-50 -m-6 mt-0 p-6">
                                 <div class="flex items-start">
                                     <i class="fas fa-times-circle text-red-600 text-xl mr-3 mt-1"></i>
@@ -396,8 +429,12 @@
                                         <p class="font-semibold text-red-900 mb-2">Negosiasi Ditolak</p>
                                         <div class="text-sm text-red-800 space-y-1">
                                             <p>Maaf, negosiasi Anda tidak dapat disetujui.</p>
-                                            @if($offer->latestNegotiation->hr_notes)
-                                                <p>Catatan HR: {{ $offer->latestNegotiation->hr_notes }}</p>
+                                            @if($latestNegotiation->counter_offer_salary)
+                                                <p>Counter offer HR: <span class="font-semibold">Rp {{ number_format($latestNegotiation->counter_offer_salary, 0, ',', '.') }}</span></p>
+                                                <p>Gaji penawaran saat ini sudah diperbarui menjadi Rp {{ number_format($offer->salary, 0, ',', '.') }}.</p>
+                                            @endif
+                                            @if($latestNegotiation->hr_notes)
+                                                <p>Catatan HR: {{ $latestNegotiation->hr_notes }}</p>
                                             @endif
                                         </div>
                                     </div>
@@ -405,12 +442,25 @@
                             </div>
                         @endif
                     </div>
+                @elseif($application->status === 'offered')
+                    <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-6">
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-gift text-indigo-600 text-xl mt-1"></i>
+                            <div>
+                                <h2 class="text-lg font-semibold text-indigo-900 mb-1">Penawaran Kerja Sedang Disiapkan</h2>
+                                <p class="text-sm text-indigo-800">
+                                    Status lamaran Anda sudah masuk tahap ditawarkan. Detail gaji dan pilihan respons akan muncul setelah HR mengirim penawaran kerja.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 @endif
             </div>
         </div>
     </div>
 </div>
 
+@if($application->offer && $application->offer->status === 'pending' && $application->offer->latestNegotiation?->status !== 'pending')
  
 <div id="negotiateModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
     <div class="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-lg bg-white">
@@ -433,10 +483,11 @@
                            name="proposed_salary" 
                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                            min="0"
+                           max="{{ \App\Models\Offer::MAX_SALARY }}"
                            step="100000"
                            required
                            placeholder="Contoh: 15000000">
-                    <p class="text-xs text-gray-500 mt-1">Gaji saat ini: Rp {{ number_format($application->offer->salary ?? 0, 0, ',', '.') }}</p>
+                    <p class="text-xs text-gray-500 mt-1">Gaji saat ini: Rp {{ number_format($application->offer->salary ?? 0, 0, ',', '.') }}. Maksimal Rp {{ number_format(\App\Models\Offer::MAX_SALARY, 0, ',', '.') }}</p>
                 </div>
 
                 <div>
@@ -513,5 +564,6 @@
         </form>
     </div>
 </div>
+@endif
 
 @endsection

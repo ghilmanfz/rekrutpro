@@ -13,6 +13,7 @@ class OfferNegotiation extends Model
         'candidate_notes',
         'status',
         'hr_notes',
+        'counter_offer_salary',
         'reviewed_by',
         'reviewed_at',
     ];
@@ -21,6 +22,7 @@ class OfferNegotiation extends Model
     {
         return [
             'proposed_salary' => 'decimal:2',
+            'counter_offer_salary' => 'decimal:2',
             'reviewed_at' => 'datetime',
         ];
     }

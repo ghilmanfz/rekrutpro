@@ -78,30 +78,10 @@ class ApplicationController extends Controller
         $oldStatus = $application->status;
         $newStatus = $request->status;
 
-         
-        $application->update([
+        $application->update(array_merge([
             'status' => $newStatus,
             'status_notes' => $request->notes,
-        ]);
-
-         
-        switch ($newStatus) {
-            case 'screening_passed':
-                $application->update(['screening_passed_at' => now()]);
-                break;
-            case 'interview_scheduled':
-                $application->update(['interview_scheduled_at' => now()]);
-                break;
-            case 'interview_passed':
-                $application->update(['interview_passed_at' => now()]);
-                break;
-            case 'offered':
-                $application->update(['offered_at' => now()]);
-                break;
-            case 'hired':
-                $application->update(['hired_at' => now()]);
-                break;
-        }
+        ], $this->statusTimestampUpdates($newStatus)));
 
          
         AuditLog::create([
@@ -117,33 +97,91 @@ class ApplicationController extends Controller
 
          
         $eventMap = [
-            'screening_passed'   => 'screening_passed',
-            'interview_passed'   => 'interview_passed',
-            'rejected_admin'     => 'screening_rejected',
-            'rejected_interview' => 'interview_rejected',
+            'screening_passed'      => 'screening_passed',
+            'interview_scheduled'  => 'application_interview_scheduled',
+            'interview_passed'      => 'interview_passed',
+            'offered'               => 'application_offered',
+            'hired'                 => 'application_hired',
+            'rejected_admin'        => 'screening_rejected',
+            'rejected_interview'    => 'interview_rejected',
         ];
 
         if (isset($eventMap[$newStatus])) {
-            $application->load(['candidate', 'jobPosting']);
+            $application->load(['candidate', 'jobPosting', 'offer']);
             $candidate = $application->candidate;
             if ($candidate && $candidate->phone) {
                 app(NotificationService::class)->sendWhatsApp(
                     $eventMap[$newStatus],
                     $candidate->phone,
-                    [
-                        'nama'           => $candidate->full_name ?? $candidate->name,
-                        'candidate_name' => $candidate->full_name ?? $candidate->name,
-                        'kode_lamaran'   => $application->application_code ?? $application->code,
-                        'application_number' => $application->application_code ?? $application->code,
-                        'posisi'         => $application->jobPosting->title ?? '',
-                        'job_title'      => $application->jobPosting->title ?? '',
-                        'company_name'   => config('app.name', 'RekrutPro'),
-                    ]
+                    $this->whatsAppStatusPayload($application, $candidate)
                 );
             }
         }
 
         return redirect()->back()->with('success', 'Status aplikasi berhasil diperbarui');
+    }
+
+    private function whatsAppStatusPayload(Application $application, User $candidate): array
+    {
+        $offer = $application->offer;
+
+        return [
+            'nama'               => $candidate->full_name ?? $candidate->name,
+            'candidate_name'     => $candidate->full_name ?? $candidate->name,
+            'kode_lamaran'       => $application->application_code ?? $application->code,
+            'application_number' => $application->application_code ?? $application->code,
+            'posisi'             => $application->jobPosting->title ?? '',
+            'job_title'          => $application->jobPosting->title ?? '',
+            'status'             => $this->statusLabel($application->status),
+            'gaji'               => $offer ? 'Rp ' . number_format((float) $offer->salary, 0, ',', '.') : '',
+            'salary_range'       => $offer ? 'Rp ' . number_format((float) $offer->salary, 0, ',', '.') : '',
+            'start_date'         => $offer?->start_date?->format('d/m/Y') ?? '',
+            'company_name'       => config('app.name', 'RekrutPro'),
+        ];
+    }
+
+    private function statusTimestampUpdates(string $status): array
+    {
+        $timestampColumns = [
+            'screening_passed' => 'screening_passed_at',
+            'interview_scheduled' => 'interview_scheduled_at',
+            'interview_passed' => 'interview_passed_at',
+            'offered' => 'offered_at',
+            'hired' => 'hired_at',
+        ];
+
+        if (! isset($timestampColumns[$status])) {
+            return [];
+        }
+
+        $updates = [$timestampColumns[$status] => now()];
+        $clearFollowing = false;
+
+        foreach ($timestampColumns as $statusKey => $column) {
+            if ($clearFollowing) {
+                $updates[$column] = null;
+            }
+
+            if ($statusKey === $status) {
+                $clearFollowing = true;
+            }
+        }
+
+        return $updates;
+    }
+
+    private function statusLabel(string $status): string
+    {
+        return [
+            'submitted' => 'Baru Diterima',
+            'screening_passed' => 'Lolos Screening',
+            'interview_scheduled' => 'Terjadwal Interview',
+            'interview_passed' => 'Lolos Interview',
+            'offered' => 'Ditawarkan',
+            'hired' => 'Diterima Kerja',
+            'rejected_admin' => 'Ditolak Admin',
+            'rejected_interview' => 'Ditolak Interview',
+        ][$status] ?? ucfirst(str_replace('_', ' ', $status));
     }
 
     
