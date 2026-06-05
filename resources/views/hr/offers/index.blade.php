@@ -16,7 +16,7 @@
          
         <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
             <form method="GET" action="{{ route('hr.offers.index') }}" class="space-y-4">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                      
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Cari Kandidat</label>
@@ -40,6 +40,12 @@
                     <div class="flex items-end">
                         <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
                             <i class="fas fa-search mr-2"></i>Filter
+                        </button>
+                    </div>
+
+                    <div class="flex items-end">
+                        <button type="submit" formaction="{{ route('hr.offers.export') }}" class="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                            <i class="fas fa-file-excel mr-2"></i>Download Excel
                         </button>
                     </div>
                 </div>

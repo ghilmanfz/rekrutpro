@@ -512,46 +512,61 @@
                             Dokumen Lamaran
                         </h2>
                         
+                        @php
+                            $cvPath = $application->cv_file;
+                            $portfolioPath = $application->portfolio_file;
+                            $hasCv = filled($cvPath) && Storage::disk('public')->exists($cvPath);
+                            $hasPortfolio = filled($portfolioPath) && Storage::disk('public')->exists($portfolioPath);
+                        @endphp
+
                         <div class="space-y-3">
-                            @if($application->cv_file)
-                            <div class="flex items-center justify-between p-4 bg-gradient-to-r from-red-50 to-red-100 rounded-lg border border-red-200">
+                            <div class="flex items-center justify-between p-4 rounded-lg border {{ $hasCv ? 'bg-gradient-to-r from-red-50 to-red-100 border-red-200' : 'bg-gray-50 border-gray-200' }}">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
+                                    <div class="w-10 h-10 {{ $hasCv ? 'bg-red-500' : 'bg-gray-400' }} rounded-lg flex items-center justify-center">
                                         <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                                             <path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"/>
                                         </svg>
                                     </div>
                                     <div>
                                         <p class="font-semibold text-gray-900">Curriculum Vitae</p>
-                                        <p class="text-sm text-gray-600">PDF Document</p>
+                                        <p class="text-sm text-gray-600">{{ $hasCv ? 'PDF Document' : 'Tidak ada file yang bisa diunduh' }}</p>
                                     </div>
                                 </div>
-                                <a href="{{ Storage::url($application->cv_file) }}" target="_blank" 
-                                   class="px-4 py-2 bg-white text-red-600 rounded-lg hover:bg-red-50 font-medium text-sm">
-                                    Download
-                                </a>
+                                @if($hasCv)
+                                    <a href="{{ Storage::url($cvPath) }}" target="_blank" 
+                                       class="px-4 py-2 bg-white text-red-600 rounded-lg hover:bg-red-50 font-medium text-sm">
+                                        Download
+                                    </a>
+                                @else
+                                    <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm font-medium">
+                                        Kandidat belum melampirkan CV
+                                    </span>
+                                @endif
                             </div>
-                            @endif
 
-                            @if($application->portfolio_file)
-                            <div class="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg border border-blue-200">
+                            <div class="flex items-center justify-between p-4 rounded-lg border {{ $hasPortfolio ? 'bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200' : 'bg-gray-50 border-gray-200' }}">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                                    <div class="w-10 h-10 {{ $hasPortfolio ? 'bg-blue-500' : 'bg-gray-400' }} rounded-lg flex items-center justify-center">
                                         <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                                             <path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"/>
                                         </svg>
                                     </div>
                                     <div>
                                         <p class="font-semibold text-gray-900">Portfolio</p>
-                                        <p class="text-sm text-gray-600">PDF Document</p>
+                                        <p class="text-sm text-gray-600">{{ $hasPortfolio ? 'PDF Document' : 'Tidak ada file yang bisa diunduh' }}</p>
                                     </div>
                                 </div>
-                                <a href="{{ Storage::url($application->portfolio_file) }}" target="_blank" 
-                                   class="px-4 py-2 bg-white text-blue-600 rounded-lg hover:bg-blue-50 font-medium text-sm">
-                                    Download
-                                </a>
+                                @if($hasPortfolio)
+                                    <a href="{{ Storage::url($portfolioPath) }}" target="_blank" 
+                                       class="px-4 py-2 bg-white text-blue-600 rounded-lg hover:bg-blue-50 font-medium text-sm">
+                                        Download
+                                    </a>
+                                @else
+                                    <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm font-medium">
+                                        Kandidat belum melampirkan Portfolio
+                                    </span>
+                                @endif
                             </div>
-                            @endif
                         </div>
                     </div>
                 </div>

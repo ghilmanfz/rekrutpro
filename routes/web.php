@@ -114,6 +114,7 @@ Route::middleware(['auth', 'hr', 'ensure.registration.completed'])->prefix('hr')
     
      
     Route::get('/offers', [\App\Http\Controllers\HR\OfferController::class, 'index'])->name('offers.index');
+    Route::get('/offers/export', [\App\Http\Controllers\HR\OfferController::class, 'export'])->name('offers.export');
     Route::get('/offers/{offer}', [\App\Http\Controllers\HR\OfferController::class, 'show'])->name('offers.show');
     Route::get('/offers/{offer}/edit', [\App\Http\Controllers\HR\OfferController::class, 'edit'])->name('offers.edit');
     Route::post('/offers', [\App\Http\Controllers\HR\OfferController::class, 'store'])->name('offers.store');

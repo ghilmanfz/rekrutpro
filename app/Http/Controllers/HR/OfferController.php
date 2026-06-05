@@ -17,23 +17,181 @@ class OfferController extends Controller
 
     public function index(Request $request)
     {
+        $query = $this->filteredOfferQuery($request);
+
+        $offers = $query->latest()->paginate(15);
+
+        return view('hr.offers.index', compact('offers'));
+    }
+
+    
+
+
+    public function export(Request $request)
+    {
+        $offers = $this->filteredOfferQuery($request)
+            ->latest()
+            ->get();
+
+        $filename = 'laporan-penawaran-kerja-'.now()->format('Ymd-His').'.xls';
+
+        return response()->streamDownload(function () use ($offers) {
+            echo "\xEF\xBB\xBF";
+            echo '<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body>';
+            echo '<table border="1">';
+            echo '<thead><tr>';
+
+            foreach ($this->offerExportHeadings() as $heading) {
+                echo '<th style="background:#dbeafe;font-weight:bold;">'.$this->excelCell($heading).'</th>';
+            }
+
+            echo '</tr></thead><tbody>';
+
+            foreach ($offers as $offer) {
+                echo '<tr>';
+
+                foreach ($this->offerExportRow($offer) as $value) {
+                    echo '<td>'.$this->excelCell($value).'</td>';
+                }
+
+                echo '</tr>';
+            }
+
+            echo '</tbody></table></body></html>';
+        }, $filename, [
+            'Content-Type' => 'application/vnd.ms-excel; charset=UTF-8',
+            'Cache-Control' => 'no-store, no-cache',
+        ]);
+    }
+
+    
+
+
+    private function filteredOfferQuery(Request $request)
+    {
         $query = Offer::with(['application.candidate', 'application.jobPosting', 'offeredBy']);
 
-         
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
 
-         
         if ($request->filled('search')) {
             $query->whereHas('application.candidate', function ($q) use ($request) {
                 $q->where('name', 'like', '%' . $request->search . '%');
             });
         }
 
-        $offers = $query->latest()->paginate(15);
+        return $query;
+    }
 
-        return view('hr.offers.index', compact('offers'));
+    private function offerExportHeadings(): array
+    {
+        return [
+            'Kode Lamaran',
+            'Nama Kandidat',
+            'Email Kandidat',
+            'Posisi Dilamar',
+            'Posisi Penawaran',
+            'Gaji',
+            'Mata Uang',
+            'Periode Gaji',
+            'Tipe Kontrak',
+            'Tanggal Mulai',
+            'Berlaku Hingga',
+            'Status',
+            'Ditawarkan Oleh',
+            'Tanggal Dibuat',
+            'Tanggal Direspons',
+            'Alasan Ditolak',
+            'Benefit',
+            'Catatan Internal',
+        ];
+    }
+
+    private function offerExportRow(Offer $offer): array
+    {
+        return [
+            $offer->application?->application_code ?? $offer->application?->code,
+            $offer->application?->candidate?->name,
+            $offer->application?->candidate?->email,
+            $offer->application?->jobPosting?->title,
+            $offer->position_title,
+            number_format((float) $offer->salary, 0, ',', '.'),
+            $offer->salary_currency,
+            $this->salaryPeriodLabel($offer->salary_period),
+            $this->contractTypeLabel($offer->contract_type),
+            $offer->start_date?->format('Y-m-d'),
+            $offer->valid_until?->format('Y-m-d'),
+            $this->offerStatusLabel($offer->status),
+            $offer->offeredBy?->name,
+            $offer->created_at?->format('Y-m-d H:i:s'),
+            $offer->responded_at?->format('Y-m-d H:i:s'),
+            $offer->rejection_reason,
+            $this->formatBenefits($offer->benefits),
+            $offer->internal_notes,
+        ];
+    }
+
+    private function offerStatusLabel(?string $status): string
+    {
+        return [
+            'pending' => 'Menunggu',
+            'accepted' => 'Diterima',
+            'rejected' => 'Ditolak',
+            'expired' => 'Kadaluarsa',
+        ][$status] ?? (string) $status;
+    }
+
+    private function contractTypeLabel(?string $contractType): string
+    {
+        return [
+            'full_time' => 'Full Time',
+            'part_time' => 'Part Time',
+            'contract' => 'Kontrak',
+            'internship' => 'Magang',
+            'Permanent' => 'Permanent',
+        ][$contractType] ?? (string) $contractType;
+    }
+
+    private function salaryPeriodLabel(?string $period): string
+    {
+        return [
+            'monthly' => 'Bulanan',
+            'yearly' => 'Tahunan',
+            'weekly' => 'Mingguan',
+            'daily' => 'Harian',
+        ][$period] ?? (string) $period;
+    }
+
+    private function formatBenefits($benefits): string
+    {
+        if (empty($benefits)) {
+            return '';
+        }
+
+        if (is_array($benefits)) {
+            return implode('; ', array_map('strval', $benefits));
+        }
+
+        $decoded = json_decode((string) $benefits, true);
+
+        if (is_array($decoded)) {
+            return implode('; ', array_map('strval', $decoded));
+        }
+
+        return (string) $benefits;
+    }
+
+    private function excelCell($value): string
+    {
+        $value = trim((string) ($value ?? ''));
+        $value = preg_replace('/\s+/', ' ', $value);
+
+        if (preg_match('/^[=+\-@]/', $value)) {
+            $value = "'".$value;
+        }
+
+        return e($value);
     }
 
     

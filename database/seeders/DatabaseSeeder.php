@@ -31,6 +31,8 @@ class DatabaseSeeder extends Seeder
              
             JobPostingSeeder::class,
             ApplicationSeeder::class,
+            InterviewSeeder::class,
+            AssessmentSeeder::class,
             OfferSeeder::class,
             OfferNegotiationSeeder::class,
             
