@@ -71,9 +71,9 @@
                             </div>
                         </div>
 
-                        @if($interview->application->cv_path)
+                        @if($interview->application->cv_file)
                             <div class="mt-4">
-                                <a href="{{ Storage::url($interview->application->cv_path) }}" target="_blank" 
+                                <a href="{{ Storage::url($interview->application->cv_file) }}" target="_blank" 
                                    class="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
                                     <i class="fas fa-file-pdf mr-2"></i>Lihat CV
                                 </a>
@@ -347,11 +347,11 @@
                 @endif
 
                  
-                @if($interview->application->cv_path || $interview->application->portfolio_path)
+                @if($interview->application->cv_file || $interview->application->portfolio_file)
                     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                         <h2 class="text-lg font-semibold text-gray-900 mb-4">Dokumen Kandidat</h2>
                         <div class="space-y-3">
-                            @if($interview->application->cv_path)
+                            @if($interview->application->cv_file)
                                 <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                                     <div class="flex items-center">
                                         <i class="fas fa-file-pdf text-red-500 text-2xl mr-3"></i>
@@ -359,7 +359,7 @@
                                             <p class="font-medium text-gray-900">CV / Resume</p>
                                         </div>
                                     </div>
-                                    <a href="{{ Storage::url($interview->application->cv_path) }}" 
+                                    <a href="{{ Storage::url($interview->application->cv_file) }}" 
                                        target="_blank"
                                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
                                         Download
@@ -367,7 +367,7 @@
                                 </div>
                             @endif
 
-                            @if($interview->application->portfolio_path)
+                            @if($interview->application->portfolio_file)
                                 <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                                     <div class="flex items-center">
                                         <i class="fas fa-briefcase text-blue-500 text-2xl mr-3"></i>
@@ -375,7 +375,7 @@
                                             <p class="font-medium text-gray-900">Portfolio</p>
                                         </div>
                                     </div>
-                                    <a href="{{ Storage::url($interview->application->portfolio_path) }}" 
+                                    <a href="{{ Storage::url($interview->application->portfolio_file) }}" 
                                        target="_blank"
                                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
                                         Download

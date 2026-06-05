@@ -82,19 +82,19 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <p class="text-sm text-gray-600">Pendidikan</p>
-                            <p class="font-medium text-gray-900 mt-1">{{ $application->education }}</p>
+                            <p class="font-medium text-gray-900 mt-1">{{ $application->education_level ?? '-' }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-600">Pengalaman</p>
-                            <p class="font-medium text-gray-900 mt-1">{{ $application->experience }}</p>
+                            <p class="font-medium text-gray-900 mt-1">{{ $application->experience_level ?? '-' }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-600">Ekspektasi Gaji</p>
-                            <p class="font-medium text-gray-900 mt-1">Rp {{ number_format($application->expected_salary, 0, ',', '.') }}</p>
+                            <p class="font-medium text-gray-900 mt-1">Rp {{ number_format($application->expected_salary ?? 0, 0, ',', '.') }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-600">Ketersediaan</p>
-                            <p class="font-medium text-gray-900 mt-1">{{ $application->availability }}</p>
+                            <p class="font-medium text-gray-900 mt-1">{{ $application->availability ?? '-' }}</p>
                         </div>
                     </div>
                 </div>
@@ -111,7 +111,7 @@
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                     <h2 class="text-lg font-semibold text-gray-900 mb-4">Dokumen</h2>
                     <div class="space-y-3">
-                        @if($application->cv_path)
+                        @if($application->cv_file)
                             <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                                 <div class="flex items-center">
                                     <svg class="w-8 h-8 text-red-500" fill="currentColor" viewBox="0 0 20 20">
@@ -119,10 +119,10 @@
                                     </svg>
                                     <div class="ml-3">
                                         <p class="font-medium text-gray-900">CV / Resume</p>
-                                        <p class="text-sm text-gray-500">{{ basename($application->cv_path) }}</p>
+                                        <p class="text-sm text-gray-500">{{ basename($application->cv_file) }}</p>
                                     </div>
                                 </div>
-                                <a href="{{ Storage::url($application->cv_path) }}" 
+                                <a href="{{ Storage::url($application->cv_file) }}" 
                                    target="_blank"
                                    class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm">
                                     Download
@@ -130,7 +130,7 @@
                             </div>
                         @endif
 
-                        @if($application->portfolio_path)
+                        @if($application->portfolio_file)
                             <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                                 <div class="flex items-center">
                                     <svg class="w-8 h-8 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
@@ -138,10 +138,10 @@
                                     </svg>
                                     <div class="ml-3">
                                         <p class="font-medium text-gray-900">Portfolio</p>
-                                        <p class="text-sm text-gray-500">{{ basename($application->portfolio_path) }}</p>
+                                        <p class="text-sm text-gray-500">{{ basename($application->portfolio_file) }}</p>
                                     </div>
                                 </div>
-                                <a href="{{ Storage::url($application->portfolio_path) }}" 
+                                <a href="{{ Storage::url($application->portfolio_file) }}" 
                                    target="_blank"
                                    class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm">
                                     Download
