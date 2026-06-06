@@ -14,7 +14,7 @@
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                 <div class="text-center">
                     <div class="relative inline-block mb-4">
-                        <img src="{{ auth()->user()->profile_photo ? Storage::url(auth()->user()->profile_photo) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&size=200' }}" 
+                        <img src="{{ auth()->user()->profile_photo ? Storage::url(auth()->user()->profile_photo) : asset('images/default-avatar.svg') }}" 
                              alt="{{ auth()->user()->name }}"
                              class="w-32 h-32 rounded-full border-4 border-blue-100">
                         <button class="absolute bottom-0 right-0 bg-blue-600 text-white rounded-full p-2 hover:bg-blue-700 shadow-lg">

@@ -127,7 +127,7 @@
              
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                 <div class="text-center">
-                    <img src="{{ auth()->user()->profile_photo ? Storage::url(auth()->user()->profile_photo) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&size=200' }}" 
+                    <img src="{{ auth()->user()->profile_photo ? Storage::url(auth()->user()->profile_photo) : asset('images/default-avatar.svg') }}" 
                          alt="{{ auth()->user()->name }}"
                          class="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-blue-100">
                     
