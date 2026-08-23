@@ -71,7 +71,7 @@
                             </div>
                         </div>
 
-                        @if($interview->application->cv_path)
+                        @if($interview->application->hasStoredCv())
                             <div class="mt-4">
                                 <a href="{{ Storage::url($interview->application->cv_path) }}" target="_blank" 
                                    class="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
@@ -347,11 +347,11 @@
                 @endif
 
                  
-                @if($interview->application->cv_path || $interview->application->portfolio_path)
+                @if($interview->application->hasStoredCv() || $interview->application->hasStoredPortfolio())
                     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                         <h2 class="text-lg font-semibold text-gray-900 mb-4">Dokumen Kandidat</h2>
                         <div class="space-y-3">
-                            @if($interview->application->cv_path)
+                            @if($interview->application->hasStoredCv())
                                 <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                                     <div class="flex items-center">
                                         <i class="fas fa-file-pdf text-red-500 text-2xl mr-3"></i>
@@ -367,7 +367,7 @@
                                 </div>
                             @endif
 
-                            @if($interview->application->portfolio_path)
+                            @if($interview->application->hasStoredPortfolio())
                                 <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                                     <div class="flex items-center">
                                         <i class="fas fa-briefcase text-blue-500 text-2xl mr-3"></i>
@@ -450,7 +450,12 @@
                     <div class="space-y-3">
                         <div>
                             <p class="text-sm text-gray-600">Pendidikan</p>
-                            <p class="font-medium text-gray-900">{{ $interview->application->education ?? '-' }}</p>
+                            <p class="font-medium text-gray-900">
+                                {{ $interview->application->education_level ?? '-' }}
+                                @if($interview->application->study_program)
+                                    — {{ $interview->application->study_program }}
+                                @endif
+                            </p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-600">Pengalaman</p>

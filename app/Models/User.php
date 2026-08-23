@@ -36,6 +36,7 @@ class User extends Authenticatable
         'is_verified',
         'date_of_birth',
         'education',
+        'study_program',
         'experience',
         'skills',
         'linkedin_url',

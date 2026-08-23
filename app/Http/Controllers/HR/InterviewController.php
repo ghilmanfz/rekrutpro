@@ -6,9 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Application;
 use App\Models\AuditLog;
 use App\Models\Interview;
+use App\Models\Role;
 use App\Models\User;
 use App\Services\NotificationService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class InterviewController extends Controller
 {
@@ -57,29 +62,66 @@ class InterviewController extends Controller
 
     public function store(Request $request)
     {
+        $interviewerRoleId = Role::where('name', Role::INTERVIEWER)->value('id');
+
         $validated = $request->validate([
             'application_id' => 'required|exists:applications,id',
-            'interviewer_id' => 'required|exists:users,id',
+            'interviewer_id' => [
+                'required',
+                Rule::exists('users', 'id')->where(fn ($query) => $query
+                    ->where('role_id', $interviewerRoleId)),
+            ],
             'scheduled_at' => 'required|date|after:now',
-            'duration' => 'required|integer|min:15|max:480',
+            'duration' => 'required|integer|min:15|max:'.Interview::MAX_DURATION_MINUTES,
             'location' => 'required|string|max:255',
             'notes' => 'nullable|string',
             'interview_type' => 'required|in:phone,video,onsite',
+        ], [
+            'interviewer_id.exists' => 'Interviewer yang dipilih tidak valid.',
         ]);
 
         $validated['status'] = 'scheduled';
         $validated['scheduled_by'] = auth()->id();
 
-        $interview = Interview::create($validated);
+        [$interview, $application] = DB::transaction(function () use ($validated, $interviewerRoleId) {
+            $lockedInterviewer = User::whereKey($validated['interviewer_id'])
+                ->lockForUpdate()
+                ->first();
 
-         
-        $application = Application::find($request->application_id);
-        $application->update([
-            'status' => 'interview_scheduled',
-            'interview_scheduled_at' => now(),
-        ]);
+            if (! $interviewerRoleId
+                || ! $lockedInterviewer
+                || (int) $lockedInterviewer->role_id !== (int) $interviewerRoleId) {
+                throw ValidationException::withMessages([
+                    'interviewer_id' => 'Interviewer yang dipilih tidak valid.',
+                ]);
+            }
 
-        AuditLog::log('create', $interview, [], $validated);
+            $startsAt = Carbon::parse($validated['scheduled_at']);
+
+            if (Interview::hasScheduleConflict(
+                (int) $validated['interviewer_id'],
+                $startsAt,
+                (int) $validated['duration']
+            )) {
+                throw ValidationException::withMessages([
+                    'scheduled_at' => 'Interviewer sudah memiliki jadwal dengan kandidat lain pada rentang waktu tersebut.',
+                ]);
+            }
+
+            $interview = Interview::create($validated);
+            $application = Application::whereKey($validated['application_id'])
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            $application->update([
+                'status' => 'interview_scheduled',
+                'interview_scheduled_at' => now(),
+            ]);
+
+            AuditLog::log('create', $interview, [], $validated);
+
+            return [$interview, $application];
+        });
 
          
         $application->load(['candidate', 'jobPosting']);
@@ -133,20 +175,72 @@ class InterviewController extends Controller
 
     public function update(Request $request, Interview $interview)
     {
+        $interviewerRoleId = Role::where('name', Role::INTERVIEWER)->value('id');
+
         $validated = $request->validate([
-            'interviewer_id' => 'required|exists:users,id',
+            'interviewer_id' => [
+                'required',
+                Rule::exists('users', 'id'),
+            ],
             'scheduled_at' => 'required|date',
-            'duration' => 'required|integer|min:15|max:480',
+            'duration' => 'required|integer|min:15|max:'.Interview::MAX_DURATION_MINUTES,
             'location' => 'required|string|max:255',
             'notes' => 'nullable|string',
             'interview_type' => 'required|in:phone,video,onsite',
             'status' => 'nullable|in:scheduled,completed,cancelled,rescheduled',
+        ], [
+            'interviewer_id.exists' => 'Interviewer yang dipilih tidak valid.',
         ]);
 
-        $oldData = $interview->toArray();
-        $interview->update($validated);
+        DB::transaction(function () use ($validated, $interview, $interviewerRoleId) {
+            $lockedInterview = Interview::whereKey($interview->id)
+                ->lockForUpdate()
+                ->firstOrFail();
 
-        AuditLog::log('update', $interview, $oldData, $validated);
+            $interviewerIds = collect([
+                (int) $lockedInterview->interviewer_id,
+                (int) $validated['interviewer_id'],
+            ])->unique()->sort()->values();
+
+            $lockedUsers = User::whereIn('id', $interviewerIds)
+                ->orderBy('id')
+                ->lockForUpdate()
+                ->get()
+                ->keyBy('id');
+
+            $targetInterviewer = $lockedUsers->get((int) $validated['interviewer_id']);
+            $isChangingInterviewer = (int) $validated['interviewer_id'] !== (int) $lockedInterview->interviewer_id;
+            $targetHasInterviewerRole = $interviewerRoleId
+                && (int) $targetInterviewer?->role_id === (int) $interviewerRoleId;
+
+            if (! $targetInterviewer || ($isChangingInterviewer && ! $targetHasInterviewerRole)) {
+                throw ValidationException::withMessages([
+                    'interviewer_id' => 'Interviewer yang dipilih tidak valid.',
+                ]);
+            }
+
+            $effectiveStatus = $validated['status'] ?? $lockedInterview->status;
+
+            if (in_array($effectiveStatus, Interview::SCHEDULE_BLOCKING_STATUSES, true)) {
+                $startsAt = Carbon::parse($validated['scheduled_at']);
+
+                if (Interview::hasScheduleConflict(
+                    (int) $validated['interviewer_id'],
+                    $startsAt,
+                    (int) $validated['duration'],
+                    $lockedInterview->id
+                )) {
+                    throw ValidationException::withMessages([
+                        'scheduled_at' => 'Interviewer sudah memiliki jadwal dengan kandidat lain pada rentang waktu tersebut.',
+                    ]);
+                }
+            }
+
+            $oldData = $lockedInterview->toArray();
+            $lockedInterview->update($validated);
+
+            AuditLog::log('update', $lockedInterview, $oldData, $validated);
+        });
 
          
 

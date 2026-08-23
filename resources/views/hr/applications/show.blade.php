@@ -86,7 +86,7 @@
                                     Data Saat Melamar
                                 </h3>
                                 <div class="text-xs text-blue-600 mb-3">
-                                    Snapshot: {{ \Carbon\Carbon::parse($application->candidate_snapshot['snapshot_at'] ?? $application->created_at)->format('d M Y, H:i') }}
+                                    Snapshot: {{ \Carbon\Carbon::parse($application->snapshot_at)->format('d M Y, H:i') }}
                                 </div>
                                 
                                 <div class="space-y-3">
@@ -140,8 +140,18 @@
                                         <p class="text-xs text-gray-600 mb-2">Pendidikan</p>
                                         @foreach($education as $edu)
                                         <div class="text-sm bg-white rounded p-2 mb-2">
-                                            <p class="font-medium text-gray-900">{{ $edu['degree'] ?? '-' }} - {{ $edu['major'] ?? '-' }}</p>
-                                            <p class="text-xs text-gray-600">{{ $edu['institution'] ?? '-' }} ({{ $edu['graduation_year'] ?? $edu['year'] ?? '-' }})</p>
+                                            <p class="font-medium text-gray-900">
+                                                {{ $edu['degree'] ?? '-' }}
+                                                @if(filled($edu['major'] ?? null)) — {{ $edu['major'] }} @endif
+                                            </p>
+                                            @if(filled($edu['institution'] ?? null) || filled($edu['graduation_year'] ?? $edu['year'] ?? null))
+                                                <p class="text-xs text-gray-600">
+                                                    {{ $edu['institution'] ?? '' }}
+                                                    @if(filled($edu['graduation_year'] ?? $edu['year'] ?? null))
+                                                        ({{ $edu['graduation_year'] ?? $edu['year'] }})
+                                                    @endif
+                                                </p>
+                                            @endif
                                         </div>
                                         @endforeach
                                     </div>
@@ -160,8 +170,13 @@
                                         <p class="text-xs text-gray-600 mb-2">Pengalaman Kerja</p>
                                         @foreach($experience as $exp)
                                         <div class="text-sm bg-white rounded p-2 mb-2">
-                                            <p class="font-medium text-gray-900">{{ $exp['position'] ?? '-' }}</p>
-                                            <p class="text-xs text-gray-600">{{ $exp['company'] ?? '-' }} ({{ $exp['duration'] ?? ($exp['start_date'] ?? '-') . ' - ' . ($exp['end_date'] ?? 'Present') }})</p>
+                                            <p class="font-medium text-gray-900">{{ $exp['position'] ?? $exp['description'] ?? '-' }}</p>
+                                            @if(filled($exp['company'] ?? null) || filled($exp['duration'] ?? null))
+                                                <p class="text-xs text-gray-600">
+                                                    {{ $exp['company'] ?? '' }}
+                                                    @if(filled($exp['duration'] ?? null)) ({{ $exp['duration'] }}) @endif
+                                                </p>
+                                            @endif
                                         </div>
                                         @endforeach
                                     </div>
@@ -219,7 +234,7 @@
                                     <div class="pt-3 border-t border-green-200">
                                         <p class="text-xs text-gray-600 mb-1">Alamat</p>
                                         <p class="text-sm font-medium text-gray-900">
-                                            {{ $application->current_candidate_address }}
+                                            {{ $application->current_candidate_address ?? '-' }}
                                             @if($application->current_candidate_address_changed)
                                             <span class="text-xs text-orange-600">(berubah)</span>
                                             @endif
@@ -256,8 +271,16 @@
                                         <p class="text-xs text-gray-600 mb-2">Pendidikan</p>
                                         @foreach($currentEducation as $edu)
                                         <div class="text-sm bg-white rounded p-2 mb-2">
-                                            <p class="font-medium text-gray-900">{{ $edu['degree'] ?? '-' }} - {{ $edu['major'] ?? '-' }}</p>
-                                            <p class="text-xs text-gray-600">{{ $edu['institution'] ?? '-' }} ({{ $edu['year'] ?? '-' }})</p>
+                                            <p class="font-medium text-gray-900">
+                                                {{ $edu['degree'] ?? '-' }}
+                                                @if(filled($edu['major'] ?? null)) — {{ $edu['major'] }} @endif
+                                            </p>
+                                            @if(filled($edu['institution'] ?? null) || filled($edu['year'] ?? null))
+                                                <p class="text-xs text-gray-600">
+                                                    {{ $edu['institution'] ?? '' }}
+                                                    @if(filled($edu['year'] ?? null)) ({{ $edu['year'] }}) @endif
+                                                </p>
+                                            @endif
                                         </div>
                                         @endforeach
                                     </div>
@@ -272,8 +295,13 @@
                                         <p class="text-xs text-gray-600 mb-2">Pengalaman Kerja</p>
                                         @foreach($currentExperience as $exp)
                                         <div class="text-sm bg-white rounded p-2 mb-2">
-                                            <p class="font-medium text-gray-900">{{ $exp['position'] ?? '-' }}</p>
-                                            <p class="text-xs text-gray-600">{{ $exp['company'] ?? '-' }} ({{ $exp['duration'] ?? '-' }})</p>
+                                            <p class="font-medium text-gray-900">{{ $exp['position'] ?? $exp['description'] ?? '-' }}</p>
+                                            @if(filled($exp['company'] ?? null) || filled($exp['duration'] ?? null))
+                                                <p class="text-xs text-gray-600">
+                                                    {{ $exp['company'] ?? '' }}
+                                                    @if(filled($exp['duration'] ?? null)) ({{ $exp['duration'] }}) @endif
+                                                </p>
+                                            @endif
                                         </div>
                                         @endforeach
                                     </div>
@@ -307,6 +335,41 @@
                                     <p class="text-xs text-gray-600 mb-1">Lokasi</p>
                                     <p class="font-semibold text-gray-900">{{ $application->jobPosting->location->name }}</p>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-sm p-6">
+                        <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6M7 4h10a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V6a2 2 0 012-2z"></path>
+                            </svg>
+                            Informasi Saat Melamar
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="p-3 bg-gray-50 rounded-lg">
+                                <p class="text-xs text-gray-600 mb-1">Pendidikan & Program Studi</p>
+                                <p class="font-semibold text-gray-900">
+                                    {{ $application->education_level ?? '-' }}
+                                    @if($application->study_program)
+                                        — {{ $application->study_program }}
+                                    @endif
+                                </p>
+                            </div>
+                            <div class="p-3 bg-gray-50 rounded-lg">
+                                <p class="text-xs text-gray-600 mb-1">Pengalaman Relevan</p>
+                                <p class="font-semibold text-gray-900">{{ $application->experience_level ?? '-' }}</p>
+                            </div>
+                            <div class="p-3 bg-gray-50 rounded-lg">
+                                <p class="text-xs text-gray-600 mb-1">Ekspektasi Gaji</p>
+                                <p class="font-semibold text-gray-900">
+                                    {{ $application->expected_salary !== null ? 'Rp '.number_format($application->expected_salary, 0, ',', '.') : '-' }}
+                                </p>
+                            </div>
+                            <div class="p-3 bg-gray-50 rounded-lg">
+                                <p class="text-xs text-gray-600 mb-1">Ketersediaan</p>
+                                <p class="font-semibold text-gray-900">{{ $application->availability ?? '-' }}</p>
                             </div>
                         </div>
                     </div>
@@ -820,52 +883,69 @@
                         <select name="interviewer_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" required>
                             <option value="">Pilih Interviewer</option>
                             @foreach($interviewers as $interviewer)
-                                <option value="{{ $interviewer->id }}">{{ $interviewer->name }}</option>
+                                <option value="{{ $interviewer->id }}" @selected(old('interviewer_id') == $interviewer->id)>{{ $interviewer->name }}</option>
                             @endforeach
                         </select>
+                        @error('interviewer_id')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal & Waktu</label>
                         <input type="datetime-local" name="scheduled_at" 
+                               value="{{ old('scheduled_at') }}"
                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" 
                                min="{{ now()->addHour()->format('Y-m-d\TH:i') }}" 
                                required>
+                        @error('scheduled_at')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Durasi (menit)</label>
                         <select name="duration" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" required>
-                            <option value="30">30 menit</option>
-                            <option value="45">45 menit</option>
-                            <option value="60" selected>60 menit</option>
-                            <option value="90">90 menit</option>
-                            <option value="120">120 menit</option>
+                            <option value="30" @selected(old('duration') == 30)>30 menit</option>
+                            <option value="45" @selected(old('duration') == 45)>45 menit</option>
+                            <option value="60" @selected(old('duration', 60) == 60)>60 menit</option>
+                            <option value="90" @selected(old('duration') == 90)>90 menit</option>
+                            <option value="120" @selected(old('duration') == 120)>120 menit</option>
                         </select>
+                        @error('duration')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Tipe Interview</label>
                         <select name="interview_type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" required>
-                            <option value="video">Video Call</option>
-                            <option value="onsite">On-site</option>
-                            <option value="phone">Telepon</option>
+                            <option value="video" @selected(old('interview_type', 'video') === 'video')>Video Call</option>
+                            <option value="onsite" @selected(old('interview_type') === 'onsite')>On-site</option>
+                            <option value="phone" @selected(old('interview_type') === 'phone')>Telepon</option>
                         </select>
+                        @error('interview_type')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Lokasi / Link</label>
                         <input type="text" name="location" 
+                               value="{{ old('location') }}"
                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" 
                                placeholder="Ruang Meeting / Zoom Link" 
                                required>
+                        @error('location')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Catatan (Opsional)</label>
                         <textarea name="notes" rows="3" 
                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" 
-                                  placeholder="Catatan tambahan untuk interview..."></textarea>
+                                  placeholder="Catatan tambahan untuk interview...">{{ old('notes') }}</textarea>
                     </div>
                 </div>
 
@@ -897,5 +977,9 @@
                 closeInterviewModal();
             }
         });
+
+        @if($errors->hasAny(['application_id', 'interviewer_id', 'scheduled_at', 'duration', 'location', 'interview_type']))
+            document.addEventListener('DOMContentLoaded', openInterviewModal);
+        @endif
     </script>
 </x-hr-layout>

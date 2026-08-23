@@ -58,8 +58,8 @@ class DashboardController extends Controller
          
         $user = auth()->user();
         $profileFields = [
-            'name', 'email', 'phone', 'address', 
-            'education', 'experience', 'skills'
+            'name', 'email', 'phone', 'date_of_birth', 'address',
+            'education', 'study_program'
         ];
         
         $completedFields = 0;

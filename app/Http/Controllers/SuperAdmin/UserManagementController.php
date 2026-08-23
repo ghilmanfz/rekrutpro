@@ -51,7 +51,9 @@ class UserManagementController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'role_id' => ['required', Rule::exists('roles', 'id')->where(fn ($query) => $query->whereIn('name', Role::internalNames()))],
             'division_id' => ['nullable', 'exists:divisions,id'],
-            'phone' => ['nullable', 'string', 'max:20'],
+            'phone' => ['nullable', 'string', 'max:15', 'regex:/^[0-9]{8,15}$/'],
+        ], [
+            'phone.regex' => 'Nomor telepon hanya boleh berisi 8 sampai 15 digit angka.',
         ]);
 
         User::create([
@@ -90,8 +92,10 @@ class UserManagementController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
             'role_id' => ['required', Rule::exists('roles', 'id')->where(fn ($query) => $query->whereIn('name', Role::internalNames()))],
             'division_id' => ['nullable', 'exists:divisions,id'],
-            'phone' => ['nullable', 'string', 'max:20'],
+            'phone' => ['nullable', 'string', 'max:15', 'regex:/^[0-9]{8,15}$/'],
             'is_active' => ['boolean'],
+        ], [
+            'phone.regex' => 'Nomor telepon hanya boleh berisi 8 sampai 15 digit angka.',
         ]);
 
         $user->update($validated);

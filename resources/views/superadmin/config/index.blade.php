@@ -51,17 +51,25 @@
                         <div class="grid grid-cols-2 gap-6">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Nomor WhatsApp *</label>
-                                <input type="text" name="whatsapp_phone" value="{{ $whatsappPhone }}" required 
+                                <input type="tel" name="whatsapp_phone" value="{{ old('whatsapp_phone', $whatsappPhone) }}" required
+                                    inputmode="numeric" autocomplete="tel" pattern="628[0-9]{7,12}" maxlength="15"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                     placeholder="628123456789">
                                 <p class="text-xs text-gray-500 mt-1">Format: 628xxx (tanpa + atau 0)</p>
+                                @error('whatsapp_phone')
+                                    <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">API Key Fonnte *</label>
-                                <input type="text" name="whatsapp_api_key" value="{{ $whatsappApiKey }}" required 
+                                <input type="text" name="whatsapp_api_key" value="{{ old('whatsapp_api_key', $whatsappApiKey) }}" required
                                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                     placeholder="Masukkan API Key dari fonnte.com">
                                 <p class="text-xs text-gray-500 mt-1">Dapatkan di <a href="https://fonnte.com" target="_blank" class="text-blue-600 hover:underline">fonnte.com</a></p>
+                                @error('whatsapp_api_key')
+                                    <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
                         <div class="mt-4">

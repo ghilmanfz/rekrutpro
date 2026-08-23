@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 class Application extends Model
 {
@@ -93,13 +94,62 @@ class Application extends Model
         return is_array($this->candidate_snapshot) ? $this->candidate_snapshot : [];
     }
 
-    protected function decodeProfileEntries($value): array
+    protected function normalizeEducationEntries($value, array $snapshot = []): array
     {
         if (is_string($value)) {
-            $value = json_decode($value, true) ?? [];
+            $decoded = json_decode($value, true);
+            if (is_array($decoded)) {
+                $value = $decoded;
+            } elseif (filled($value)) {
+                return [[
+                    'degree' => $value,
+                    'major' => $snapshot['study_program'] ?? null,
+                    'institution' => null,
+                    'year' => null,
+                ]];
+            }
         }
 
-        return is_array($value) ? $value : [];
+        if (! is_array($value) || $value === []) {
+            return [];
+        }
+
+        if (! array_is_list($value)) {
+            return [$value];
+        }
+
+        return collect($value)
+            ->map(fn ($entry) => is_array($entry) ? $entry : ['degree' => $entry])
+            ->all();
+    }
+
+    protected function normalizeExperienceEntries($value, ?string $fallbackDuration = null): array
+    {
+        if (is_string($value)) {
+            $decoded = json_decode($value, true);
+            if (is_array($decoded)) {
+                $value = $decoded;
+            } elseif (filled($value)) {
+                return [[
+                    'position' => $value,
+                    'description' => $value,
+                    'company' => null,
+                    'duration' => $fallbackDuration,
+                ]];
+            }
+        }
+
+        if (! is_array($value) || $value === []) {
+            return [];
+        }
+
+        if (! array_is_list($value)) {
+            return [$value];
+        }
+
+        return collect($value)
+            ->map(fn ($entry) => is_array($entry) ? $entry : ['description' => $entry])
+            ->all();
     }
     
     public function getCandidateNameAttribute()
@@ -129,7 +179,7 @@ class Application extends Model
     public function getCandidateBirthDateAttribute()
     {
         $snapshot = $this->getSnapshotData();
-        return $snapshot['birth_date'] ?? null;
+        return $snapshot['birth_date'] ?? $snapshot['date_of_birth'] ?? null;
     }
 
     public function getCandidateGenderAttribute()
@@ -141,13 +191,20 @@ class Application extends Model
     public function getCandidateEducationAttribute()
     {
         $snapshot = $this->getSnapshotData();
-        return $snapshot['education'] ?? [];
+        $education = $snapshot['education'] ?? $snapshot['education_level'] ?? null;
+
+        return $this->normalizeEducationEntries($education, $snapshot);
     }
 
     public function getCandidateExperienceAttribute()
     {
         $snapshot = $this->getSnapshotData();
-        return $snapshot['experience'] ?? [];
+        $experience = $snapshot['experience'] ?? $snapshot['experience_description'] ?? null;
+
+        return $this->normalizeExperienceEntries(
+            $experience,
+            $snapshot['experience_level'] ?? null
+        );
     }
 
     public function getCandidateProfilePhotoAttribute()
@@ -159,12 +216,27 @@ class Application extends Model
 
     public function getEducationLevelAttribute()
     {
-        return $this->getSnapshotData()['education_level'] ?? null;
+        $snapshot = $this->getSnapshotData();
+
+        return $snapshot['education_level']
+            ?? data_get($this->normalizeEducationEntries($snapshot['education'] ?? null, $snapshot), '0.degree');
+    }
+
+    public function getStudyProgramAttribute()
+    {
+        $snapshot = $this->getSnapshotData();
+
+        return $snapshot['study_program']
+            ?? $snapshot['program_studi']
+            ?? data_get($this->normalizeEducationEntries($snapshot['education'] ?? null, $snapshot), '0.major');
     }
 
     public function getExperienceLevelAttribute()
     {
-        return $this->getSnapshotData()['experience_level'] ?? null;
+        $snapshot = $this->getSnapshotData();
+
+        return $snapshot['experience_level']
+            ?? data_get($this->normalizeExperienceEntries($snapshot['experience'] ?? null), '0.duration');
     }
 
     public function getExpectedSalaryAttribute()
@@ -177,29 +249,80 @@ class Application extends Model
         return $this->getSnapshotData()['availability'] ?? null;
     }
 
+    public function getSnapshotAtAttribute()
+    {
+        return $this->getSnapshotData()['snapshot_at'] ?? $this->created_at;
+    }
+
+    public function getSkillsAttribute()
+    {
+        return $this->getSnapshotData()['skills'] ?? null;
+    }
+
+    public function getCvPathAttribute()
+    {
+        return $this->cv_file;
+    }
+
+    public function getPortfolioPathAttribute()
+    {
+        return $this->portfolio_file;
+    }
+
+    public function getEducationAttribute()
+    {
+        return $this->education_level;
+    }
+
+    public function getExperienceAttribute()
+    {
+        return $this->experience_level;
+    }
+
+    public function getPhoneAttribute()
+    {
+        return $this->candidate_phone;
+    }
+
+    public function hasStoredCv(): bool
+    {
+        return filled($this->cv_file)
+            && Storage::disk('public')->exists($this->cv_file);
+    }
+
+    public function hasStoredPortfolio(): bool
+    {
+        return filled($this->portfolio_file)
+            && Storage::disk('public')->exists($this->portfolio_file);
+    }
+
+    public function getCandidateExperienceDescriptionAttribute()
+    {
+        $snapshot = $this->getSnapshotData();
+
+        return $snapshot['experience_description']
+            ?? data_get($this->candidate_experience, '0.description')
+            ?? data_get($this->candidate_experience, '0.position');
+    }
+
     public function getCurrentCandidateAddressAttribute()
     {
-        $currentAddress = $this->candidate->address ?? null;
-
-        return filled($currentAddress) ? $currentAddress : $this->candidate_address;
+        return $this->candidate?->address;
     }
 
     public function getCurrentCandidateAddressChangedAttribute(): bool
     {
-        $currentAddress = $this->candidate->address ?? null;
-
-        return filled($currentAddress) && $this->candidate_address !== $currentAddress;
+        return $this->candidate_address !== $this->candidate?->address;
     }
 
     public function getCurrentCandidateBirthDateAttribute()
     {
-        return $this->candidate->date_of_birth?->toDateString() ?: $this->candidate_birth_date;
+        return $this->candidate?->date_of_birth?->toDateString();
     }
 
     public function getCurrentCandidateBirthDateChangedAttribute(): bool
     {
-        return $this->candidate->date_of_birth !== null
-            && $this->candidate_birth_date !== $this->candidate->date_of_birth?->toDateString();
+        return $this->candidate_birth_date !== $this->candidate?->date_of_birth?->toDateString();
     }
 
     public function getCurrentCandidateGenderAttribute()
@@ -218,20 +341,22 @@ class Application extends Model
 
     public function getCurrentCandidateEducationAttribute(): array
     {
-        $currentEducation = $this->decodeProfileEntries($this->candidate->education ?? []);
+        if (! filled($this->candidate?->education)) {
+            return [];
+        }
 
-        return count($currentEducation) > 0
-            ? $currentEducation
-            : $this->decodeProfileEntries($this->candidate_education);
+        return $this->normalizeEducationEntries($this->candidate->education, [
+            'study_program' => $this->candidate->study_program,
+        ]);
     }
 
     public function getCurrentCandidateExperienceAttribute(): array
     {
-        $currentExperience = $this->decodeProfileEntries($this->candidate->experience ?? []);
+        if (! filled($this->candidate?->experience)) {
+            return [];
+        }
 
-        return count($currentExperience) > 0
-            ? $currentExperience
-            : $this->decodeProfileEntries($this->candidate_experience);
+        return $this->normalizeExperienceEntries($this->candidate->experience);
     }
 
     
@@ -239,22 +364,22 @@ class Application extends Model
 
     public function hasProfileChangedSinceApply()
     {
-        if (!$this->candidate_snapshot) {
-            return false;
-        }
-
-        $snapshot = $this->candidate_snapshot;
-        
-         
-        if (!is_array($snapshot)) {
-            return false;
-        }
-        
+        $snapshot = $this->getSnapshotData();
         $current = $this->candidate;
 
-        return ($snapshot['email'] ?? null) !== $current->email ||
-               ($snapshot['phone'] ?? null) !== $current->phone ||
-               ($snapshot['full_name'] ?? null) !== $current->name;
+        if ($snapshot === [] || ! $current) {
+            return false;
+        }
+
+        return ($snapshot['full_name'] ?? null) !== $current->name
+            || ($snapshot['email'] ?? null) !== $current->email
+            || ($snapshot['phone'] ?? null) !== $current->phone
+            || ($snapshot['address'] ?? null) !== $current->address
+            || $this->candidate_birth_date !== $current->date_of_birth?->toDateString()
+            || $this->education_level !== $current->education
+            || $this->study_program !== $current->study_program
+            || $this->candidate_experience_description !== $current->experience
+            || ($snapshot['skills'] ?? null) !== $current->skills;
     }
 
     public function scopeScreeningPassed($query)

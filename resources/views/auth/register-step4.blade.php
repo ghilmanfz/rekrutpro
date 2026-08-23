@@ -41,37 +41,55 @@
 
                 <form method="POST" action="{{ route('register.step4.process') }}">
                     @csrf
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Lahir *</label>
+                        <input type="date" name="date_of_birth" value="{{ old('date_of_birth', auth()->user()->date_of_birth?->toDateString()) }}"
+                               max="{{ now()->toDateString() }}" required
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        @error('date_of_birth')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+                    </div>
                     
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Pendidikan Terakhir *</label>
                         <select name="education" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             <option value="">Pilih Pendidikan</option>
-                            <option value="SMA/SMK">SMA/SMK</option>
-                            <option value="D3">D3</option>
-                            <option value="S1">S1</option>
-                            <option value="S2">S2</option>
-                            <option value="S3">S3</option>
+                            <option value="SMA/SMK" @selected(old('education', auth()->user()->education) === 'SMA/SMK')>SMA/SMK</option>
+                            <option value="D3" @selected(old('education', auth()->user()->education) === 'D3')>D3</option>
+                            <option value="S1" @selected(old('education', auth()->user()->education) === 'S1')>S1</option>
+                            <option value="S2" @selected(old('education', auth()->user()->education) === 'S2')>S2</option>
+                            <option value="S3" @selected(old('education', auth()->user()->education) === 'S3')>S3</option>
                         </select>
                         @error('education')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
 
                     <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Program Studi / Jurusan *</label>
+                        <input type="text" name="study_program" value="{{ old('study_program', auth()->user()->study_program) }}"
+                               maxlength="255" required placeholder="Contoh: Teknik Informatika, RPL, IPA"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        @error('study_program')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+                    </div>
+
+                    <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Alamat Lengkap *</label>
-                        <textarea name="address" rows="3" required placeholder="Masukkan alamat lengkap Anda..."
-                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">{{ old('address') }}</textarea>
+                        <textarea name="address" rows="3" maxlength="1000" required placeholder="Masukkan alamat lengkap Anda..."
+                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">{{ old('address', auth()->user()->address) }}</textarea>
                         @error('address')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
 
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Pengalaman Kerja</label>
-                        <textarea name="experience" rows="3" placeholder="Jelaskan pengalaman kerja Anda (opsional)..."
-                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">{{ old('experience') }}</textarea>
+                        <textarea name="experience" rows="3" maxlength="5000" placeholder="Jelaskan pengalaman kerja Anda (opsional)..."
+                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">{{ old('experience', auth()->user()->experience) }}</textarea>
+                        @error('experience')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
 
                     <div class="mb-6">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Keahlian/Skills</label>
-                        <textarea name="skills" rows="2" placeholder="Contoh: PHP, Laravel, JavaScript, Communication (opsional)..."
-                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">{{ old('skills') }}</textarea>
+                        <textarea name="skills" rows="2" maxlength="2000" placeholder="Contoh: PHP, Laravel, JavaScript, Communication (opsional)..."
+                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">{{ old('skills', auth()->user()->skills) }}</textarea>
+                        @error('skills')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
 
                     <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 font-semibold">

@@ -108,8 +108,10 @@ class ConfigurationController extends Controller
     public function updateWhatsAppConfig(Request $request)
     {
         $validated = $request->validate([
-            'whatsapp_phone' => 'required|string|max:20',
+            'whatsapp_phone' => 'required|string|max:15|regex:/^628[0-9]{7,12}$/',
             'whatsapp_api_key' => 'required|string|max:255',
+        ], [
+            'whatsapp_phone.regex' => 'Nomor WhatsApp harus berupa angka dengan format 628xxx.',
         ]);
 
         SystemConfig::set('whatsapp_phone', $validated['whatsapp_phone'], 'string', 'Nomor WhatsApp untuk Fonnte API');

@@ -9,7 +9,9 @@ use App\Models\AuditLog;
 use App\Services\FileUploadService;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class ApplicationController extends Controller
 {
@@ -55,7 +57,19 @@ class ApplicationController extends Controller
                 ->with('info', 'Anda sudah melamar untuk posisi ini.');
         }
 
-        return view('candidate.applications.create', compact('job'));
+        $user = auth()->user();
+        $missingProfileFields = $this->missingRequiredProfileFields($user);
+
+        if ($missingProfileFields !== []) {
+            return redirect()
+                ->route('candidate.profile')
+                ->with('candidate_apply_after_profile_job_id', $job->id)
+                ->with('error', 'Lengkapi profil berikut sebelum melamar: '.implode(', ', $missingProfileFields).'.');
+        }
+
+        $hasProfileCv = $this->hasUsableProfileCv($user);
+
+        return view('candidate.applications.create', compact('job', 'hasProfileCv'));
     }
 
     
@@ -63,18 +77,37 @@ class ApplicationController extends Controller
 
     public function store(Request $request)
     {
-         
-         
+        $user = auth()->user();
+        $missingProfileFields = $this->missingRequiredProfileFields($user);
+
+        if ($missingProfileFields !== []) {
+            $activeJobId = JobPosting::query()
+                ->whereKey($request->input('job_posting_id'))
+                ->where('status', 'active')
+                ->value('id');
+
+            $redirect = redirect()
+                ->route('candidate.profile')
+                ->with('error', 'Lengkapi profil berikut sebelum melamar: '.implode(', ', $missingProfileFields).'.');
+
+            if ($activeJobId) {
+                $redirect->with('candidate_apply_after_profile_job_id', $activeJobId);
+            }
+
+            return $redirect;
+        }
+
+        $hasProfileCv = $this->hasUsableProfileCv($user);
+
         $validated = $request->validate([
             'job_posting_id' => 'required|exists:job_postings,id',
-            'cv' => 'required|file|mimes:pdf,doc,docx|max:5120',
+            'cv' => [$hasProfileCv ? 'nullable' : 'required', 'file', 'mimes:pdf,doc,docx', 'max:5120'],
             'portfolio' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
-            'cover_letter' => 'nullable|string',
-            'education' => 'required|string|max:50',
-            'experience' => 'required|string|max:50',
-            'expected_salary' => 'required|numeric|min:0',
-            'availability' => 'required|string|max:50',
+            'experience' => ['required', Rule::in(['Fresh Graduate', '< 1 Tahun', '1-3 Tahun', '3-5 Tahun', '> 5 Tahun'])],
+            'expected_salary' => 'required|numeric|min:0|max:9999999999',
+            'availability' => ['required', Rule::in(['Segera', '1 Bulan', '2 Bulan', '3 Bulan'])],
             'agree_terms' => 'required|accepted',
+            'cover_letter' => 'nullable|string|max:255',
         ]);
 
          
@@ -88,14 +121,14 @@ class ApplicationController extends Controller
                 ->with('info', 'Anda sudah melamar untuk posisi ini.');
         }
 
-        $user = auth()->user();
-
         try {
-             
-            $cvPath = $this->fileUploadService->uploadCV(
-                $request->file('cv'),
-                $user->full_name ?? $user->name
-            );
+            $cvPath = $user->cv_path;
+            if ($request->hasFile('cv')) {
+                $cvPath = $this->fileUploadService->uploadCV(
+                    $request->file('cv'),
+                    $user->full_name ?? $user->name
+                );
+            }
 
              
             $portfolioPath = null;
@@ -126,11 +159,27 @@ class ApplicationController extends Controller
             'address' => $user->address ?? '-',
             'birth_date' => $user->date_of_birth?->toDateString(),
             'gender' => $user->gender ?? '-',
-            'education' => $user->education ?? [],
-            'experience' => $user->experience ?? [],
+            'education' => [[
+                'degree' => $user->education,
+                'major' => $user->study_program,
+                'institution' => null,
+                'year' => null,
+            ]],
+            'experience' => filled($user->experience) ? [[
+                'position' => $user->experience,
+                'description' => $user->experience,
+                'company' => null,
+                'duration' => $validated['experience'],
+            ]] : [],
+            'experience_description' => $user->experience,
+            'skills' => $user->skills,
+            'linkedin_url' => $user->linkedin_url,
+            'github_url' => $user->github_url,
+            'portfolio_url' => $user->portfolio_url,
             'profile_photo' => $user->profile_photo ?? null,
 
-            'education_level' => $validated['education'],
+            'education_level' => $user->education,
+            'study_program' => $user->study_program,
             'experience_level' => $validated['experience'],
             'expected_salary' => $validated['expected_salary'],
             'availability' => $validated['availability'],
@@ -147,9 +196,13 @@ class ApplicationController extends Controller
                 'candidate_snapshot' => $candidateSnapshot,  
                 'cv_file' => $cvPath,
                 'portfolio_file' => $portfolioPath,
-                'cover_letter' => $validated['cover_letter'],
+                'cover_letter' => $validated['cover_letter'] ?? null,
                 'status' => 'submitted',
             ]);
+
+            if (! $hasProfileCv && $request->hasFile('cv')) {
+                $user->update(['cv_path' => $cvPath]);
+            }
 
              
             AuditLog::create([
@@ -211,6 +264,30 @@ class ApplicationController extends Controller
             ->findOrFail($id);
 
         return view('candidate.applications.show', compact('application'));
+    }
+
+    private function missingRequiredProfileFields($user): array
+    {
+        $requiredFields = [
+            'name' => 'Nama Lengkap',
+            'email' => 'Email',
+            'phone' => 'Nomor WhatsApp',
+            'date_of_birth' => 'Tanggal Lahir',
+            'address' => 'Alamat Lengkap',
+            'education' => 'Pendidikan Terakhir',
+            'study_program' => 'Program Studi / Jurusan',
+        ];
+
+        return collect($requiredFields)
+            ->filter(fn ($label, $field) => blank($user->{$field}))
+            ->values()
+            ->all();
+    }
+
+    private function hasUsableProfileCv($user): bool
+    {
+        return filled($user->cv_path)
+            && Storage::disk('public')->exists($user->cv_path);
     }
 
     

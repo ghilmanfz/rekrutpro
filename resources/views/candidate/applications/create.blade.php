@@ -12,6 +12,12 @@
             <p class="text-gray-600 mt-2">{{ $job->title }} - {{ $job->division->name }}</p>
         </div>
 
+        @if(session('error'))
+            <div class="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-800" role="alert">
+                {{ session('error') }}
+            </div>
+        @endif
+
          
         <form action="{{ route('candidate.applications.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
             @csrf
@@ -20,100 +26,110 @@
              
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <h2 class="text-lg font-semibold text-gray-900 mb-4">Informasi Pribadi</h2>
+                <p class="text-sm text-gray-600 mb-5">
+                    Data ini diambil dari profil Anda. Jika perlu diperbarui, silakan
+                    <a href="{{ route('candidate.profile') }}" class="text-blue-600 hover:text-blue-800 font-medium">ubah profil</a>
+                    sebelum mengirim lamaran.
+                </p>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Nama Lengkap <span class="text-red-500">*</span>
+                            Nama Lengkap
                         </label>
                         <input 
                             type="text" 
-                            name="full_name" 
-                            value="{{ old('full_name', auth()->user()->name) }}"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('full_name') border-red-500 @enderror"
-                            required
+                            value="{{ auth()->user()->name ?: '-' }}"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 cursor-not-allowed"
+                            disabled
+                            aria-disabled="true"
                         >
-                        @error('full_name')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Email <span class="text-red-500">*</span>
+                            Email
                         </label>
                         <input 
                             type="email" 
-                            name="email" 
-                            value="{{ old('email', auth()->user()->email) }}"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('email') border-red-500 @enderror"
-                            required
+                            value="{{ auth()->user()->email ?: '-' }}"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 cursor-not-allowed"
+                            disabled
+                            aria-disabled="true"
                         >
-                        @error('email')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Nomor Telepon <span class="text-red-500">*</span>
+                            Nomor WhatsApp
                         </label>
                         <input 
                             type="tel" 
-                            name="phone" 
-                            value="{{ old('phone', auth()->user()->phone) }}"
-                            placeholder="08xxxxxxxxxx"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('phone') border-red-500 @enderror"
-                            required
+                            value="{{ auth()->user()->phone ?: '-' }}"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 cursor-not-allowed"
+                            disabled
+                            aria-disabled="true"
                         >
-                        @error('phone')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Tanggal Lahir
+                        </label>
+                        <input
+                            type="text"
+                            value="{{ auth()->user()->date_of_birth?->format('d/m/Y') ?: '-' }}"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 cursor-not-allowed"
+                            disabled
+                            aria-disabled="true"
+                        >
                     </div>
 
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Alamat Lengkap <span class="text-red-500">*</span>
+                            Alamat Lengkap
                         </label>
                         <textarea 
-                            name="address" 
                             rows="3"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('address') border-red-500 @enderror"
-                            required
-                        >{{ old('address', auth()->user()->address) }}</textarea>
-                        @error('address')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 cursor-not-allowed"
+                            disabled
+                            aria-disabled="true"
+                        >{{ auth()->user()->address ?: '-' }}</textarea>
                     </div>
                 </div>
             </div>
 
              
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h2 class="text-lg font-semibold text-gray-900 mb-4">Pendidikan & Pengalaman</h2>
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Pendidikan & Informasi Lamaran</h2>
+                <p class="text-sm text-gray-600 mb-5">
+                    Pendidikan diambil otomatis dari profil. Informasi lainnya dapat berbeda untuk setiap posisi yang dilamar.
+                </p>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Pendidikan Terakhir <span class="text-red-500">*</span>
+                            Pendidikan Terakhir
                         </label>
-                        <select 
-                            name="education" 
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            required
-                        >
-                            <option value="">Pilih Pendidikan</option>
-                            <option value="SMA/SMK" {{ old('education') == 'SMA/SMK' ? 'selected' : '' }}>SMA/SMK</option>
-                            <option value="D3" {{ old('education') == 'D3' ? 'selected' : '' }}>D3</option>
-                            <option value="S1" {{ old('education') == 'S1' ? 'selected' : '' }}>S1</option>
-                            <option value="S2" {{ old('education') == 'S2' ? 'selected' : '' }}>S2</option>
-                            <option value="S3" {{ old('education') == 'S3' ? 'selected' : '' }}>S3</option>
-                        </select>
+                        <input type="text"
+                               value="{{ auth()->user()->education }}"
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 cursor-not-allowed"
+                               disabled aria-disabled="true">
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Pengalaman Kerja <span class="text-red-500">*</span>
+                            Program Studi / Jurusan
+                        </label>
+                        <input type="text"
+                               value="{{ auth()->user()->study_program }}"
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 cursor-not-allowed"
+                               disabled aria-disabled="true">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Lama Pengalaman yang Relevan <span class="text-red-500">*</span>
                         </label>
                         <select 
                             name="experience" 
@@ -127,6 +143,10 @@
                             <option value="3-5 Tahun" {{ old('experience') == '3-5 Tahun' ? 'selected' : '' }}>3-5 Tahun</option>
                             <option value="> 5 Tahun" {{ old('experience') == '> 5 Tahun' ? 'selected' : '' }}>> 5 Tahun</option>
                         </select>
+                        @error('experience')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                        <p class="mt-2 text-xs text-gray-500">Pilih pengalaman yang relevan dengan posisi ini, bukan mengisi ulang riwayat pada profil.</p>
                     </div>
 
                     <div>
@@ -138,9 +158,13 @@
                             name="expected_salary" 
                             value="{{ old('expected_salary') }}"
                             min="0"
+                            max="9999999999"
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             required
                         >
+                        @error('expected_salary')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div>
@@ -158,6 +182,9 @@
                             <option value="2 Bulan" {{ old('availability') == '2 Bulan' ? 'selected' : '' }}>2 Bulan</option>
                             <option value="3 Bulan" {{ old('availability') == '3 Bulan' ? 'selected' : '' }}>3 Bulan</option>
                         </select>
+                        @error('availability')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
             </div>
@@ -169,16 +196,29 @@
                 <div class="space-y-6">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Upload CV/Resume <span class="text-red-500">*</span>
+                            {{ $hasProfileCv ? 'CV untuk Lamaran Ini' : 'Upload CV/Resume' }}
+                            @unless($hasProfileCv)<span class="text-red-500">*</span>@endunless
                         </label>
+                        @if($hasProfileCv)
+                            <div class="mb-3 flex items-center justify-between gap-4 rounded-lg border border-green-200 bg-green-50 p-3">
+                                <div>
+                                    <p class="text-sm font-medium text-green-900">CV profil akan digunakan otomatis</p>
+                                    <p class="text-xs text-green-700">{{ basename(auth()->user()->cv_path) }}</p>
+                                </div>
+                                <a href="{{ Storage::url(auth()->user()->cv_path) }}" target="_blank"
+                                   class="text-sm font-medium text-green-700 hover:text-green-900">Lihat CV</a>
+                            </div>
+                        @endif
                         <input 
                             type="file" 
                             name="cv" 
                             accept=".pdf,.doc,.docx"
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('cv') border-red-500 @enderror"
-                            required
+                            @required(!$hasProfileCv)
                         >
-                        <p class="mt-2 text-sm text-gray-500">Format: PDF, DOC, DOCX (Max: 5MB)</p>
+                        <p class="mt-2 text-sm text-gray-500">
+                            {{ $hasProfileCv ? 'Opsional: pilih file bila ingin memakai CV berbeda khusus untuk lamaran ini.' : 'Format: PDF, DOC, DOCX (Max: 5MB)' }}
+                        </p>
                         @error('cv')
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -195,6 +235,9 @@
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         >
                         <p class="mt-2 text-sm text-gray-500">Format: PDF, DOC, DOCX (Max: 5MB)</p>
+                        @error('portfolio')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
             </div>
@@ -210,9 +253,14 @@
                     <textarea 
                         name="cover_letter" 
                         rows="6"
+                        maxlength="255"
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         placeholder="Tulis cover letter Anda di sini..."
                     >{{ old('cover_letter') }}</textarea>
+                    <p class="mt-2 text-sm text-gray-500">Maksimal 255 karakter.</p>
+                    @error('cover_letter')
+                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
 
@@ -224,6 +272,7 @@
                         type="checkbox" 
                         name="agree_terms"
                         value="1"
+                        @checked(old('agree_terms'))
                         class="w-4 h-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500 mt-1"
                         required
                     >
@@ -232,6 +281,9 @@
                         Saya memahami bahwa memberikan informasi palsu dapat mengakibatkan pembatalan lamaran.
                     </label>
                 </div>
+                @error('agree_terms')
+                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                @enderror
             </div>
 
              

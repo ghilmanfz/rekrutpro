@@ -8,6 +8,13 @@
         </div>
     @endif
 
+    @if(session('error'))
+        <div class="mb-6 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg flex items-start gap-2" role="alert">
+            <i class="fas fa-exclamation-circle mt-0.5"></i>
+            <span>{{ session('error') }}</span>
+        </div>
+    @endif
+
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
          
         <div class="lg:col-span-1">
@@ -85,6 +92,10 @@
                 @csrf
                 @method('PUT')
 
+                @if(old('return_job_id', session('candidate_apply_after_profile_job_id')))
+                    <input type="hidden" name="return_job_id" value="{{ old('return_job_id', session('candidate_apply_after_profile_job_id')) }}">
+                @endif
+
                  
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
@@ -118,11 +129,17 @@
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Nomor Telepon</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nomor WhatsApp *</label>
                             <input type="tel" 
                                    name="phone" 
                                    value="{{ old('phone', $user->phone) }}"
-                                   placeholder="+62 812 3456 7890"
+                                   placeholder="6281234567890 atau 081234567890"
+                                   inputmode="numeric"
+                                   autocomplete="tel"
+                                   pattern="628[0-9]{7,12}|08[0-9]{8,11}"
+                                   maxlength="15"
+                                   oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                   required
                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             @error('phone')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -130,17 +147,24 @@
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Lahir</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Lahir *</label>
                             <input type="date" 
                                    name="date_of_birth" 
-                                   value="{{ old('date_of_birth', $user->date_of_birth) }}"
+                                   value="{{ old('date_of_birth', $user->date_of_birth?->toDateString()) }}"
+                                   max="{{ now()->toDateString() }}"
+                                   required
                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            @error('date_of_birth')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Alamat Lengkap</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Alamat Lengkap *</label>
                             <textarea name="address" 
                                       rows="3"
+                                      maxlength="1000"
+                                      required
                                       placeholder="Masukkan alamat lengkap Anda..."
                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">{{ old('address', $user->address) }}</textarea>
                             @error('address')
@@ -158,9 +182,10 @@
                     </h3>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Pendidikan Terakhir</label>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Pendidikan Terakhir *</label>
                             <select name="education" 
+                                    required
                                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                 <option value="">Pilih Pendidikan</option>
                                 <option value="SMA/SMK" {{ old('education', $user->education) == 'SMA/SMK' ? 'selected' : '' }}>SMA/SMK</option>
@@ -169,6 +194,23 @@
                                 <option value="S2" {{ old('education', $user->education) == 'S2' ? 'selected' : '' }}>S2</option>
                                 <option value="S3" {{ old('education', $user->education) == 'S3' ? 'selected' : '' }}>S3</option>
                             </select>
+                            @error('education')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Program Studi / Jurusan *</label>
+                            <input type="text"
+                                   name="study_program"
+                                   value="{{ old('study_program', $user->study_program) }}"
+                                   maxlength="255"
+                                   placeholder="Contoh: Teknik Informatika, RPL, IPA"
+                                   required
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            @error('study_program')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
                     </div>
                 </div>
@@ -185,20 +227,62 @@
                             <label class="block text-sm font-medium text-gray-700 mb-2">Pengalaman Kerja</label>
                             <textarea name="experience" 
                                       rows="4"
+                                      maxlength="5000"
                                       placeholder="Jelaskan pengalaman kerja Anda (posisi, perusahaan, durasi, tanggung jawab)..."
                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">{{ old('experience', $user->experience) }}</textarea>
                             <p class="text-xs text-gray-500 mt-1">Pisahkan setiap pengalaman dengan baris baru</p>
+                            @error('experience')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Keahlian/Skills</label>
                             <textarea name="skills" 
                                       rows="3"
+                                      maxlength="2000"
                                       placeholder="Contoh: PHP, Laravel, JavaScript, React, MySQL, Communication, Leadership..."
                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">{{ old('skills', $user->skills) }}</textarea>
                             <p class="text-xs text-gray-500 mt-1">Pisahkan skills dengan koma</p>
+                            @error('skills')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
                     </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                        <i class="fas fa-file-alt text-blue-600"></i>
+                        Curriculum Vitae
+                    </h3>
+
+                    @php
+                        $hasProfileCv = filled($user->cv_path) && Storage::disk('public')->exists($user->cv_path);
+                    @endphp
+
+                    @if($hasProfileCv)
+                        <div class="mb-4 flex items-center justify-between gap-4 rounded-lg border border-green-200 bg-green-50 p-4">
+                            <div>
+                                <p class="font-medium text-green-900">CV profil tersimpan</p>
+                                <p class="text-sm text-green-700">{{ basename($user->cv_path) }}</p>
+                            </div>
+                            <a href="{{ Storage::url($user->cv_path) }}" target="_blank"
+                               class="text-sm font-medium text-green-700 hover:text-green-900">Lihat CV</a>
+                        </div>
+                    @endif
+
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        {{ $hasProfileCv ? 'Ganti CV (Opsional)' : 'Upload CV' }}
+                    </label>
+                    <input type="file"
+                           name="cv"
+                           accept=".pdf,.doc,.docx"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <p class="text-xs text-gray-500 mt-1">Format PDF, DOC, atau DOCX. Maksimal 5MB.</p>
+                    @error('cv')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                  
@@ -219,8 +303,12 @@
                                        name="linkedin_url" 
                                        value="{{ old('linkedin_url', $user->linkedin_url) }}"
                                        placeholder="https://linkedin.com/in/username"
+                                       maxlength="255"
                                        class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             </div>
+                            @error('linkedin_url')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div>
@@ -233,8 +321,12 @@
                                        name="github_url" 
                                        value="{{ old('github_url', $user->github_url) }}"
                                        placeholder="https://github.com/username"
+                                       maxlength="255"
                                        class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             </div>
+                            @error('github_url')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div class="md:col-span-2">
@@ -247,8 +339,12 @@
                                        name="portfolio_url" 
                                        value="{{ old('portfolio_url', $user->portfolio_url) }}"
                                        placeholder="https://yourportfolio.com"
+                                       maxlength="255"
                                        class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             </div>
+                            @error('portfolio_url')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
                     </div>
                 </div>

@@ -10,6 +10,18 @@
             </a>
         </div>
 
+        @foreach([
+            'success' => 'border-green-200 bg-green-50 text-green-800',
+            'info' => 'border-blue-200 bg-blue-50 text-blue-800',
+            'error' => 'border-red-200 bg-red-50 text-red-800',
+        ] as $flashKey => $flashClasses)
+            @if(session($flashKey))
+                <div class="mb-6 rounded-lg border px-4 py-3 {{ $flashClasses }}" role="alert">
+                    {{ session($flashKey) }}
+                </div>
+            @endif
+        @endforeach
+
          
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
             <div class="flex items-start justify-between">
@@ -59,19 +71,25 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <p class="text-sm text-gray-600">Nama Lengkap</p>
-                            <p class="font-medium text-gray-900 mt-1">{{ $application->candidate->name }}</p>
+                            <p class="font-medium text-gray-900 mt-1">{{ $application->candidate_name }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-600">Email</p>
-                            <p class="font-medium text-gray-900 mt-1">{{ $application->candidate->email }}</p>
+                            <p class="font-medium text-gray-900 mt-1">{{ $application->candidate_email }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-600">Telepon</p>
-                            <p class="font-medium text-gray-900 mt-1">{{ $application->candidate->phone }}</p>
+                            <p class="font-medium text-gray-900 mt-1">{{ $application->candidate_phone }}</p>
                         </div>
                         <div>
+                            <p class="text-sm text-gray-600">Tanggal Lahir</p>
+                            <p class="font-medium text-gray-900 mt-1">
+                                {{ $application->candidate_birth_date ? \Carbon\Carbon::parse($application->candidate_birth_date)->format('d/m/Y') : '-' }}
+                            </p>
+                        </div>
+                        <div class="col-span-2">
                             <p class="text-sm text-gray-600">Alamat</p>
-                            <p class="font-medium text-gray-900 mt-1">{{ $application->candidate->address }}</p>
+                            <p class="font-medium text-gray-900 mt-1">{{ $application->candidate_address }}</p>
                         </div>
                     </div>
                 </div>
@@ -81,16 +99,22 @@
                     <h2 class="text-lg font-semibold text-gray-900 mb-4">Pendidikan & Pengalaman</h2>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <p class="text-sm text-gray-600">Pendidikan</p>
+                            <p class="text-sm text-gray-600">Pendidikan Terakhir</p>
                             <p class="font-medium text-gray-900 mt-1">{{ $application->education_level ?? '-' }}</p>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-600">Pengalaman</p>
+                            <p class="text-sm text-gray-600">Program Studi / Jurusan</p>
+                            <p class="font-medium text-gray-900 mt-1">{{ $application->study_program ?? '-' }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Pengalaman Relevan</p>
                             <p class="font-medium text-gray-900 mt-1">{{ $application->experience_level ?? '-' }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-600">Ekspektasi Gaji</p>
-                            <p class="font-medium text-gray-900 mt-1">Rp {{ number_format($application->expected_salary ?? 0, 0, ',', '.') }}</p>
+                            <p class="font-medium text-gray-900 mt-1">
+                                {{ $application->expected_salary !== null ? 'Rp '.number_format($application->expected_salary, 0, ',', '.') : '-' }}
+                            </p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-600">Ketersediaan</p>
@@ -111,7 +135,7 @@
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                     <h2 class="text-lg font-semibold text-gray-900 mb-4">Dokumen</h2>
                     <div class="space-y-3">
-                        @if($application->cv_path)
+                        @if($application->hasStoredCv())
                             <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                                 <div class="flex items-center">
                                     <svg class="w-8 h-8 text-red-500" fill="currentColor" viewBox="0 0 20 20">
@@ -130,7 +154,7 @@
                             </div>
                         @endif
 
-                        @if($application->portfolio_path)
+                        @if($application->hasStoredPortfolio())
                             <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                                 <div class="flex items-center">
                                     <svg class="w-8 h-8 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
@@ -148,6 +172,10 @@
                                 </a>
                             </div>
                         @endif
+
+                        @unless($application->hasStoredCv() || $application->hasStoredPortfolio())
+                            <p class="text-sm text-gray-500">File dokumen tidak tersedia.</p>
+                        @endunless
                     </div>
                 </div>
 

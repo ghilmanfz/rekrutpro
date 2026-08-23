@@ -29,7 +29,7 @@ class RegisterController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'phone' => 'required|string|max:20|regex:/^628[0-9]{7,12}$/',
+            'phone' => 'required|string|max:15|regex:/^628[0-9]{7,12}$/',
             'password' => 'required|string|min:8|confirmed',
             'agree_terms' => 'required|accepted',
         ], [
@@ -191,19 +191,23 @@ class RegisterController extends Controller
     public function processStep4(Request $request)
     {
         $validated = $request->validate([
-            'address' => 'required|string',
+            'date_of_birth' => 'required|date|before_or_equal:today',
+            'address' => 'required|string|max:1000',
             'education' => 'required|in:SMA/SMK,D3,S1,S2,S3',
-            'experience' => 'nullable|string',
-            'skills' => 'nullable|string',
+            'study_program' => 'required|string|max:255',
+            'experience' => 'nullable|string|max:5000',
+            'skills' => 'nullable|string|max:2000',
         ]);
 
         $user = auth()->user();
         
         $user->update([
+            'date_of_birth' => $validated['date_of_birth'],
             'address' => $validated['address'],
             'education' => $validated['education'],
-            'experience' => $validated['experience'],
-            'skills' => $validated['skills'],
+            'study_program' => $validated['study_program'],
+            'experience' => $validated['experience'] ?? null,
+            'skills' => $validated['skills'] ?? null,
             'registration_step' => 4,
         ]);
 

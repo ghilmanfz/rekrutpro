@@ -255,12 +255,12 @@
             </div>
 
              
-            @if($assessment->interview->application->cv_path || $assessment->interview->application->portfolio_path)
+            @if($assessment->interview->application->hasStoredCv() || $assessment->interview->application->hasStoredPortfolio())
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Dokumen</h3>
                     
                     <div class="space-y-2">
-                        @if($assessment->interview->application->cv_path)
+                        @if($assessment->interview->application->hasStoredCv())
                             <a href="{{ Storage::url($assessment->interview->application->cv_path) }}" 
                                target="_blank"
                                class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
@@ -272,7 +272,7 @@
                             </a>
                         @endif
 
-                        @if($assessment->interview->application->portfolio_path)
+                        @if($assessment->interview->application->hasStoredPortfolio())
                             <a href="{{ Storage::url($assessment->interview->application->portfolio_path) }}" 
                                target="_blank"
                                class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">

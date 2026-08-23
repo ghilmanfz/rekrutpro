@@ -107,10 +107,15 @@
                      
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Nomor WhatsApp *</label>
-                        <input type="text" 
+                        <input type="tel"
                                name="phone" 
                                value="{{ old('phone') }}"
                                placeholder="628123456789"
+                               inputmode="numeric"
+                               autocomplete="tel"
+                               pattern="628[0-9]{7,12}"
+                               maxlength="15"
+                               oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                                required
                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         <p class="text-xs text-gray-500 mt-1">Format: 628xxx (tanpa + atau 0). Kode OTP akan dikirim ke nomor ini.</p>

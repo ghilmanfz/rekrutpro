@@ -148,7 +148,9 @@
 
                  
                 <div class="mt-8 pt-6 border-t border-gray-200">
-                    <p class="text-center text-sm text-gray-600 mb-4">Silakan login atau daftar untuk melamar posisi ini</p>
+                    @guest
+                        <p class="text-center text-sm text-gray-600 mb-4">Silakan login atau daftar untuk melamar posisi ini</p>
+                    @endguest
                     
                     @auth
                         @if(auth()->user()->role->name === 'candidate')
@@ -164,7 +166,7 @@
                             @else
                                 <div class="flex justify-center gap-4">
                                     <a href="{{ route('candidate.applications.create', $job->id) }}" class="px-8 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors">
-                                        Login
+                                        Lamar Sekarang
                                     </a>
                                 </div>
                             @endif
