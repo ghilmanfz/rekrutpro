@@ -17,6 +17,8 @@ use Illuminate\Validation\ValidationException;
 
 class InterviewController extends Controller
 {
+    private const SCHEDULE_CONFLICT_MESSAGE = 'Interviewer sudah memiliki jadwal dengan kandidat lain pada rentang waktu tersebut.';
+
     
 
 
@@ -104,7 +106,8 @@ class InterviewController extends Controller
                 (int) $validated['duration']
             )) {
                 throw ValidationException::withMessages([
-                    'scheduled_at' => 'Interviewer sudah memiliki jadwal dengan kandidat lain pada rentang waktu tersebut.',
+                    'scheduled_at' => self::SCHEDULE_CONFLICT_MESSAGE,
+                    'schedule_conflict' => self::SCHEDULE_CONFLICT_MESSAGE,
                 ]);
             }
 
@@ -126,8 +129,9 @@ class InterviewController extends Controller
          
         $application->load(['candidate', 'jobPosting']);
         $candidate = $application->candidate;
+        $notificationFailed = false;
         if ($candidate && $candidate->phone) {
-            app(NotificationService::class)->sendWhatsApp(
+            $notificationFailed = ! app(NotificationService::class)->sendWhatsApp(
                 'interview_scheduled',
                 $candidate->phone,
                 [
@@ -151,7 +155,13 @@ class InterviewController extends Controller
             );
         }
 
-        return redirect()->back()->with('success', 'Jadwal interview berhasil dibuat.');
+        $redirect = redirect()->back()->with('success', 'Jadwal interview berhasil dibuat.');
+
+        if ($notificationFailed) {
+            $redirect->with('warning', 'Jadwal tersimpan, tetapi notifikasi WhatsApp gagal dikirim. Periksa koneksi perangkat Fonnte.');
+        }
+
+        return $redirect;
     }
 
     
@@ -231,7 +241,8 @@ class InterviewController extends Controller
                     $lockedInterview->id
                 )) {
                     throw ValidationException::withMessages([
-                        'scheduled_at' => 'Interviewer sudah memiliki jadwal dengan kandidat lain pada rentang waktu tersebut.',
+                        'scheduled_at' => self::SCHEDULE_CONFLICT_MESSAGE,
+                        'schedule_conflict' => self::SCHEDULE_CONFLICT_MESSAGE,
                     ]);
                 }
             }

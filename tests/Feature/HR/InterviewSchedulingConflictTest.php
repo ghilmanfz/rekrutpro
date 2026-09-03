@@ -115,7 +115,7 @@ class InterviewSchedulingConflictTest extends TestCase
             $this->schedulePayload($this->secondApplication, $startsAt->copy()->addMinutes(30), 60)
         );
 
-        $response->assertRedirect()->assertSessionHasErrors('scheduled_at');
+        $response->assertRedirect()->assertSessionHasErrors(['scheduled_at', 'schedule_conflict']);
         $this->assertDatabaseCount('interviews', 1);
         $this->assertDatabaseHas('applications', [
             'id' => $this->secondApplication->id,
@@ -123,6 +123,13 @@ class InterviewSchedulingConflictTest extends TestCase
         ]);
         $this->assertDatabaseCount('audit_logs', 0);
         Http::assertNothingSent();
+
+        $this->actingAs($this->hr)
+            ->get(route('hr.applications.show', $this->secondApplication))
+            ->assertOk()
+            ->assertSee('Jadwal Interview Bentrok')
+            ->assertSee('Perbaiki Jadwal')
+            ->assertSee('role="alertdialog"', false);
     }
 
     public function test_same_start_time_for_same_interviewer_is_rejected(): void
@@ -162,7 +169,38 @@ class InterviewSchedulingConflictTest extends TestCase
             'model_type' => Interview::class,
         ]);
         Http::assertSent(fn ($request) => $request->url() === 'https://api.fonnte.com/send'
-            && $request['target'] === '628222222222');
+            && $request['target'] === '628222222222'
+            && $request['connectOnly'] === false);
+    }
+
+    public function test_schedule_is_saved_but_hr_sees_warning_when_fonnte_rejects_notification(): void
+    {
+        Http::fake([
+            'https://api.fonnte.com/send' => Http::response([
+                'status' => false,
+                'reason' => 'device disconnected',
+                'requestid' => 12345,
+            ], 200),
+        ]);
+
+        $startsAt = now()->addDays(2)->startOfHour();
+
+        $response = $this->actingAs($this->hr)->post(
+            route('hr.interviews.store'),
+            $this->schedulePayload($this->secondApplication, $startsAt, 60)
+        );
+
+        $response
+            ->assertRedirect()
+            ->assertSessionHasNoErrors()
+            ->assertSessionHas('success')
+            ->assertSessionHas('warning');
+
+        $this->assertDatabaseHas('applications', [
+            'id' => $this->secondApplication->id,
+            'status' => 'interview_scheduled',
+        ]);
+        $this->assertDatabaseCount('interviews', 1);
     }
 
     public function test_inactive_rescheduled_row_does_not_block_the_current_slot(): void

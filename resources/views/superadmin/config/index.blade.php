@@ -62,11 +62,16 @@
                                 @enderror
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">API Key Fonnte *</label>
-                                <input type="text" name="whatsapp_api_key" value="{{ old('whatsapp_api_key', $whatsappApiKey) }}" required
+                                <label class="block text-sm font-medium text-gray-700 mb-2">API Key Fonnte {{ $whatsappApiKeyConfigured ? '' : '*' }}</label>
+                                <input type="password" name="whatsapp_api_key" value="{{ old('whatsapp_api_key') }}"
+                                    autocomplete="new-password"
+                                    @required(!$whatsappApiKeyConfigured)
                                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="Masukkan API Key dari fonnte.com">
-                                <p class="text-xs text-gray-500 mt-1">Dapatkan di <a href="https://fonnte.com" target="_blank" class="text-blue-600 hover:underline">fonnte.com</a></p>
+                                    placeholder="{{ $whatsappApiKeyConfigured ? 'Token tersimpan — isi hanya untuk mengganti' : 'Masukkan API Key dari fonnte.com' }}">
+                                <p class="text-xs text-gray-500 mt-1">
+                                    {{ $whatsappApiKeyConfigured ? 'Token saat ini tersimpan dan tidak ditampilkan kembali.' : 'Token belum dikonfigurasi.' }}
+                                    Dapatkan di <a href="https://fonnte.com" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">fonnte.com</a>
+                                </p>
                                 @error('whatsapp_api_key')
                                     <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
                                 @enderror

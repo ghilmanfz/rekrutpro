@@ -161,6 +161,52 @@
                             </div>
                         @endif
 
+                        @if (session('warning'))
+                            <div class="mb-4 bg-amber-100 border border-amber-400 text-amber-800 px-4 py-3 rounded relative" role="alert">
+                                <span class="block sm:inline">{{ session('warning') }}</span>
+                            </div>
+                        @endif
+
+                        @if ($errors->has('schedule_conflict'))
+                            <div id="scheduleConflictPopup"
+                                 class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-60 px-4"
+                                 style="z-index: 70"
+                                 role="alertdialog"
+                                 aria-modal="true"
+                                 aria-labelledby="scheduleConflictTitle"
+                                 aria-describedby="scheduleConflictMessage">
+                                <div class="w-full max-w-md rounded-2xl bg-white p-6 text-center shadow-2xl">
+                                    <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-amber-100 text-amber-600">
+                                        <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 4h.01M10.29 3.86l-8.82 15.28A1 1 0 002.34 21h19.32a1 1 0 00.87-1.5L13.71 3.86a1 1 0 00-1.74 0z" />
+                                        </svg>
+                                    </div>
+                                    <h2 id="scheduleConflictTitle" class="text-xl font-bold text-gray-900">Jadwal Interview Bentrok</h2>
+                                    <p id="scheduleConflictMessage" class="mt-2 text-sm leading-6 text-gray-600">
+                                        {{ $errors->first('schedule_conflict') }} Pilih waktu lain sebelum menjadwalkan interview.
+                                    </p>
+                                    <button type="button"
+                                            onclick="closeScheduleConflictPopup()"
+                                            class="mt-6 w-full rounded-lg bg-amber-500 px-4 py-2.5 font-semibold text-white transition hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">
+                                        Perbaiki Jadwal
+                                    </button>
+                                </div>
+                            </div>
+
+                            <script>
+                                function closeScheduleConflictPopup() {
+                                    document.getElementById('scheduleConflictPopup')?.classList.add('hidden');
+                                    document.querySelector('[name="scheduled_at"]')?.focus();
+                                }
+
+                                document.addEventListener('keydown', function (event) {
+                                    if (event.key === 'Escape' && !document.getElementById('scheduleConflictPopup')?.classList.contains('hidden')) {
+                                        closeScheduleConflictPopup();
+                                    }
+                                });
+                            </script>
+                        @endif
+
                         {{ $slot ?? '' }}
                         @yield('content')
                     </div>

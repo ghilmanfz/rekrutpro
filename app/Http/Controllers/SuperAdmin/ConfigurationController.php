@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\NotificationTemplate;
 use App\Models\SystemConfig;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ConfigurationController extends Controller
 {
@@ -18,12 +19,12 @@ class ConfigurationController extends Controller
 
          
         $whatsappPhone = SystemConfig::get('whatsapp_phone');
-        $whatsappApiKey = SystemConfig::get('whatsapp_api_key');
+        $whatsappApiKeyConfigured = filled(SystemConfig::get('whatsapp_api_key'));
 
         return view('superadmin.config.index', compact(
             'templates',
             'whatsappPhone',
-            'whatsappApiKey'
+            'whatsappApiKeyConfigured'
         ));
     }
 
@@ -107,15 +108,25 @@ class ConfigurationController extends Controller
 
     public function updateWhatsAppConfig(Request $request)
     {
+        $currentApiKey = SystemConfig::get('whatsapp_api_key');
+
         $validated = $request->validate([
             'whatsapp_phone' => 'required|string|max:15|regex:/^628[0-9]{7,12}$/',
-            'whatsapp_api_key' => 'required|string|max:255',
+            'whatsapp_api_key' => [
+                Rule::requiredIf(blank($currentApiKey)),
+                'nullable',
+                'string',
+                'max:255',
+            ],
         ], [
             'whatsapp_phone.regex' => 'Nomor WhatsApp harus berupa angka dengan format 628xxx.',
         ]);
 
         SystemConfig::set('whatsapp_phone', $validated['whatsapp_phone'], 'string', 'Nomor WhatsApp untuk Fonnte API');
-        SystemConfig::set('whatsapp_api_key', $validated['whatsapp_api_key'], 'string', 'API Key dari Fonnte.com');
+
+        if (filled($validated['whatsapp_api_key'] ?? null)) {
+            SystemConfig::set('whatsapp_api_key', $validated['whatsapp_api_key'], 'string', 'API Key dari Fonnte.com');
+        }
 
         return back()->with('success', 'Konfigurasi WhatsApp berhasil diperbarui');
     }

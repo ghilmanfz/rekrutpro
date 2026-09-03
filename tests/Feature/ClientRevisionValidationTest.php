@@ -350,6 +350,38 @@ class ClientRevisionValidationTest extends TestCase
         $this->assertSame('628111111111', SystemConfig::get('whatsapp_phone'));
     }
 
+    public function test_existing_fonnte_token_is_hidden_and_preserved_when_left_blank(): void
+    {
+        $superAdminRole = Role::create([
+            'name' => Role::SUPER_ADMIN,
+            'display_name' => 'Super Admin',
+        ]);
+        $superAdmin = User::create([
+            'name' => 'Super Admin',
+            'email' => 'admin-secret-test@example.com',
+            'password' => 'password',
+            'role_id' => $superAdminRole->id,
+            'is_active' => true,
+        ]);
+        SystemConfig::set('whatsapp_phone', '628111111111');
+        SystemConfig::set('whatsapp_api_key', 'existing-secret-token');
+
+        $this->actingAs($superAdmin)
+            ->get(route('superadmin.config.index'))
+            ->assertOk()
+            ->assertDontSee('existing-secret-token')
+            ->assertSee('Token saat ini tersimpan dan tidak ditampilkan kembali.');
+
+        $response = $this->actingAs($superAdmin)->post(route('superadmin.config.whatsapp'), [
+            'whatsapp_phone' => '628222222222',
+            'whatsapp_api_key' => '',
+        ]);
+
+        $response->assertRedirect()->assertSessionHasNoErrors();
+        $this->assertSame('628222222222', SystemConfig::get('whatsapp_phone'));
+        $this->assertSame('existing-secret-token', SystemConfig::get('whatsapp_api_key'));
+    }
+
     private function candidateAndPublishedJob(): array
     {
         $candidateRole = Role::firstOrCreate(

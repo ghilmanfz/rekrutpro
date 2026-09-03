@@ -106,11 +106,13 @@ class ApplicationController extends Controller
             'rejected_interview'    => 'interview_rejected',
         ];
 
+        $notificationFailed = false;
+
         if (isset($eventMap[$newStatus])) {
             $application->load(['candidate', 'jobPosting', 'offer']);
             $candidate = $application->candidate;
             if ($candidate && $candidate->phone) {
-                app(NotificationService::class)->sendWhatsApp(
+                $notificationFailed = ! app(NotificationService::class)->sendWhatsApp(
                     $eventMap[$newStatus],
                     $candidate->phone,
                     $this->whatsAppStatusPayload($application, $candidate)
@@ -118,7 +120,13 @@ class ApplicationController extends Controller
             }
         }
 
-        return redirect()->back()->with('success', 'Status aplikasi berhasil diperbarui');
+        $redirect = redirect()->back()->with('success', 'Status aplikasi berhasil diperbarui');
+
+        if ($notificationFailed) {
+            $redirect->with('warning', 'Status tersimpan, tetapi notifikasi WhatsApp gagal dikirim. Periksa koneksi perangkat Fonnte.');
+        }
+
+        return $redirect;
     }
 
     private function whatsAppStatusPayload(Application $application, User $candidate): array
